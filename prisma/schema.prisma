@@ -1,0 +1,119 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  email     String   @unique
+  name      String
+  password  String
+  avatar    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relations
+  quizResults QuizResult[]
+  readingProgress ReadingProgress[]
+  
+  // Stats intégrées
+  stats UserStats?
+  
+  @@map("users")
+}
+
+model UserStats {
+  id              String @id @default(auto()) @map("_id") @db.ObjectId
+  userId          String @unique @db.ObjectId
+  totalQuizzes    Int    @default(0)
+  totalPoints     Int    @default(0)
+  averageScore    Float  @default(0)
+  favoriteCategory String?
+  streakRecord    Int    @default(0)
+  
+  // Statistiques de lecture
+  totalVersesRead Int    @default(0)
+  currentSurah    Int?   // Numéro de la sourate actuelle
+  currentVerse    Int?   // Numéro du verset actuel
+  readingStreak   Int    @default(0) // Jours consécutifs de lecture
+  lastReadDate    DateTime?
+  dailyGoal       Int    @default(10) // Objectif de versets par jour
+  
+  // Relation
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("user_stats")
+}
+
+model QuizResult {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId          String   @db.ObjectId
+  score           Int
+  category        String
+  difficulty      String
+  correctAnswers  Int
+  totalQuestions  Int
+  percentage      Float
+  timeSpent       Int?     // en secondes
+  hintsUsed       Int      @default(0)
+  createdAt       DateTime @default(now())
+  
+  // Relation
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("quiz_results")
+}
+
+model Category {
+  id          String @id @default(auto()) @map("_id") @db.ObjectId
+  name        String @unique
+  description String?
+  icon        String?
+  color       String?
+  isActive    Boolean @default(true)
+  createdAt   DateTime @default(now())
+  
+  @@map("categories")
+}
+
+model Question {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  category    String
+  question    String
+  options     String[] // Array de strings pour les options
+  answer      String
+  explanation String
+  source      String?
+  difficulty  String   @default("normal") // easy, normal, hard
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+    @@unique([category, question])
+  @@map("questions")
+}
+
+model ReadingProgress {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String   @db.ObjectId
+  surahNumber Int      // Numéro de la sourate (1-114)
+  verseNumber Int      // Numéro du verset dans la sourate
+  surahName   String   // Nom de la sourate
+  readAt      DateTime @default(now())
+  readingTime Int?     // Temps passé en secondes
+  
+  // Relation
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, surahNumber, verseNumber])
+  @@map("reading_progress")
+}

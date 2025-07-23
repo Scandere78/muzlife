@@ -39,3 +39,11 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Ignore Noor Play legacy sources and build artifacts
+noor-player-main/
+noor/
+noor-player/
+noorplay/
+noorplay-main/
+noor-player-main-*/
