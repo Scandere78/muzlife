@@ -1,3 +1,6 @@
+
+
+'use client';
 // Types stricts pour les stats quiz
 type CategoryStat = {
   average: number;
@@ -11,7 +14,6 @@ type QuizResult = {
   score: number;
   percentage: number;
 };
-'use client';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
 import { Progress } from '../../components/ui/progress';
