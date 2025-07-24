@@ -1,3 +1,16 @@
+// Types stricts pour les stats quiz
+type CategoryStat = {
+  average: number;
+  total: number;
+};
+type QuizResult = {
+  id: string | number;
+  category: string;
+  correctAnswers: number;
+  totalQuestions: number;
+  score: number;
+  percentage: number;
+};
 'use client';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
@@ -389,10 +402,9 @@ const getGradeLetter = (percentage: number): string => {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-          {readingStats && Array.isArray((readingStats as any).categoryStats) === false &&
-            (readingStats as { categoryStats?: Record<string, { average: number; total: number }> }).categoryStats &&
-            Object.entries((readingStats as { categoryStats: Record<string, { average: number; total: number }> }).categoryStats).map(
-              ([category, data]) => (
+          {readingStats && readingStats.categoryStats &&
+            Object.entries(readingStats.categoryStats as Record<string, CategoryStat>).map(
+              ([category, data]: [string, CategoryStat]) => (
                 <div key={category} className="space-y-2">
                   <div className="flex justify-between items-center">
                     <span className="text-sm font-medium">{category}</span>
@@ -422,15 +434,8 @@ const getGradeLetter = (percentage: number): string => {
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-          {readingStats && Array.isArray((readingStats as any).recentResults) &&
-            ((readingStats as any).recentResults as Array<{
-              id: string | number;
-              category: string;
-              correctAnswers: number;
-              totalQuestions: number;
-              score: number;
-              percentage: number;
-            }>).slice(0, 5).map((result) => (
+          {readingStats && Array.isArray(readingStats.recentResults) &&
+            (readingStats.recentResults as QuizResult[]).slice(0, 5).map((result: QuizResult) => (
               <div key={String(result.id)} className="flex items-center justify-between p-3 bg-gray-700 rounded-lg">
                 <div className="flex items-center space-x-3">
                   <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
