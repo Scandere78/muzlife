@@ -58,7 +58,12 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
 
 
 
-export default async function SouratePage({ params }: { params: { id: string } }) {
+// Correction du typage pour Next.js 15+ (App Router)
+interface PageParams {
+  params: { id: string }
+}
+
+export default async function SouratePage({ params }: PageParams) {
   const sourate = await fetchSourateWithTranslation(params.id);
   if (!sourate) {
     return (
