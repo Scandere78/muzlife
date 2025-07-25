@@ -13,12 +13,12 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-background: #ff0000;
-    --color-foreground: #ededed;
-    --color-accent: #c7a96b;
-    --color-accent-dark: #a88a4a;
-    --color-border: #c7a96b;
-    --color-muted: #174c43;
+    --color-background: #e8e3da; /* Blanc cassé/beige doux */
+    --color-foreground: #174c43; /* Vert profond du logo */
+    --color-accent: #c8b080; /* Doré du croissant et du texte */
+    --color-accent-dark: #a88a4a; /* Variante doré plus foncé */
+    --color-border: #c7a96b; /* Pour les bordures dorées */
+    --color-muted: #e6f0ed; /* Vert très clair pour fonds secondaires */
   }
 }
 

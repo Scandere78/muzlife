@@ -37,6 +37,16 @@ export const sourates = [
   { number: 36, slug: "yasin", nom_phonetique: "Yasin" },
   { number: 37, slug: "as-saf", nom_phonetique: "As-Saf" },
   { number: 38, slug: "al-humazah", nom_phonetique: "Al-Humazah" },
+  { number: 39, slug: "al-fil", nom_phonetique: "Al-Fil" },
+  { number: 40, slug: "quraysh", nom_phonetique: "Quraysh" },
+  { number: 41, slug: "al-ma-un", nom_phonetique: "Al-Ma’un" },
+  { number: 42, slug: "al-kauthar", nom_phonetique: "Al-Kauthar" },
+  { number: 43, slug: "al-kafirun", nom_phonetique: "Al-Kafirun" },
+  { number: 44, slug: "an-nasr", nom_phonetique: "An-Nasr" },
+  { number: 45, slug: "al-lahi", nom_phonetique: "Al-Lahi" },
+  { number: 46, slug: "al-ikhlas", nom_phonetique: "Al-Ikhlas" },
+  { number: 47, slug: "al-falaq", nom_phonetique: "Al-Falaq" },
+  { number: 48, slug: "an-nas", nom_phonetique: "An-Nas" },
   // ... complète la liste si besoin
 ];
 
