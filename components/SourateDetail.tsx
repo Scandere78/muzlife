@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useRef } from "react";
 import Link from "next/link";
 
 interface SourateDetailProps {
@@ -9,6 +9,58 @@ interface SourateDetailProps {
 }
 
 const SourateDetail: React.FC<SourateDetailProps> = ({ sourate, translation }) => {
+  const [playingAyah, setPlayingAyah] = useState<number | null>(null);
+  const [isPaused, setIsPaused] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  const handleAudioPlay = (ayahNumber: number, audioUrl: string) => {
+    // Si on clique sur le même verset qui joue déjà
+    if (playingAyah === ayahNumber) {
+      if (audioRef.current) {
+        if (isPaused) {
+          // Reprendre la lecture
+          audioRef.current.play();
+          setIsPaused(false);
+        } else {
+          // Mettre en pause
+          audioRef.current.pause();
+          setIsPaused(true);
+        }
+      }
+      return;
+    }
+
+    // Arrêter l'audio précédent s'il y en a un
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+    }
+
+    // Créer et jouer le nouvel audio
+    const audio = new Audio(audioUrl);
+    audioRef.current = audio;
+    
+    audio.addEventListener('ended', () => {
+      setPlayingAyah(null);
+      setIsPaused(false);
+      audioRef.current = null;
+    });
+
+    audio.addEventListener('pause', () => {
+      if (audio.currentTime > 0 && audio.currentTime < audio.duration) {
+        setIsPaused(true);
+      }
+    });
+
+    audio.addEventListener('play', () => {
+      setIsPaused(false);
+    });
+
+    audio.play();
+    setPlayingAyah(ayahNumber);
+    setIsPaused(false);
+  };
+
   return (
     <main className="max-w-3xl mx-auto py-10 px-4">
       {/* Bouton retour */}
@@ -32,6 +84,8 @@ const SourateDetail: React.FC<SourateDetailProps> = ({ sourate, translation }) =
       <div className="space-y-6">
         {sourate.ayahs.map((ayah: any, index: number) => {
           const translationAyah = translation?.ayahs?.[index];
+          const isCurrentlyPlaying = playingAyah === ayah.numberInSurah;
+          const isThisPaused = isCurrentlyPlaying && isPaused;
           
           return (
             <div key={ayah.number} className="bg-[var(--color-muted)] rounded-lg p-6 shadow-sm border border-[var(--color-border)]">
@@ -44,16 +98,32 @@ const SourateDetail: React.FC<SourateDetailProps> = ({ sourate, translation }) =
                   <span className="text-[var(--color-foreground)] font-medium">Verset {ayah.numberInSurah}</span>
                 </div>
                 <button 
-                  className="p-2 rounded-full bg-[var(--color-accent)] hover:bg-[var(--color-accent-dark)] transition-colors"
-                  onClick={() => {
-                    const audio = new Audio(ayah.audio);
-                    audio.play();
-                  }}
-                  aria-label="Écouter le verset"
+                  className={`p-2 rounded-full transition-colors ${
+                    isCurrentlyPlaying 
+                      ? 'bg-[var(--color-foreground)] hover:bg-[var(--color-foreground)]/80' 
+                      : 'bg-[var(--color-accent)] hover:bg-[var(--color-accent-dark)]'
+                  }`}
+                  onClick={() => handleAudioPlay(ayah.numberInSurah, ayah.audio)}
+                  aria-label={isCurrentlyPlaying ? (isThisPaused ? 'Reprendre le verset' : 'Mettre en pause') : 'Écouter le verset'}
                 >
-                  <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
-                  </svg>
+                  {isCurrentlyPlaying ? (
+                    isThisPaused ? (
+                      // Icône play (reprendre)
+                      <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
+                      </svg>
+                    ) : (
+                      // Icône pause
+                      <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+                      </svg>
+                    )
+                  ) : (
+                    // Icône play (démarrer)
+                    <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
+                    </svg>
+                  )}
                 </button>
               </div>
 
