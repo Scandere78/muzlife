@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { jwtVerify } from 'jose';
 import { prisma } from '@/lib/prisma';
+import { ReadingProgress } from '@prisma/client';
 
 export async function GET(req: NextRequest) {
   try {
@@ -50,7 +51,7 @@ export async function GET(req: NextRequest) {
       });
     }
     // Récupérer les données de lecture séparément
-    let recentReadingProgress = [];
+    let recentReadingProgress: ReadingProgress[] = [];
     try {
       recentReadingProgress = await prisma.readingProgress.findMany({
         where: { userId },
