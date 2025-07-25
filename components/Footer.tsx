@@ -77,6 +77,61 @@ export default function Footer() {
                   💬 +33 6 50 87 51 35
                 </a>
               </address>
+
+            {/* Nos devs */}
+           
+              <h3 className="text-lg sm:text-xl font-semibold mb-4 sm:mb-6 text-[var(--color-background)]">Nos devs</h3>
+              <p className="text-gray-300 text-sm sm:text-sm mb-2 sm:mb-4">
+                Nos devs sont disponibles sur les réseaux sociaux
+              </p>
+              {/* 
+                On affiche les devs dans des box cliquables, avec une animation douce au survol.
+                On utilise les composants Link de Next.js et on stylise avec Tailwind pour la lisibilité.
+                Les box sont accessibles et responsives.
+              */}
+              <div className="flex flex-col gap-3">
+                <Link
+                  href="https://www.scandere-tej.fr/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group block rounded-lg bg-[var(--color-muted)]/20 border border-[var(--color-muted)] px-5 py-3 transition-all duration-200 hover:bg-[var(--color-muted)]/40 hover:scale-[1.03] shadow-sm hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]"
+                  aria-label="Portfolio de Scandere Tej"
+                >
+                  <span className="flex items-center gap-2">
+                    <svg className="w-6 h-6 text-[var(--color-accent)] group-hover:animate-pulse" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                    </svg>
+                    <span className="text-base sm:text-lg font-semibold text-gray-200 group-hover:text-[var(--color-accent)] transition-colors">
+                      Scandere Tej
+                    </span>
+                  </span>
+                  <span className="block text-xs text-gray-400 mt-1">Développeur web</span>
+                </Link>
+                <Link
+                  href="https://www.samy-dev.fr/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group block rounded-xl bg-[var(--color-muted)]/20 border border-[var(--color-muted)] px-5 py-3 transition-all duration-200 hover:bg-[var(--color-muted)]/40 hover:scale-[1.03] shadow-sm hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]"
+                  aria-label="Portfolio de Samy Ajouid"
+                >
+                  <span className="flex items-center gap-2">
+                    <svg className="w-6 h-6 text-[var(--color-accent)] group-hover:animate-pulse" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                    </svg>
+                    <span className="text-base sm:text-lg font-semibold text-gray-200 group-hover:text-[var(--color-accent)] transition-colors">
+                      Samy Ajouid
+                    </span>
+                  </span>
+                  <span className="block text-xs text-gray-400 mt-1">Développeur web</span>
+                </Link>
+              </div>
+              {/* 
+                Explication :
+                - Chaque dev est dans une box stylisée, cliquable, avec effet de survol (scale et couleur).
+                - L'icône "+" est animée subtilement au hover.
+                - Les couleurs sont cohérentes avec le thème du site.
+                - Les liens sont accessibles (focus, aria-label).
+              */}
             </div>
             
             {/* Navigation - style cohérent avec Navbar */}
