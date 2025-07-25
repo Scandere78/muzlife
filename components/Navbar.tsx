@@ -96,7 +96,7 @@ const Navbar: React.FC = () => {
                 <div className="relative">
                   <Button
                     onClick={() => setShowDropdown(!showDropdown)}
-                    className="flex items-center bg-gradient-to-r from-[var(--color-foreground)] to-[var(--color-accent)] text-white px-6 py-2.5 rounded-full hover:shadow-lg transition-all border border-green-500/30 group"
+                    className="flex items-center bg-gradient-to-r from-[var(--color-foreground)] to-[var(--color-muted)] text-white px-6 py-2.5 rounded-full hover:shadow-lg transition-all border border-green-500/30 group"
                     variant="default"
                   >
                     {user?.avatar ? (
