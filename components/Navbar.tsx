@@ -69,7 +69,7 @@ const Navbar: React.FC = () => {
             <div className="flex-shrink-0">
               <Link href="/" className="font-bold text-3xl flex items-center">
                 <Image src="/muzlife_v2.png" alt="MuzLife" width={48} height={48} className="h-12 w-12 mr-3" />
-                <span className="text-[var(--color-foreground)]">Muz</span>
+                <span className="text-[var(--color-accent)]">Muz</span>
                 <span className="text-white ml-2">Life</span>
               </Link>
             </div>
