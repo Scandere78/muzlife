@@ -60,8 +60,8 @@ const Navbar: React.FC = () => {
     <>
       <nav className={`fixed w-full top-0 z-50 transition-all duration-300 font-sans h-20 ${
         scrolled
-          ? "bg-gradient-to-b from-green-300/30 to-transparent"
-          : "bg-gradient-to-b from-green-300/30 to-transparent"
+          ? "bg-gradient-to-b from-[var(--color-foreground)] to-transparent"
+          : "bg-gradient-to-b from-[var(--color-foreground)] to-transparent"
       }`}>
         <div className="max-w-7xl mx-auto h-full px-4 md:px-6">
           <div className="flex items-center h-full justify-between">
@@ -69,23 +69,23 @@ const Navbar: React.FC = () => {
             <div className="flex-shrink-0">
               <Link href="/" className="font-bold text-3xl flex items-center">
                 <Image src="/muzlife.JPG" alt="MuzLife" width={48} height={48} className="h-12 w-12 mr-3" />
-                <span className="text-green-500">Muz</span>
+                <span className="text-[var(--color-foreground)]">Muz</span>
                 <span className="text-white ml-2">Life</span>
               </Link>
             </div>
             {/* Desktop Menu */}
             <div className="hidden md:flex items-center">
               <div className="flex items-center space-x-4">
-                <Link href="/lecture" className="text-white hover:text-green-400 px-4 py-2.5 rounded-md transition-colors text-lg font-medium">
+                <Link href="/lecture" className="text-[var(--color-background)] hover:text-[var(--color-accent)] px-4 py-2.5 rounded-md transition-colors text-lg font-medium">
                 🧑‍🏫 Lecture
                 </Link>
-                <Link href="/sourates" className="text-white hover:text-green-400 px-4 py-2.5 rounded-md transition-colors text-lg font-medium">
+                <Link href="/sourates" className="text-[var(--color-background)] hover:text-[var(--color-foreground)] px-4 py-2.5 rounded-md transition-colors text-lg font-medium">
                 🎧 Écoute
                 </Link>
-                <Link href="/quizz" className="text-white hover:text-green-400 px-4 py-2.5 rounded-md transition-colors text-lg font-medium">
+                <Link href="/quizz" className="text-[var(--color-background)] hover:text-[var(--color-accent)] px-4 py-2.5 rounded-md transition-colors text-lg font-medium">
                 🧠 Quizz
                 </Link>
-                <Link href="/about" className="text-white hover:text-green-400 px-4 py-2.5 rounded-md transition-colors text-lg font-medium">
+                <Link href="/about" className="text-[var(--color-background)] hover:text-[var(--color-accent)] px-4 py-2.5 rounded-md transition-colors text-lg font-medium">
                 👤 À propos
                 </Link>
               </div>
@@ -157,11 +157,8 @@ const Navbar: React.FC = () => {
                   className="relative overflow-hidden group"
                   variant="default"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-r from-green-600 to-green-500 rounded-full"></div>
-                  <div className="absolute inset-0 opacity-0 group-hover:opacity-30 transition-opacity duration-700">
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-                  </div>
-                  <div className="absolute inset-0 rounded-full border border-green-500/40"></div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                  <div className="absolute inset-0 "></div>
                   <div className="relative z-10 flex items-center text-white px-6 py-2.5 rounded-full font-medium text-lg">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />

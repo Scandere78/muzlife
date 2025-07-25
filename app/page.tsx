@@ -9,6 +9,8 @@ import "swiper/css/pagination";
 import "swiper/css/effect-fade";
 import { Pagination, Autoplay, EffectFade } from "swiper/modules";
 import { Navbar } from "../components";
+import "../styles/globals.css";
+
 
 interface Recitateur {
   id: number;
@@ -25,14 +27,14 @@ export default function HomePage() {
   ];
 
   return (
-    <div className="py-12 bg-gradient-to-b from-gray-900 to-gray-800 text-white min-h-screen navbar-safe">
+    <div className="py-12 min-h-screen navbar-safe" style={{ background: 'var(--color-background)', color: 'var(--color-foreground)' }}>
       {/* Présentation */}
       <Navbar />
       <div className="text-center px-4 max-w-4xl mx-auto">
-        <h1 className="text-5xl font-extrabold bg-gradient-to-r from-green-400 to-emerald-600 bg-clip-text text-transparent">
+        <h1 className="text-5xl font-extrabold bg-clip-text text-transparent" style={{ backgroundImage: 'linear-gradient(to right, var(--color-accent), var(--color-foreground))' }}>
           Bienvenue sur MuzLife
         </h1>
-        <p className="mt-4 text-xl text-gray-300 leading-relaxed">
+        <p className="mt-4 text-xl text-[var(--color-muted)] leading-relaxed">
           Écoutez et lisez le Coran facilement avec une interface intuitive.
         </p>
       </div>
@@ -41,14 +43,14 @@ export default function HomePage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-16 px-6 max-w-7xl mx-auto">
         <div className="transition-all duration-300 transform hover:-translate-y-1">
           <Link href="/lecture" className="block">
-            <div className="bg-gray-800 p-8 rounded-xl shadow-lg cursor-pointer hover:shadow-emerald-600/20 hover:bg-gray-700 transition-all duration-300 border border-gray-700 h-full">
-              <div className="bg-green-500/10 w-16 h-16 rounded-full flex items-center justify-center mb-4">
+            <div className="bg-[var(--color-muted)] p-8 rounded-xl shadow-lg cursor-pointer hover:shadow-[var(--color-accent)]/20 hover:bg-[var(--color-background)] transition-all duration-300 border border-[var(--color-border)] h-full">
+              <div className="bg-[var(--color-accent)]/10 w-16 h-16 rounded-full flex items-center justify-center mb-4">
                 <span className="text-3xl">📖</span>
               </div>
-              <h2 className="text-2xl font-bold text-green-400 mb-2">
+              <h2 className="text-2xl font-bold text-[var(--color-accent)] mb-2">
                 Lecture du Coran
               </h2>
-              <p className="text-gray-300">
+              <p className="text-[var(--color-foreground)]">
                 Lisez le Coran avec traduction et explication des versets.
               </p>
             </div>
@@ -57,14 +59,14 @@ export default function HomePage() {
 
         <div className="transition-all duration-300 transform hover:-translate-y-1">
           <Link href="/sourates" className="block">
-            <div className="bg-gray-800 p-8 rounded-xl shadow-lg cursor-pointer hover:shadow-emerald-600/20 hover:bg-gray-700 transition-all duration-300 border border-gray-700 h-full">
-              <div className="bg-green-500/10 w-16 h-16 rounded-full flex items-center justify-center mb-4">
+            <div className="bg-[var(--color-muted)] p-8 rounded-xl shadow-lg cursor-pointer hover:shadow-[var(--color-accent)]/20 hover:bg-[var(--color-background)] transition-all duration-300 border border-[var(--color-border)] h-full">
+              <div className="bg-[var(--color-accent)]/10 w-16 h-16 rounded-full flex items-center justify-center mb-4">
                 <span className="text-3xl">🎧</span>
               </div>
-              <h2 className="text-2xl font-bold text-green-400 mb-2">
+              <h2 className="text-2xl font-bold text-[var(--color-accent)] mb-2">
                 Écoute du Coran
               </h2>
-              <p className="text-gray-300">
+              <p className="text-[var(--color-foreground)]">
                 Écoutez le Coran récité par différents imams renommés.
               </p>
             </div>
@@ -73,12 +75,12 @@ export default function HomePage() {
 
         <div className="transition-all duration-300 transform hover:-translate-y-1">
           <Link href="/quizz" className="block">
-            <div className="bg-gray-800 p-8 rounded-xl shadow-lg cursor-pointer hover:shadow-emerald-600/20 hover:bg-gray-700 transition-all duration-300 border border-gray-700 h-full">
-              <div className="bg-green-500/10 w-16 h-16 rounded-full flex items-center justify-center mb-4">
+            <div className="bg-[var(--color-muted)] p-8 rounded-xl shadow-lg cursor-pointer hover:shadow-[var(--color-accent)]/20 hover:bg-[var(--color-background)] transition-all duration-300 border border-[var(--color-border)] h-full">
+              <div className="bg-[var(--color-accent)]/10 w-16 h-16 rounded-full flex items-center justify-center mb-4">
                 <span className="text-3xl">🎯</span>
               </div>
-              <h2 className="text-2xl font-bold text-green-400 mb-2">Quizz</h2>
-              <p className="text-gray-300">
+              <h2 className="text-2xl font-bold text-[var(--color-accent)] mb-2">Quizz</h2>
+              <p className="text-[var(--color-foreground)]">
                 Testez vos connaissances sur différents thèmes du Coran.
               </p>
             </div>
@@ -88,7 +90,7 @@ export default function HomePage() {
 
       {/* Carrousel des récitateurs */}
       <div className="mt-20 px-6 max-w-7xl mx-auto">
-        <h2 className="text-3xl font-bold bg-gradient-to-r from-green-400 to-emerald-600 bg-clip-text text-transparent text-center mb-10">
+        <h2 className="text-3xl font-bold bg-clip-text text-transparent text-center mb-10" style={{ backgroundImage: 'linear-gradient(to right, var(--color-accent), var(--color-foreground))' }}>
           Récitateurs Renommés
         </h2>
         <Swiper
@@ -108,7 +110,7 @@ export default function HomePage() {
                 href={`/sourates?recitateur=${recitateur.id}`}
                 className="block"
               >
-                <div className="bg-gray-800 p-6 rounded-xl shadow-lg text-center cursor-pointer hover:bg-gray-700 hover:shadow-emerald-600/10 transition-all duration-300 transform hover:-translate-y-1 border border-gray-700">
+                <div className="bg-[var(--color-muted)] p-6 rounded-xl shadow-lg text-center cursor-pointer hover:bg-[var(--color-background)] hover:shadow-[var(--color-accent)]/10 transition-all duration-300 transform hover:-translate-y-1 border border-[var(--color-border)]">
                   <div className="relative w-32 h-32 mx-auto rounded-full overflow-hidden mb-4">
                     <Image
                       src={recitateur.image}
@@ -118,7 +120,7 @@ export default function HomePage() {
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
                   </div>
-                  <h3 className="text-xl font-bold text-green-400">
+                  <h3 className="text-xl font-bold text-[var(--color-accent)]">
                     {recitateur.name}
                   </h3>
                 </div>
@@ -131,7 +133,7 @@ export default function HomePage() {
       {/* Section d'appel à l'action */}
       <div className="mt-16 text-center px-4 pb-10">
         <Link href="/sourates">
-          <button className="px-8 py-4 bg-gradient-to-r from-green-500 to-emerald-600 rounded-lg text-white font-bold text-lg hover:shadow-lg hover:shadow-green-500/20 transition-all duration-300 transform hover:-translate-y-1">
+          <button className="px-8 py-4 rounded-lg text-white font-bold text-lg border-accent bg-[var(--color-accent)] hover:shadow-lg hover:shadow-[var(--color-accent)]/20 transition-all duration-300 transform hover:-translate-y-1">
             Commencer à écouter
           </button>
         </Link>

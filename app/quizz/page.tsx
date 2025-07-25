@@ -3,6 +3,7 @@
 import React from "react";
 import { useAuth } from "../../contexts/AuthContext";
 // import AuthModal from "../../components/auth/AuthModal";
+import "../../styles/globals.css";
 
 // Types
 export type Quiz = {
@@ -326,7 +327,7 @@ export default function QuizPage() {
   const currentQ = currentQuiz[currentQuestionIndex];
 
   return (
-    <div className="max-w-2xl mx-auto py-10 px-4">
+    <div className="max-w-2xl mx-auto py-10 px-4 min-h-screen" style={{ background: 'var(--color-background)', color: 'var(--color-foreground)' }}>
       {/* <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} /> */}
       <h1 className="text-3xl font-bold text-green-500 text-center mb-6">Quiz Islamique</h1>
       <div className="flex flex-wrap gap-2 justify-center mb-6">

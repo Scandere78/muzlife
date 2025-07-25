@@ -1,4 +1,5 @@
 import React from 'react';
+import "../../styles/globals.css";
 
 interface Feature {
   id: string;
@@ -99,12 +100,12 @@ const AboutPage: React.FC = () => {
   };
 
   const FeatureCard = ({ feature }: { feature: Feature }) => (
-    <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-300">
+    <div className="bg-[var(--color-background)] rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-300 border border-[var(--color-border)]">
       <div className="flex items-center mb-4">
         <span className="text-2xl mr-3">{feature.icon}</span>
-        <h3 className="text-lg font-semibold text-gray-800">{feature.name}</h3>
+        <h3 className="text-lg font-semibold text-[var(--color-foreground)]">{feature.name}</h3>
       </div>
-      <p className="text-gray-600 leading-relaxed">{feature.description}</p>
+      <p className="text-[var(--color-muted)] leading-relaxed">{feature.description}</p>
     </div>
   );
 
@@ -118,7 +119,7 @@ const AboutPage: React.FC = () => {
 
     return (
       <div className="mb-12">
-        <h2 className={`text-2xl font-bold mb-6 ${color}`}>{title}</h2>
+        <h2 className="text-2xl font-bold mb-6 text-[var(--color-accent)]">{title}</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {categoryFeatures.map(feature => (
             <FeatureCard key={feature.id} feature={feature} />
@@ -129,11 +130,12 @@ const AboutPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50">
+    <div className="min-h-screen" style={{ background: 'var(--color-background)', color: 'var(--color-foreground)' }}>
       {/* Header Section */}
-      <div className="bg-gradient-to-r from-blue-600 to-green-600 text-white py-16">
+      <div className="bg-[var(--color-accent)] text-white py-16">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">À propos de Muzlife</h1>
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">
+            À propos de Muzlife</h1>
           <p className="text-xl md:text-2xl opacity-90 max-w-3xl mx-auto">
             La plateforme communautaire musulmane gamifiée
           </p>
@@ -143,7 +145,7 @@ const AboutPage: React.FC = () => {
       <div className="container mx-auto px-4 py-12">
         {/* Introduction */}
         <div className="text-center mb-16">
-          <p className="text-lg text-gray-700 max-w-4xl mx-auto leading-relaxed">
+          <p className="text-lg text-[var(--color-foreground)] max-w-4xl mx-auto leading-relaxed">
             Muzlife est une plateforme innovante conçue pour rassembler la communauté musulmane 
             autour d'une expérience interactive et enrichissante. Notre mission est de créer un 
             espace numérique où spiritualité, communauté et technologie se rencontrent harmonieusement.
@@ -151,81 +153,83 @@ const AboutPage: React.FC = () => {
         </div>
 
         {/* Mascot Section */}
-        <div className="bg-white rounded-xl shadow-lg p-8 mb-16 text-center">
+        <div className="bg-[var(--color-background)] rounded-xl shadow-lg p-8 mb-16 text-center border border-[var(--color-border)]">
           <div className="text-6xl mb-4">🐱</div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">
+          <h2 className="text-2xl font-bold text-[var(--color-accent)] mb-4">
             Rencontrez {mascot.name}, notre mascotte
           </h2>
-          <p className="text-gray-600 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-[var(--color-muted)] max-w-2xl mx-auto leading-relaxed">
             {mascot.description}
           </p>
         </div>
 
         {/* Features by Category */}
         <div className="mb-16">
-          <h1 className="text-3xl font-bold text-center mb-12 text-gray-800">
+          <h1 className="text-3xl font-bold text-center mb-12 text-[var(--color-accent)]">
             🚀 Nos Fonctionnalités
           </h1>
           
           <CategorySection 
             title="🎮 Gamification" 
             category="gamification" 
-            color="text-purple-600" 
+            color="text-[var(--color-accent)]" 
           />
           
           <CategorySection 
-            title="🕌 Spiritualité" 
+            title="🔔 Spiritualité" 
             category="spiritual" 
-            color="text-green-600" 
+            color="text-[var(--color-accent)]" 
           />
           
           <CategorySection 
             title="🤖 Intelligence Artificielle" 
             category="ai" 
-            color="text-blue-600" 
+            color="text-[var(--color-accent)]" 
           />
           
           <CategorySection 
             title="👥 Communauté" 
             category="community" 
-            color="text-orange-600" 
+            color="text-[var(--color-accent)]" 
           />
           
           <CategorySection 
             title="📱 Mobile" 
             category="mobile" 
-            color="text-indigo-600" 
+            color="text-[var(--color-accent)]" 
           />
         </div>
 
         {/* Technology Stack */}
-        <div className="bg-gradient-to-r from-gray-800 to-gray-900 text-white rounded-xl p-8 mb-16">
-          <h2 className="text-2xl font-bold mb-6 text-center">🛠️ Notre Stack Technologique</h2>
+        <div className="bg-[var(--color-foreground)] text-white rounded-xl p-8 mb-16">
+          <h2 className="text-2xl font-bold mb-6 text-center text-[var(--color-accent)]">
+            🛠️ Notre Stack Technologique</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
             <div>
               <h3 className="font-semibold mb-2">Base de données</h3>
-              <p className="text-gray-300">PostgreSQL</p>
+              <p className="text-[var(--color-muted)]">PostgreSQL</p>
             </div>
             <div>
               <h3 className="font-semibold mb-2">Architecture</h3>
-              <p className="text-gray-300">Full-Stack TypeScript</p>
+              <p className="text-[var(--color-muted)]">Full-Stack TypeScript</p>
             </div>
             <div>
               <h3 className="font-semibold mb-2">Plateformes</h3>
-              <p className="text-gray-300">Web • Mobile • API REST</p>
+              <p className="text-[var(--color-muted)]">Web • Mobile • API REST</p>
             </div>
           </div>
         </div>
 
         {/* Mission Statement */}
-        <div className="bg-white rounded-xl shadow-lg p-8 text-center">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6">🎯 Notre Mission</h2>
-          <p className="text-gray-700 max-w-4xl mx-auto leading-relaxed mb-4">
+        <div className="bg-[var(--color-background)] rounded-xl shadow-lg p-8 text-center border border-[var(--color-border)]">
+          <h2 className="text-2xl font-bold text-[var(--color-accent)] mb-6">
+            🎯 Notre Mission</h2>
+          <p className="text-[var(--color-foreground)] max-w-4xl mx-auto leading-relaxed mb-4">
             Chez Muzlife, nous croyons que la technologie peut servir à renforcer les liens spirituels 
             et communautaires. Notre plateforme gamifiée encourage la participation positive, 
             l'entraide et l'épanouissement personnel dans un environnement respectueux des valeurs islamiques.
           </p>
-          <p className="text-gray-700 max-w-4xl mx-auto leading-relaxed">
+          <p className="text-[var(--color-foreground)] max-w-4xl mx-auto leading-relaxed">
             Nous nous engageons à créer un espace numérique où chaque membre peut grandir spirituellement, 
             socialement et personnellement, tout en contribuant au bien-être de la communauté globale.
           </p>

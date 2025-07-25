@@ -3,7 +3,7 @@ import { Inter, Amiri } from "next/font/google";
 import { AuthProvider } from "../contexts/AuthContext";
 import { Navbar } from "../components";
 import Footer from "../components/Footer";
-import "../styles/globals.css";
+import '../styles/globals.css';
 // import { Analytics } from "@vercel/analytics/react"; // Décommente si Analytics est installé
 
 const inter = Inter({ subsets: ["latin"] });
@@ -21,11 +21,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr" className={`${inter.className} ${amiri.variable}`}>
-      <body className="bg-gray-800 text-foreground min-h-screen font-amiri">
+      <body style={{ background: 'var(--color-background)', color: 'var(--color-accent)' }} className="min-h-screen font-amiri">
         <AuthProvider>
           <Navbar />
           <main className="pt-16 md:pt-20">{children}</main>
-          <Footer />
+      <Footer />
           {/* <Analytics /> */}
         </AuthProvider>
       </body>
