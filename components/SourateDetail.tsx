@@ -65,7 +65,7 @@ const SourateDetail: React.FC<SourateDetailProps> = ({ sourate, translation }) =
     <main className="max-w-3xl mx-auto py-10 px-4">
       {/* Bouton retour */}
       <div className="mb-6">
-        <Link href="/sourates" className="inline-flex items-center px-4 py-2 rounded-full bg-[var(--color-accent)] hover:bg-[var(--color-accent-dark)] text-white font-medium transition-colors shadow-sm">
+        <Link href="/sourates" className="inline-flex items-center px-4 py-2 rounded-full bg-[var(--color-muted)] hover:bg-[var(--color-accent-dark)] text-white font-medium transition-colors shadow-sm">
           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>

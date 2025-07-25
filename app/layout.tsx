@@ -21,7 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr" className={`${inter.className} ${amiri.variable}`}>
-      <body style={{ background: 'var(--color-background)', color: 'var(--color-accent)' }} className="min-h-screen font-amiri">
+      <body style={{ backgroundImage: 'url(/caligraphie.png)', color: 'var(--color-accent)' }} className="min-h-screen font-amiri">
         <AuthProvider>
           <Navbar />
           <main className="pt-16 md:pt-20">{children}</main>

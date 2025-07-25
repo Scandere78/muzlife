@@ -2,9 +2,9 @@
 
 :root {
   /* Couleurs principales inspirées du logo MuzLife */
-  --color-background: #e8e3da; /* Blanc cassé/beige doux */
+  --color-background: #f8f5ef; /* Blanc cassé/beige doux */
   --color-foreground: #174c43; /* Vert profond du logo */
-  --color-accent: #c8b080; /* Doré du croissant et du texte */
+  --color-accent: #c7a96b; /* Doré du croissant et du texte */
   --color-accent-dark: #a88a4a; /* Variante doré plus foncé */
   --color-border: #c7a96b; /* Pour les bordures dorées */
   --color-muted: #e6f0ed; /* Vert très clair pour fonds secondaires */
@@ -13,57 +13,96 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-background: #e8e3da; /* Blanc cassé/beige doux */
-    --color-foreground: #174c43; /* Vert profond du logo */
-    --color-accent: #c8b080; /* Doré du croissant et du texte */
-    --color-accent-dark: #a88a4a; /* Variante doré plus foncé */
-    --color-border: #c7a96b; /* Pour les bordures dorées */
-    --color-muted: #e6f0ed; /* Vert très clair pour fonds secondaires */
+    --color-background: #1a1a1a;
+    --color-foreground: #ededed;
+    --color-accent: #c7a96b;
+    --color-accent-dark: #a88a4a;
+    --color-border: #c7a96b;
+    --color-muted: #174c43;
   }
 }
 
+/* Arrière-plan principal avec l'image de calligraphie */
 body {
-  background: var(--color-background);
-  color: var(--color-foreground);
+  background-image: url('/caligraphie.png');
+  background-color: var(--color-foreground); /* Fallback si l'image ne charge pas */
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  min-height: 100vh;
   font-family: var(--font-sans);
+  color: var(--color-foreground);
+  line-height: 1.6;
 }
 
-/* Liens et éléments interactifs */
+/* Overlay pour améliorer la lisibilité du contenu */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(248, 245, 239, 0.85); /* Overlay beige semi-transparent */
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Ajustements pour les conteneurs principaux */
+.page-container {
+  position: relative;
+  z-index: 1;
+}
+
+/* Amélioration de la lisibilité des cartes et sections */
+.bg-muted {
+  background-color: rgba(230, 240, 237, 0.95) !important;
+  backdrop-filter: blur(10px);
+}
+
+/* Amélioration des cartes avec effet de verre */
+.card, .bg-white, .bg-gray-800, .bg-gray-900 {
+  background-color: rgba(255, 255, 255, 0.9) !important;
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(199, 169, 107, 0.2);
+}
+
+/* Styles de base */
 a {
   color: var(--color-accent);
   text-decoration: none;
-  transition: color 0.2s;
-}
-a:hover {
-  color: var(--color-foreground);
+  transition: color 0.3s ease;
 }
 
-/* Titres */
+a:hover {
+  color: var(--color-accent-dark);
+}
+
 h1, h2, h3, h4, h5, h6 {
   color: var(--color-foreground);
-  font-family: var(--font-sans);
-}
-
-/* Boutons génériques */
-button, .btn {
-  background: var(--color-accent);
-  color: #fff;
-  border: none;
-  border-radius: 0.375rem;
-  padding: 0.5em 1.2em;
   font-weight: 600;
-  transition: background 0.2s;
+  line-height: 1.2;
 }
+
+button, .btn {
+  background-color: var(--color-accent);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
 button:hover, .btn:hover {
-  background: var(--color-accent-dark);
+  background-color: var(--color-accent-dark);
 }
 
-/* Bordures dorées pour certains éléments */
 .border-accent {
-  border-color: var(--color-border) !important;
+  border-color: var(--color-border);
 }
 
-/* Fond secondaire doux */
 .bg-muted {
-  background: var(--color-muted);
-}
+  background-color: var(--color-muted);
+} 

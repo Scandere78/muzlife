@@ -21,7 +21,7 @@ export default function Footer() {
 
 
       {/* Footer principal */}
-      <div className="bg-gradient-to-b from-[var(--color-background)] to-black text-white relative">
+        <div className="bg-[var(--color-foreground)] text-white relative">
         {/* Effet de backdrop similaire au Navbar */}
         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[var(--color-foreground)] backdrop-blur-sm"></div>
 
@@ -32,7 +32,7 @@ export default function Footer() {
             <div>
               <div className="flex items-center mb-4 sm:mb-6">
                 <Image 
-                  src="/muzlife.JPG" 
+                  src="/muzlife_v2.png" 
                   alt="MuzLife" 
                   width={40} 
                   height={40} 
@@ -40,26 +40,53 @@ export default function Footer() {
                 />
                 <div>
                   <h3 className="text-lg sm:text-xl lg:text-2xl font-bold">
-                    <span className="text-[var(--color-foreground)]">Muz</span>
+                    <span className="text-[var(--color-accent)]">Muz</span>
                     <span className="text-white ml-1">Life</span>
                   </h3>
                 </div>
               </div>
               <address className="not-italic text-gray-300 space-y-1 sm:space-y-2">
-                <p className="text-sm sm:text-sm ">Votre compagnon spirituel numérique</p>
-                <p className="text-sm sm:text-sm">📧 contact@muzlife.fr</p>
-                <p className="text-sm sm:text-sm">📞 +33 7 67 60 53 71</p>
+                <p className="text-sm sm:text-sm text-[var(--color-muted)]">Votre compagnon spirituel numérique</p>
+                
+                <a 
+                  href="mailto:contact@muzlife.fr" 
+                  className="text-sm sm:text-sm text-gray-300 hover:text-[var(--color-muted)] transition-colors underline"
+                  aria-label="Envoyer un mail à contact@muzlife.fr"
+                >
+                  📧 contact@muzlife.fr
+                </a>
+                <br />
+                
+                <a 
+                  href="https://wa.me/33767605371" 
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm sm:text-sm text-gray-300 hover:text-[var(--color-muted)] transition-colors underline"
+                  aria-label="Contacter sur WhatsApp au +33 7 67 60 53 71"
+                >
+                  💬 +33 7 67 60 53 71
+                </a>
+                <br />
+                <a 
+                  href="https://wa.me/33650875135" 
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm sm:text-sm text-gray-300 hover:text-[var(--color-muted)] transition-colors underline"
+                  aria-label="Contacter sur WhatsApp au +33 6 50 87 51 35"
+                >
+                  💬 +33 6 50 87 51 35
+                </a>
               </address>
             </div>
             
             {/* Navigation - style cohérent avec Navbar */}
             <div>
-              <h3 className="text-lg sm:text-xl font-semibold mb-4 sm:mb-6 text-green-400">Navigation</h3>
+              <h3 className="text-lg sm:text-xl font-semibold mb-4 sm:mb-6 text-[var(--color-background)]">Navigation</h3>
               <ul className="space-y-2 sm:space-y-3">
                 <li>
                   <Link 
                     href="/" 
-                    className="text-gray-300 hover:text-green-400 transition-colors text-lg font-medium flex items-center group"
+                    className="text-gray-300 hover:text-[var(--color-muted)] transition-colors text-lg font-medium flex items-center group"
                   >
                     <span className="mr-2 group-hover:translate-x-1 transition-transform">🏠</span>
                     Accueil

@@ -47,6 +47,21 @@ export const sourates = [
   { number: 46, slug: "al-ikhlas", nom_phonetique: "Al-Ikhlas" },
   { number: 47, slug: "al-falaq", nom_phonetique: "Al-Falaq" },
   { number: 48, slug: "an-nas", nom_phonetique: "An-Nas" },
+  { number: 49, slug: "al-masad", nom_phonetique: "Al-Masad" },
+  { number: 50, slug: "al-ikhlas", nom_phonetique: "Al-Ikhlas" },
+  { number: 51, slug: "al-falaq", nom_phonetique: "Al-Falaq" },
+  { number: 52, slug: "an-nas", nom_phonetique: "An-Nas" },
+  { number: 53, slug: "al-masad", nom_phonetique: "Al-Masad" },
+  { number: 54, slug: "al-ikhlas", nom_phonetique: "Al-Ikhlas" },
+  { number: 55, slug: "al-falaq", nom_phonetique: "Al-Falaq" },
+  { number: 56, slug: "an-nas", nom_phonetique: "An-Nas" },
+  { number: 57, slug: "al-masad", nom_phonetique: "Al-Masad" },
+  { number: 58, slug: "al-ikhlas", nom_phonetique: "Al-Ikhlas" },
+  { number: 59, slug: "al-falaq", nom_phonetique: "Al-Falaq" },
+  { number: 60, slug: "an-nas", nom_phonetique: "An-Nas" },
+  { number: 61, slug: "al-masad", nom_phonetique: "Al-Masad" },
+  { number: 62, slug: "al-ikhlas", nom_phonetique: "Al-Ikhlas" },
+  { number: 63, slug: "al-falaq", nom_phonetique: "Al-Falaq" },
   // ... complète la liste si besoin
 ];
 

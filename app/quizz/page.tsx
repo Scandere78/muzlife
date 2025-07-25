@@ -8,7 +8,7 @@ export default function QuizPage() {
   const [selectedDifficulty, setSelectedDifficulty] = useState<'facile' | 'moyen' | 'difficile'>('moyen');
 
   return (
-    <div className="max-w-2xl mx-auto py-10 px-4 min-h-screen" style={{ background: 'var(--color-background)', color: 'var(--color-foreground)' }}>
+    <div className="max-w-2xl mx-auto py-10 px-4 min-h-screen" style={{ background: 'transparent', color: 'var(--color-foreground)' }}>
       <h1 className="text-3xl font-bold text-[var(--color-accent)] text-center mb-6">Quiz Islamique</h1>
       
       {/* Sélection de difficulté */}

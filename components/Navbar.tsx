@@ -68,7 +68,7 @@ const Navbar: React.FC = () => {
             {/* Logo avec image et texte */}
             <div className="flex-shrink-0">
               <Link href="/" className="font-bold text-3xl flex items-center">
-                <Image src="/muzlife.JPG" alt="MuzLife" width={48} height={48} className="h-12 w-12 mr-3" />
+                <Image src="/muzlife_v2.png" alt="MuzLife" width={48} height={48} className="h-12 w-12 mr-3" />
                 <span className="text-[var(--color-foreground)]">Muz</span>
                 <span className="text-white ml-2">Life</span>
               </Link>
@@ -76,16 +76,16 @@ const Navbar: React.FC = () => {
             {/* Desktop Menu */}
             <div className="hidden md:flex items-center">
               <div className="flex items-center space-x-4">
-                <Link href="/lecture" className="text-[var(--color-background)] hover:text-[var(--color-accent)] px-4 py-2.5 rounded-md transition-colors text-lg font-medium">
+                <Link href="/lecture" className="text-white hover:text-[var(--color-muted)] px-4 py-2.5 rounded-md transition-colors text-lg font-medium">
                 🧑‍🏫 Lecture
                 </Link>
-                <Link href="/sourates" className="text-[var(--color-background)] hover:text-[var(--color-foreground)] px-4 py-2.5 rounded-md transition-colors text-lg font-medium">
+                <Link href="/sourates" className="text-white hover:text-[var(--color-muted)] px-4 py-2.5 rounded-md transition-colors text-lg font-medium">
                 🎧 Écoute
                 </Link>
-                <Link href="/quizz" className="text-[var(--color-background)] hover:text-[var(--color-accent)] px-4 py-2.5 rounded-md transition-colors text-lg font-medium">
+                <Link href="/quizz" className="text-white hover:text-[var(--color-muted)] px-4 py-2.5 rounded-md transition-colors text-lg font-medium">
                 🧠 Quizz
                 </Link>
-                <Link href="/about" className="text-[var(--color-background)] hover:text-[var(--color-accent)] px-4 py-2.5 rounded-md transition-colors text-lg font-medium">
+                <Link href="/about" className="text-white hover:text-[var(--color-muted)] px-4 py-2.5 rounded-md transition-colors text-lg font-medium">
                 👤 À propos
                 </Link>
               </div>
@@ -96,13 +96,13 @@ const Navbar: React.FC = () => {
                 <div className="relative">
                   <Button
                     onClick={() => setShowDropdown(!showDropdown)}
-                    className="flex items-center bg-gradient-to-r from-green-600 to-green-500 text-white px-6 py-2.5 rounded-full hover:shadow-lg transition-all border border-green-500/30 group"
+                    className="flex items-center bg-gradient-to-r from-[var(--color-foreground)] to-[var(--color-accent)] text-white px-6 py-2.5 rounded-full hover:shadow-lg transition-all border border-green-500/30 group"
                     variant="default"
                   >
                     {user?.avatar ? (
                       <Image src={user.avatar} alt={user.name} width={32} height={32} className="h-8 w-8 rounded-full mr-2.5 border border-white/30" />
                     ) : (
-                      <div className="h-8 w-8 bg-green-700 rounded-full mr-2.5 flex items-center justify-center text-white text-sm font-bold border border-white/30">
+                      <div className="h-8 w-8 bg-[var(--color-foreground)] rounded-full mr-2.5 flex items-center justify-center text-white text-sm font-bold border border-white/30">
                         {user?.name?.charAt(0) || "U"}
                       </div>
                     )}
@@ -207,20 +207,20 @@ const Navbar: React.FC = () => {
             isMenuOpen ? "translate-x-0 opacity-100" : "translate-x-full opacity-0"
           }`}
         >
-          <div className="bg-gradient-to-b from-green-600 to-green-500 rounded-xl overflow-hidden">
+          <div className="bg-gradient-to-b from-[var(--color-foreground)] to-[var(--color-foreground)] rounded-xl overflow-hidden backdrop-blur-sm">
             {/* En-tête du menu avec compte */}
             {isLoggedIn ? (
               <div className="p-4 bg-black/20 flex items-center">
                 {user?.avatar ? (
                   <Image src={user.avatar} alt={user.name} width={48} height={48} className="h-12 w-12 rounded-full border border-white/30" />
                 ) : (
-                  <div className="h-12 w-12 bg-green-700 rounded-full flex items-center justify-center text-white text-lg font-bold border border-white/30">
+                  <div className="h-12 w-12 bg-[var(--color-foreground)] rounded-full flex items-center justify-center text-[var(--color-background)] text-lg font-bold border border-white/30">
                     {user?.name?.charAt(0) || "U"}
                   </div>
                 )}
                 <div className="ml-3">
-                  <p className="text-white font-medium truncate max-w-[180px]">{user?.name}</p>
-                  <p className="text-green-200 text-xs truncate max-w-[180px]">{user?.email}</p>
+                  <p className="text-[var(--color-background)] font-medium truncate max-w-[180px]">{user?.name}</p>
+                  <p className="text-[var(--color-background)] text-xs truncate max-w-[180px]">{user?.email}</p>
                 </div>
               </div>
             ) : (
@@ -232,14 +232,14 @@ const Navbar: React.FC = () => {
                   }}
                   className="flex items-center text-white w-full"
                 >
-                  <div className="h-12 w-12 bg-green-700 rounded-full flex items-center justify-center mr-3 border border-white/30">
+                  <div className="h-12 w-12 bg-[var(--color-foreground)] rounded-full flex items-center justify-center mr-3 border border-white/40">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
                     </svg>
                   </div>
                   <div className="text-left">
                     <p className="font-medium text-lg">Se connecter</p>
-                    <p className="text-sm text-green-200">Accéder à votre espace</p>
+                    <p className="text-sm text-[var(--color-background)]">Accéder à votre espace</p>
                   </div>
                 </button>
               </div>
@@ -252,56 +252,56 @@ const Navbar: React.FC = () => {
                   className={`flex items-center px-3 py-3 rounded-lg transition-colors ${
                     isActive("/lecture")
                       ? "bg-white/20 text-white"
-                      : "text-white/90 hover:bg-white/10 hover:text-white"
+                      : "text-white hover:text-[var(--color-background)] hover:bg-white/10"
                   }`}
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-3" fill="none" viewBox="0 0 24 24" stroke="var(--color-muted)">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                   </svg>
-                  <span className="text-lg">Lecture</span>
+                  <span className="text-lg text-[var(--color-muted)]">Lecture</span>
                 </Link>
                 <Link
                   href="/sourates"
                   className={`flex items-center px-3 py-3 rounded-lg transition-colors ${
                     isActive("/sourates")
                       ? "bg-white/20 text-white"
-                      : "text-white/90 hover:bg-white/10 hover:text-white"
+                      : "text-white hover:text-[var(--color-background)] hover:bg-white/10"
                   }`}
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-3" fill="none" viewBox="0 0 24 24" stroke="var(--color-muted)">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
                   </svg>
-                  <span className="text-lg">Écoute</span>
+                  <span className="text-lg text-[var(--color-muted)]">Écoute</span>
                 </Link>
                 <Link
                   href="/quizz"
                   className={`flex items-center px-3 py-3 rounded-lg transition-colors ${
                     isActive("/quizz")
                       ? "bg-white/20 text-white"
-                      : "text-white/90 hover:bg-white/10 hover:text-white"
+                      : "text-white hover:text-[var(--color-background)] hover:bg-white/10"
                   }`}
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-3" fill="none" viewBox="0 0 24 24" stroke="var(--color-muted)">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
-                  <span className="text-lg">Quizz</span>
+                  <span className="text-lg text-[var(--color-muted)]">Quizz</span>
                 </Link>
                 <Link
                   href="/about"
                   className={`flex items-center px-3 py-3 rounded-lg transition-colors ${
                     isActive("/about")
                       ? "bg-white/20 text-white"
-                      : "text-white/90 hover:bg-white/10 hover:text-white"
+                      : "text-white hover:text-[var(--color-background)] hover:bg-white/10"
                   }`}
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-3" fill="none" viewBox="0 0 24 24" stroke="var(--color-muted)">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
-                  <span className="text-lg">À propos</span>
+                  <span className="text-lg text-[var(--color-muted)]">À propos</span>
                 </Link>
               </div>
             </div>
@@ -313,7 +313,7 @@ const Navbar: React.FC = () => {
                     href="/profile"
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    <div className="flex items-center px-3 py-3 rounded-lg text-white/90 hover:bg-white/10 hover:text-white transition-colors">
+                    <div className="flex items-center px-3 py-3 rounded-lg text-white hover:text-[var(--color-accent)] hover:bg-white/10 transition-colors">
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                       </svg>
@@ -324,7 +324,7 @@ const Navbar: React.FC = () => {
                     href="/dashboard"
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    <div className="flex items-center px-3 py-3 rounded-lg text-white/90 hover:bg-white/10 hover:text-white transition-colors">
+                    <div className="flex items-center px-3 py-3 rounded-lg text-white hover:text-[var(--color-accent)] hover:bg-white/10 transition-colors">
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                       </svg>

@@ -105,7 +105,7 @@ const AboutPage: React.FC = () => {
         <span className="text-2xl mr-3">{feature.icon}</span>
         <h3 className="text-lg font-semibold text-[var(--color-foreground)]">{feature.name}</h3>
       </div>
-      <p className="text-[var(--color-muted)] leading-relaxed">{feature.description}</p>
+      <p className="text-[var(--color-foreground)] leading-relaxed">{feature.description}</p>
     </div>
   );
 
@@ -130,9 +130,9 @@ const AboutPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen" style={{ background: 'var(--color-background)', color: 'var(--color-foreground)' }}>
+    <div className="min-h-screen" style={{ background: 'transparent', color: 'var(--color-foreground)' }}>
       {/* Header Section */}
-      <div className="bg-[var(--color-accent)] text-white py-16">
+      
         <div className="container mx-auto px-4 text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
             À propos de Muzlife</h1>
@@ -140,7 +140,7 @@ const AboutPage: React.FC = () => {
             La plateforme communautaire musulmane gamifiée
           </p>
         </div>
-      </div>
+    
 
       <div className="container mx-auto px-4 py-12">
         {/* Introduction */}
@@ -158,7 +158,7 @@ const AboutPage: React.FC = () => {
           <h2 className="text-2xl font-bold text-[var(--color-accent)] mb-4">
             Rencontrez {mascot.name}, notre mascotte
           </h2>
-          <p className="text-[var(--color-muted)] max-w-2xl mx-auto leading-relaxed">
+          <p className="text-[var(--color-foreground)] max-w-2xl mx-auto leading-relaxed">
             {mascot.description}
           </p>
         </div>

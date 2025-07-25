@@ -27,7 +27,7 @@ export default function HomePage() {
   ];
 
   return (
-    <div className="py-12 min-h-screen navbar-safe" style={{ background: 'var(--color-background)', color: 'var(--color-foreground)' }}>
+    <div className="py-12 min-h-screen navbar-safe" style={{ background: 'transparent', color: 'var(--color-foreground)' }}>
       {/* Présentation */}
       <Navbar />
       <div className="text-center px-4 max-w-4xl mx-auto">
