@@ -17,21 +17,21 @@ export default function Footer() {
   }
   
   return (
-    <footer className="relative">
+    <footer className="relative w-screen overflow-x-hidden">
       {/* Gradient de transition */}
-      <div className="h-32 bg-gradient-to-b from-gray-800 to-gray-900"></div>
-      
+      <div className="h-20 sm:h-24 md:h-32 bg-gradient-to-b from-gray-800 to-gray-900"></div>
+
       {/* Footer principal */}
       <div className="bg-gradient-to-b from-gray-900 to-black text-white relative">
         {/* Effet de backdrop similaire au Navbar */}
         <div className="absolute inset-0 bg-gradient-to-b from-green-300/5 to-transparent backdrop-blur-sm"></div>
-        
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+
+        <div className="relative z-10 w-full sm:max-w-7xl sm:mx-auto px-0 py-8 sm:py-10 md:py-12">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 lg:gap-12">
             
             {/* Informations - avec logo comme le Navbar */}
             <div>
-              <div className="flex items-center mb-6">
+              <div className="flex items-center mb-4 sm:mb-6">
                 <Image 
                   src="/muzlife.JPG" 
                   alt="MuzLife" 
@@ -40,23 +40,23 @@ export default function Footer() {
                   className="h-10 w-10 mr-3 rounded-lg"
                 />
                 <div>
-                  <h3 className="text-xl font-bold">
+                  <h3 className="text-lg sm:text-xl lg:text-2xl font-bold">
                     <span className="text-green-500">Muz</span>
                     <span className="text-white ml-1">Life</span>
                   </h3>
                 </div>
               </div>
-              <address className="not-italic text-gray-300 space-y-2">
-                <p className="text-sm">Votre compagnon spirituel numérique</p>
-                <p className="text-sm">📧 contact@muzlife.com</p>
-                <p className="text-sm">📞 +33 1 23 45 67 89</p>
+              <address className="not-italic text-gray-300 space-y-1 sm:space-y-2">
+                <p className="text-xs sm:text-sm">Votre compagnon spirituel numérique</p>
+                <p className="text-xs sm:text-sm">📧 contact@muzlife.com</p>
+                <p className="text-xs sm:text-sm">📞 +33 1 23 45 67 89</p>
               </address>
             </div>
             
             {/* Navigation - style cohérent avec Navbar */}
             <div>
-              <h3 className="text-xl font-semibold mb-6 text-green-400">Navigation</h3>
-              <ul className="space-y-3">
+              <h3 className="text-lg sm:text-xl font-semibold mb-4 sm:mb-6 text-green-400">Navigation</h3>
+              <ul className="space-y-2 sm:space-y-3">
                 <li>
                   <Link 
                     href="/" 
@@ -107,12 +107,12 @@ export default function Footer() {
             
             {/* Communauté & Réseaux sociaux */}
             <div>
-              <h3 className="text-xl font-semibold mb-6 text-green-400">Communauté</h3>
-              <p className="text-gray-300 text-sm mb-4">
+              <h3 className="text-lg sm:text-xl font-semibold mb-4 sm:mb-6 text-green-400">Communauté</h3>
+              <p className="text-gray-300 text-xs sm:text-sm mb-2 sm:mb-4">
                 Rejoignez notre communauté sur les réseaux sociaux
               </p>
-              
-              <div className="flex space-x-4">
+
+              <div className="flex flex-wrap gap-2 sm:gap-4">
                 <a 
                   href="#" 
                   aria-label="Facebook" 
@@ -154,25 +154,25 @@ export default function Footer() {
 
             {/* Newsletter - style harmonisé */}
             <div>
-              <h3 className="text-xl font-semibold mb-6 text-green-400">Newsletter</h3>
-              <p className="text-gray-300 text-sm mb-4 leading-relaxed">
+              <h3 className="text-lg sm:text-xl font-semibold mb-4 sm:mb-6 text-green-400">Newsletter</h3>
+              <p className="text-gray-300 text-xs sm:text-sm mb-2 sm:mb-4 leading-relaxed">
                 Restez informé de nos dernières actualités, nouveautés et conseils spirituels.
               </p>
               <NewsletterForm variant="footer" />
             </div>
           </div>
           
-          {/* Footer bottom - style similaire au Navbar */}
-          <div className="border-t border-gray-700/50 mt-12 pt-8">
-            <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+          {/* Footer bottom - style similaire au Navbar, responsive */}
+          <div className="border-t border-gray-700/50 mt-8 sm:mt-12 pt-6 sm:pt-8">
+            <div className="flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-0">
               <div className="flex items-center space-x-2">
-                <p className="text-gray-400 text-sm">
+                <p className="text-gray-400 text-xs sm:text-sm">
                   © {currentYear} <span className="text-green-400 font-medium">MuzLife</span>. 
                   Tous droits réservés.
                 </p>
               </div>
-              
-              <div className="flex space-x-6 text-sm">
+
+              <div className="flex flex-wrap gap-3 sm:gap-6 text-xs sm:text-sm">
                 <Link 
                   href="/mentions-legales" 
                   className="text-gray-400 hover:text-green-400 transition-colors"
