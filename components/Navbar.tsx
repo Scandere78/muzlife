@@ -79,7 +79,7 @@ const Navbar: React.FC = () => {
                 <Link href="/lecture" className="text-white hover:text-[var(--color-muted)] px-4 py-2.5 rounded-md transition-colors text-lg font-medium">
                 🧑‍🏫 Lecture
                 </Link>
-                <Link href="/sourates" className="text-white hover:text-[var(--color-muted)] px-4 py-2.5 rounded-md transition-colors text-lg font-medium">
+                <Link href="/ecoute" className="text-white hover:text-[var(--color-muted)] px-4 py-2.5 rounded-md transition-colors text-lg font-medium">
                 🎧 Écoute
                 </Link>
                 <Link href="/quizz" className="text-white hover:text-[var(--color-muted)] px-4 py-2.5 rounded-md transition-colors text-lg font-medium">
@@ -262,9 +262,9 @@ const Navbar: React.FC = () => {
                   <span className="text-lg text-[var(--color-muted)]">Lecture</span>
                 </Link>
                 <Link
-                  href="/sourates"
+                  href="/ecoute"
                   className={`flex items-center px-3 py-3 rounded-lg transition-colors ${
-                    isActive("/sourates")
+                    isActive("/ecoute")
                       ? "bg-white/20 text-white"
                       : "text-white hover:text-[var(--color-background)] hover:bg-white/10"
                   }`}

@@ -58,7 +58,7 @@ export default function HomePage() {
         </div>
 
         <div className="transition-all duration-300 transform hover:-translate-y-1">
-          <Link href="/sourates" className="block">
+          <Link href="/ecoute" className="block">
             <div className="bg-[var(--color-muted)] p-8 rounded-xl shadow-lg cursor-pointer hover:shadow-[var(--color-accent)]/20 hover:bg-[var(--color-background)] transition-all duration-300 border border-[var(--color-border)] h-full">
               <div className="bg-[var(--color-accent)]/10 w-16 h-16 rounded-full flex items-center justify-center mb-4">
                 <span className="text-3xl">🎧</span>
@@ -107,7 +107,7 @@ export default function HomePage() {
           {recitateurs.map((recitateur) => (
             <SwiperSlide key={recitateur.id} className="pb-10">
               <Link
-                href={`/sourates?recitateur=${recitateur.id}`}
+                href={`/ecoute?recitateur=${recitateur.id}`}
                 className="block"
               >
                 <div className="bg-[var(--color-muted)] p-6 rounded-xl shadow-lg text-center cursor-pointer hover:bg-[var(--color-background)] hover:shadow-[var(--color-accent)]/10 transition-all duration-300 transform hover:-translate-y-1 border border-[var(--color-border)]">
@@ -132,7 +132,7 @@ export default function HomePage() {
 
       {/* Section d'appel à l'action */}
       <div className="mt-16 text-center px-4 pb-10">
-        <Link href="/sourates">
+        <Link href="/ecoute">
           <button className="px-8 py-4 rounded-lg text-white font-bold text-lg border-accent bg-[var(--color-accent)] hover:shadow-lg hover:shadow-[var(--color-accent)]/20 transition-all duration-300 transform hover:-translate-y-1">
             Commencer à écouter
           </button>

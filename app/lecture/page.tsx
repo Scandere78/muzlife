@@ -75,7 +75,7 @@ export default function Lecture() {
                   aria-label="Partager la sourate" 
                   className="p-2 rounded-full hover:bg-[var(--color-foreground)]/20 transition-colors"
                   onClick={async () => {
-                    await navigator.clipboard.writeText(window.location.origin + `/sourates/${sourate.slug}`);
+                    await navigator.clipboard.writeText(window.location.origin + `/ecoute/${sourate.slug}`);
                     setCopiedSlug(sourate.slug);
                     setTimeout(() => setCopiedSlug(null), 1500);
                   }}

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { slugToNumber } from "../../../lib/sourateSlugs";
+import { slugToNumber } from "../../../lib/ecoutelugs";
 
 // Récupère le texte arabe et la traduction française d'une sourate via l'API alquran.cloud
 async function fetchSourateWithTranslation(id: string): Promise<any | null> {

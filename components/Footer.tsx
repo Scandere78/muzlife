@@ -103,7 +103,7 @@ export default function Footer() {
                 </li>
                 <li>
                   <Link 
-                    href="/sourates" 
+                    href="/ecoute" 
                     className="text-gray-300 hover:text-green-400 transition-colors text-lg font-medium flex items-center group"
                   >
                     <span className="mr-2 group-hover:translate-x-1 transition-transform">🎧</span>

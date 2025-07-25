@@ -13,7 +13,7 @@ const SouratesList: React.FC = () => {
         {sourates.map((sourate, index) => (
           <li key={sourate.number} className="mb-4 p-4 bg-[var(--color-muted)] rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 border border-[var(--color-border)] w-full mx-auto">
             <div className="flex items-center justify-between">
-              <Link href={`/sourates/${sourate.slug}`} className="flex-1">
+              <Link href={`/ecoute/${sourate.slug}`} className="flex-1">
                 <div className="flex items-center space-x-4">
                   <div className="w-12 h-12 bg-[var(--color-foreground)] text-[var(--color-accent)] rounded-full flex items-center justify-center text-lg font-bold">
                     {sourate.number}
@@ -42,7 +42,7 @@ const SouratesList: React.FC = () => {
                   aria-label="Partager la sourate" 
                   className="p-2 rounded-full hover:bg-[var(--color-foreground)]/20 transition-colors"
                   onClick={async () => {
-                    await navigator.clipboard.writeText(window.location.origin + `/sourates/${sourate.slug}`);
+                    await navigator.clipboard.writeText(window.location.origin + `/ecoute/${sourate.slug}`);
                     setCopiedSlug(sourate.slug);
                     setTimeout(() => setCopiedSlug(null), 1500);
                   }}
