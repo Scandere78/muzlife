@@ -354,7 +354,7 @@ export default function QuizPage() {
         ))}
       </div>
       <div className="flex justify-center gap-4 mb-6">
-        <label className="flex items-center gap-2">
+        <label className="flex text-white items-center gap-2">
           <input
             type="radio"
             name="difficulty"
@@ -365,7 +365,7 @@ export default function QuizPage() {
           />
           Facile
         </label>
-        <label className="flex items-center gap-2">
+        <label className="flex text-white items-center gap-2">
           <input
             type="radio"
             name="difficulty"
@@ -376,7 +376,7 @@ export default function QuizPage() {
           />
           Normal
         </label>
-        <label className="flex items-center gap-2">
+        <label className="flex text-white items-center gap-2">
           <input
             type="radio"
             name="difficulty"

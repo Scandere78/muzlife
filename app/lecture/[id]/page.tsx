@@ -48,8 +48,9 @@ async function fetchSourateWithTranslation(id: string): Promise<ApiSourate | nul
 }
 
 
-export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
-  const sourate = await fetchSourateWithTranslation(params.id);
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params;
+  const sourate = await fetchSourateWithTranslation(id);
   return {
     title: sourate ? `${sourate.englishName} - Sourate ${sourate.number} | MuzLife` : "Sourate inconnue | MuzLife",
     description: sourate ? `Détail de la sourate ${sourate.englishName} (${sourate.name})` : "Détail d'une sourate du Coran sur MuzLife."
@@ -60,11 +61,12 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
 
 // Correction du typage pour Next.js 15+ (App Router)
 interface PageParams {
-  params: { id: string }
+  params: Promise<{ id: string }>
 }
 
 export default async function SouratePage({ params }: PageParams) {
-  const sourate = await fetchSourateWithTranslation(params.id);
+  const { id } = await params;
+  const sourate = await fetchSourateWithTranslation(id);
   if (!sourate) {
     return (
       <main className="max-w-3xl mx-auto py-10 px-4">

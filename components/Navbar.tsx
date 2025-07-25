@@ -60,8 +60,8 @@ const Navbar: React.FC = () => {
     <>
       <nav className={`fixed w-full top-0 z-50 transition-all duration-300 font-sans h-20 ${
         scrolled
-          ? "bg-gradient-to-b from-black via-black/95 to-black/85 shadow-lg"
-          : "bg-gradient-to-b from-black/80 via-black/60 to-transparent backdrop-blur-sm"
+          ? "bg-gradient-to-b from-green-300/30 to-transparent"
+          : "bg-gradient-to-b from-green-300/30 to-transparent"
       }`}>
         <div className="max-w-7xl mx-auto h-full px-4 md:px-6">
           <div className="flex items-center h-full justify-between">
@@ -77,16 +77,16 @@ const Navbar: React.FC = () => {
             <div className="hidden md:flex items-center">
               <div className="flex items-center space-x-4">
                 <Link href="/lecture" className="text-white hover:text-green-400 px-4 py-2.5 rounded-md transition-colors text-lg font-medium">
-                  Lecture
+                🧑‍🏫 Lecture
                 </Link>
                 <Link href="/sourates" className="text-white hover:text-green-400 px-4 py-2.5 rounded-md transition-colors text-lg font-medium">
-                  Écoute
+                🎧 Écoute
                 </Link>
                 <Link href="/quizz" className="text-white hover:text-green-400 px-4 py-2.5 rounded-md transition-colors text-lg font-medium">
-                  Quizz
+                🧠 Quizz
                 </Link>
                 <Link href="/about" className="text-white hover:text-green-400 px-4 py-2.5 rounded-md transition-colors text-lg font-medium">
-                  À propos
+                👤 À propos
                 </Link>
               </div>
             </div>

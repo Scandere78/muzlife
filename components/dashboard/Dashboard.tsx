@@ -312,10 +312,10 @@ export default function Dashboard() {
                     <div className="flex justify-between text-xs text-gray-400 mb-1">
                       <span>Progression</span>
                       <span>
-                        {(stats?.readingStats?.todayCount ?? 0)} / {newGoal} versets
+                        {(stats?.readingStats?.todayVerses ?? 0)} / {newGoal} versets
                       </span>
                     </div>
-                    <Progress value={Math.min(100, Math.round(((stats?.readingStats?.todayCount ?? 0) / newGoal) * 100))} className="h-2" />
+                    <Progress value={Math.min(100, Math.round(((stats?.readingStats?.todayVerses ?? 0) / newGoal) * 100))} className="h-2" />
                   </div>
                 </div>
                 <div className="flex space-x-3 pt-4">

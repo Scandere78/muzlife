@@ -1,7 +1,7 @@
 "use client";
 
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, use } from "react";
 import Image from "next/image";
 import { FaPlay, FaPause, FaStepForward, FaStepBackward, FaBookmark } from "react-icons/fa";
 import ReadingTracker from "../../../components/ReadingTracker";
@@ -60,7 +60,7 @@ const souratesNames: string[] = [
 ];
 
 type RecitationsProps = {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 };
 
 
@@ -71,7 +71,7 @@ export default function Recitations({ params }: RecitationsProps) {
   const { user, getReadingProgress } = useAuth();
   // const router = useRouter(); // Optionnel, à supprimer si non utilisé
   // Correction : inutile d'utiliser use(params), params est déjà passé par Next.js App Router
-  const id = params.id;
+  const { id } = use(params);
   const reciterFolder = recitationsMap[id];
   const reciterInfo = recitersInfo[id];
   const [sourates, setSourates] = useState<{ id: string; name: string; audioUrl: string }[]>([]);
