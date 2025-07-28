@@ -204,7 +204,7 @@ export default function Footer() {
                   </svg>
                 </a>
                 <a 
-                  href="#" 
+                  href="#https://www.instagram.com/muzlife.off/" 
                   aria-label="Instagram" 
                   className="group p-3 bg-gray-800/50 rounded-full hover:bg-pink-600/20 border border-gray-700 hover:border-pink-500/50 transition-all duration-300"
                 >

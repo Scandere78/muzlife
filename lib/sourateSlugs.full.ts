@@ -1,4 +1,5 @@
 // Liste complète des 114 sourates du Coran avec nom arabe, nom phonétique, slug et traduction anglaise
+// Copie ce contenu dans sourateSlugs.ts pour remplacer la liste actuelle
 export const sourates = [
   { number: 1, slug: "al-faatiha", nom_phonetique: "Al-Faatiha", nom_arabe: "سورة الفاتحة", englishNameTranslation: "The Opening" },
   { number: 2, slug: "al-baqara", nom_phonetique: "Al-Baqara", nom_arabe: "سورة البقرة", englishNameTranslation: "The Cow" },
@@ -115,20 +116,3 @@ export const sourates = [
   { number: 113, slug: "al-falaq", nom_phonetique: "Al-Falaq", nom_arabe: "سورة الفلق", englishNameTranslation: "The Daybreak" },
   { number: 114, slug: "an-nas", nom_phonetique: "An-Nas", nom_arabe: "سورة الناس", englishNameTranslation: "Mankind" },
 ];
-
-export function slugToNumber(slug: string): number | null {
-  const found = sourates.find(s => s.slug === slug);
-  return found ? found.number : null;
-}
-
-export function numberToSlug(number: number): string | null {
-  const found = sourates.find(s => s.number === number);
-  return found ? found.slug : null;
-}
-
-export function slugify(str: string) {
-  return str
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
-} 
