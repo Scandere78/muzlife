@@ -59,7 +59,7 @@ export default function HorairesPage() {
       </div>
 
       {/* Section d'informations */}
-      <div className="bg-white/70 border-t">
+      <div className="bg-white/20 border-t backdrop-blur-sm">
         <div className="max-w-4xl mx-auto px-6 py-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div>
