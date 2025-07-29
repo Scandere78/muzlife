@@ -21,9 +21,9 @@ export default function Footer() {
 
 
       {/* Footer principal */}
-        <div className="bg-[var(--color-foreground)] text-white relative">
+        <div className="bg-gradient-to-t from-[var(--color-foreground)]/90 via-[var(--color-foreground)]/60 to-transparent text-white relative">
         {/* Effet de backdrop similaire au Navbar */}
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[var(--color-foreground)] backdrop-blur-sm"></div>
+        <div className="absolute inset-0 from-transparent to-[var(--color-foreground)] bg-gradient-to-b "></div>
 
         <div className="relative z-10 w-full pl-4 sm:px-8 sm:max-w-7xl sm:mx-auto px-0 py-8 sm:py-10 md:py-12">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 lg:gap-12">
