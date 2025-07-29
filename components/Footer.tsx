@@ -195,7 +195,9 @@ export default function Footer() {
 
               <div className="flex flex-wrap gap-2 sm:gap-4">
                 <a 
-                  href="#" 
+                  href="https://www.facebook.com/muzlife.off/"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   aria-label="Facebook" 
                   className="group p-3 bg-gray-800/50 rounded-full hover:bg-blue-600/20 border border-gray-700 hover:border-blue-500/50 transition-all duration-300"
                 >
@@ -204,7 +206,9 @@ export default function Footer() {
                   </svg>
                 </a>
                 <a 
-                  href="#https://www.instagram.com/muzlife.off/" 
+                  href="https://www.instagram.com/muzlife.off/" 
+                  target="_blank"
+                  rel="noopener noreferrer"
                   aria-label="Instagram" 
                   className="group p-3 bg-gray-800/50 rounded-full hover:bg-pink-600/20 border border-gray-700 hover:border-pink-500/50 transition-all duration-300"
                 >
@@ -213,7 +217,9 @@ export default function Footer() {
                   </svg>
                 </a>
                 <a 
-                  href="#" 
+                  href="https://x.com/muzlife_off" 
+                  target="_blank"
+                  rel="noopener noreferrer"
                   aria-label="Twitter/X" 
                   className="group p-3 bg-gray-800/50 rounded-full hover:bg-gray-600/20 border border-gray-700 hover:border-gray-500/50 transition-all duration-300"
                 >

@@ -132,9 +132,9 @@ export default function HomePage() {
 
       {/* Section d'appel à l'action */}
       <div className="mt-16 text-center px-4 pb-10">
-        <Link href="/ecoute">
+        <Link href="/horaires">
           <button className="px-8 py-4 rounded-lg text-white font-bold text-lg border-accent bg-[var(--color-accent)] hover:shadow-lg hover:shadow-[var(--color-accent)]/20 transition-all duration-300 transform hover:-translate-y-1">
-            Commencer à écouter
+            Horaires de prière
           </button>
         </Link>
       </div>
