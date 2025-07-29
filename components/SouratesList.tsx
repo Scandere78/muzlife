@@ -6,11 +6,26 @@ import { sourates } from "../lib/sourateSlugs";
 
 const SouratesList: React.FC = () => {
   const [copiedSlug, setCopiedSlug] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState<string>("");
+
+  const filteredSourates = sourates.filter(sourate => 
+    sourate.nom_phonetique.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <div className="w-full max-w-4xl">
+      <div className="flex items-center gap-2 mb-4">
+        <input 
+          type="text" 
+          placeholder="Rechercher une sourate" 
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full p-2 rounded-lg border border-[var(--color-border)]" 
+        />
+        <button className="px-4 py-2 rounded-lg text-white font-bold text-lg border-accent bg-[var(--color-accent)] hover:shadow-lg hover:shadow-[var(--color-accent)]/20 transition-all duration-300 transform hover:-translate-y-1">Rechercher</button>
+      </div>
       <ul className="space-y-4">
-        {sourates.map((sourate, index) => (
+        {filteredSourates.map((sourate, index) => (
           <li key={sourate.number} className="mb-4 p-4 bg-[var(--color-muted)] rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 border border-[var(--color-border)] w-full mx-auto">
             <div className="flex items-center justify-between">
               <Link href={`/ecoute/${sourate.slug}`} className="flex-1">

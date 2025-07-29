@@ -64,7 +64,7 @@ export default function Footer() {
                   className="text-sm sm:text-sm text-gray-300 hover:text-[var(--color-muted)] transition-colors underline"
                   aria-label="Contacter sur WhatsApp au +33 7 67 60 53 71"
                 >
-                  💬 +33 7 67 60 53 71
+                  💬 Samy
                 </a>
                 <br />
                 <a 
@@ -74,7 +74,7 @@ export default function Footer() {
                   className="text-sm sm:text-sm text-gray-300 hover:text-[var(--color-muted)] transition-colors underline"
                   aria-label="Contacter sur WhatsApp au +33 6 50 87 51 35"
                 >
-                  💬 +33 6 50 87 51 35
+                  💬 Scandere
                 </a>
               </address>
 

@@ -80,8 +80,8 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
     return (
       <main className="max-w-3xl mx-auto py-10 px-4">
         <div className="mb-6">
-          <a href="/ecoute" className="inline-flex items-center px-4 py-2 rounded-full bg-[var(--color-muted)] hover:scale-105 text-white font-medium transition-colors shadow-sm">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="var(--color-muted)">
+          <a href="/ecoute" className="inline-flex items-center px-4 py-2 rounded-full bg-[var(--color-foreground)] hover:scale-105 text-white font-medium transition-colors shadow-sm">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="var(--color-foreground)">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
             Retour à la liste

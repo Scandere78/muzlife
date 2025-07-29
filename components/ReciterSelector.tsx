@@ -26,12 +26,12 @@ interface ReciterSelectorProps {
 const ReciterSelector: React.FC<ReciterSelectorProps> = ({ selectedReciter, onChange }) => {
   return (
     <div className="mb-4 flex items-center gap-2">
-      <label htmlFor="reciter-select" className="font-medium">Choisir un récitant :</label>
+        <label htmlFor="reciter-select" className="font-medium  bg-gold-500 rounded-full text-[var(--color-foreground)] px-4 py-2">Choix du récitant :</label>
       <select
-        id="reciter-select"
+        id="reciter-select" 
         value={selectedReciter}
         onChange={e => onChange(e.target.value)}
-        className="px-3 py-2 rounded border border-gray-300 focus:outline-none focus:ring"
+        className="px-3 py-2 rounded border border-[var(--color-foreground)] focus:outline-none focus:ring text-[var(--color-foreground)]"
       >
         {RECITERS.map(reciter => (
           <option key={reciter.id} value={reciter.id}>{reciter.name}</option>
