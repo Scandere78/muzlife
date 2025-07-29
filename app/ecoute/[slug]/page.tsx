@@ -1,11 +1,10 @@
 import { slugToNumber } from '../../../lib/sourateSlugs';
 import { Metadata } from 'next';
 import SourateDetail from '../../../components/SourateDetail';
+// This is a server component, do not use useState
 
 // Typage pour Next.js App Router
-interface PageParams {
-  params: Promise<{ slug: string }>
-}
+// Next.js App Router expects params: { slug: string }
 
 // Fonction pour récupérer les données de la sourate
 async function fetchSourateData(num: number) {
@@ -39,27 +38,23 @@ async function fetchTranslation(num: number) {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const num = slugToNumber(slug);
-  
   if (!num) {
     return {
       title: 'Sourate non trouvée - MuzLife',
-      description: 'La sourate demandée n\'existe pas.'
+      description: "La sourate demandée n'existe pas."
     };
   }
-
   const sourateData = await fetchSourateData(num);
   const sourate = sourateData?.data;
-
   return {
     title: `${sourate?.name || 'Sourate'} - MuzLife`,
     description: `Écoutez la récitation de ${sourate?.name || 'cette sourate'} par Sheikh Alafasy sur MuzLife.`,
   };
 }
 
-export default async function SouratePage({ params }: PageParams) {
+export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const num = slugToNumber(slug);
-  
   if (!num) {
     return (
       <main className="max-w-3xl mx-auto py-10 px-4">
@@ -75,15 +70,12 @@ export default async function SouratePage({ params }: PageParams) {
       </main>
     );
   }
-
   const [sourateData, translationData] = await Promise.all([
     fetchSourateData(num),
     fetchTranslation(num)
   ]);
-
   const sourate = sourateData?.data;
   const translation = translationData?.data;
-
   if (!sourate) {
     return (
       <main className="max-w-3xl mx-auto py-10 px-4">
@@ -99,6 +91,14 @@ export default async function SouratePage({ params }: PageParams) {
       </main>
     );
   }
-
-  return <SourateDetail sourate={sourate} translation={translation} />;
+  // Ajout de la sélection d'imam et du bouton Lecture complète
+  // La logique audio et UI sera gérée dans SourateDetail
+  return (
+    <SourateDetail
+      sourate={sourate}
+      translation={translation}
+      showReciterSelector={true}
+      showPlayAllButton={true}
+    />
+  );
 }

@@ -1,17 +1,51 @@
 "use client";
 
 import React, { useState, useRef } from "react";
+import AudioPlayer from "./AudioPlayer";
 import Link from "next/link";
+
+import ReciterSelector, { RECITERS } from './ReciterSelector';
 
 interface SourateDetailProps {
   sourate: any;
   translation: any;
+  showReciterSelector?: boolean;
+  showPlayAllButton?: boolean;
 }
 
-const SourateDetail: React.FC<SourateDetailProps> = ({ sourate, translation }) => {
+const getRecitationUrl = (reciterId: string, sourateId: number) => {
+  // Pad surah number to 3 digits for mp3quran.net
+  const paddedId = String(sourateId).padStart(3, '0');
+  return reciterId === "balilah"
+    ? `https://server6.mp3quran.net/balilah/${paddedId}.mp3`
+    : reciterId === "jhn"
+    ? `https://server13.mp3quran.net/jhn/${paddedId}.mp3`
+    : reciterId === "aabd-lrhmn-lshh-t"
+    ? `https://server16.mp3quran.net/a_alshahhat/Rewayat-Hafs-A-n-Assem/${paddedId}.mp3`
+    : reciterId === "afs"
+    ? `https://server8.mp3quran.net/afs/${paddedId}.mp3`
+    : reciterId === "maher"
+    ? `https://server12.mp3quran.net/maher/${paddedId}.mp3`
+    : reciterId === "h_dukhain"
+    ? `https://server16.mp3quran.net/h_dukhain/Rewayat-Hafs-A-n-Assem/${paddedId}.mp3`
+    : reciterId === "islam"
+    ? `https://server14.mp3quran.net/islam/Rewayat-Hafs-A-n-Assem/${paddedId}.mp3`
+    : reciterId === "soufi-1"
+    ? `https://server16.mp3quran.net/soufi/Rewayat-Khalaf-A-n-Hamzah/${paddedId}.mp3`
+    : reciterId === "sds"
+    ? `https://server11.mp3quran.net/sds/${paddedId}.mp3`
+    : `https://www.al-hamdoulillah.com/coran/mp3/files/${reciterId}/${paddedId}.mp3`;
+};
+
+const SourateDetail: React.FC<SourateDetailProps> = ({ sourate, translation, showReciterSelector, showPlayAllButton }) => {
   const [playingAyah, setPlayingAyah] = useState<number | null>(null);
   const [isPaused, setIsPaused] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [selectedReciter, setSelectedReciter] = useState<string>(RECITERS[0].id);
+  const [showGlobalPlayer, setShowGlobalPlayer] = useState(false);
+  const [globalPlayerProps, setGlobalPlayerProps] = useState<{src: string; title: string; reciter: string} | null>(null);
+
+  const sourateId = sourate?.number;
 
   const handleAudioPlay = (ayahNumber: number, audioUrl: string) => {
     // Si on clique sur le même verset qui joue déjà
@@ -73,6 +107,38 @@ const SourateDetail: React.FC<SourateDetailProps> = ({ sourate, translation }) =
         </Link>
       </div>
 
+      {/* Sélecteur d'imam */}
+      {showReciterSelector && (
+        <>
+          <ReciterSelector selectedReciter={selectedReciter} onChange={setSelectedReciter} />
+          {selectedReciter !== 'afs' && (
+            <div className="mb-4 p-3 rounded bg-yellow-100 text-yellow-900 text-sm border border-yellow-300">
+              La lecture verset par verset n'est disponible que pour Sheikh Alafasy. Pour les autres imams, cliquer sur un verset joue la sourate entière.
+            </div>
+          )}
+        </>
+      )}
+      {/* Lecture complète */}
+      {showPlayAllButton && (
+        <div className="mb-4 flex flex-col items-center gap-2">
+          <button
+            className="px-4 py-2 rounded bg-green-600 text-white font-semibold hover:bg-green-700 transition"
+            onClick={() => {
+              setShowGlobalPlayer(true);
+              setGlobalPlayerProps({
+                src: getRecitationUrl(selectedReciter, sourateId),
+                title: `${sourate.nom_phonetique} (${sourate.nom_arabe})`,
+                reciter: RECITERS.find(r => r.id === selectedReciter)?.name || selectedReciter
+              });
+              setPlayingAyah(-1); // -1 = lecture complète
+              setIsPaused(false);
+            }}
+          >
+            Lecture complète
+          </button>
+        </div>
+      )}
+
       {/* En-tête de la sourate */}
       <div className="text-center mb-8">
         <h1 className="text-3xl font-bold text-[var(--color-accent)] mb-2">{sourate.name}</h1>
@@ -86,7 +152,10 @@ const SourateDetail: React.FC<SourateDetailProps> = ({ sourate, translation }) =
           const translationAyah = translation?.ayahs?.[index];
           const isCurrentlyPlaying = playingAyah === ayah.numberInSurah;
           const isThisPaused = isCurrentlyPlaying && isPaused;
-          
+          // Pour Alafasy, jouer l'audio du verset. Pour les autres, jouer la sourate complète.
+          const ayahAudioUrl = selectedReciter === 'afs'
+            ? ayah.audio // audio du verset fourni par l'API pour Alafasy
+            : getRecitationUrl(selectedReciter, sourateId); // audio de la sourate complète pour les autres
           return (
             <div key={ayah.number} className="bg-[var(--color-muted)] rounded-lg p-6 shadow-sm border border-[var(--color-border)]">
               {/* En-tête du verset */}
@@ -103,7 +172,7 @@ const SourateDetail: React.FC<SourateDetailProps> = ({ sourate, translation }) =
                       ? 'bg-[var(--color-foreground)] hover:bg-[var(--color-foreground)]/80' 
                       : 'bg-[var(--color-accent)] hover:bg-[var(--color-accent-dark)]'
                   }`}
-                  onClick={() => handleAudioPlay(ayah.numberInSurah, ayah.audio)}
+                  onClick={() => handleAudioPlay(ayah.numberInSurah, ayahAudioUrl)}
                   aria-label={isCurrentlyPlaying ? (isThisPaused ? 'Reprendre le verset' : 'Mettre en pause') : 'Écouter le verset'}
                 >
                   {isCurrentlyPlaying ? (
@@ -146,6 +215,31 @@ const SourateDetail: React.FC<SourateDetailProps> = ({ sourate, translation }) =
           );
         })}
       </div>
+      {/* Affichage du lecteur global si demandé */}
+      {showGlobalPlayer && globalPlayerProps && (
+        <AudioPlayer
+          src={globalPlayerProps.src}
+          title={globalPlayerProps.title}
+          reciter={globalPlayerProps.reciter}
+          image={
+            (() => {
+              const reciters = [
+                { id: 'balilah', name: 'Bandar Balilah', image: '/img/bandar-balila.jpg' },
+                { id: 'jhn', name: 'Jahan', image: '/img/al.jpg' },
+                { id: 'aabd-lrhmn-lshh-t', name: 'Abderrahman Al Shahat', image: '/img/abderrahman-shahat.jpg' },
+                { id: 'afs', name: 'Alafasy', image: '/img/mishary.webp' },
+                { id: 'maher', name: 'Maher Al-Muaiqly', image: '/img/Maher.png' },
+                { id: 'h_dukhain', name: 'Haitham Dukhain', image: '/img/haitham.webp' },
+                { id: 'islam', name: 'Islam Sobhi', image: '/img/islam.png' },
+                { id: 'soufi-1', name: 'Soufi', image: '/img/abdul-rashid-ali-sufi.png' },
+                { id: 'sds', name: 'Saad Al-Ghamdi', image: '/img/saad-al-ghamdi.jpg' },
+              ];
+              const reciterObj = reciters.find(r => r.name === globalPlayerProps.reciter || r.id === selectedReciter);
+              return reciterObj?.image;
+            })()
+          }
+        />
+      )}
     </main>
   );
 };
