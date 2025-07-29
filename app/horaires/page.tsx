@@ -37,9 +37,9 @@ export const metadata: Metadata = {
  */
 export default function HorairesPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50">
+    <div className="min-h-screen ">
       {/* En-tête de la page */}
-      <div className="bg-white shadow-sm border-b">
+      <div className="bg-transparent shadow-sm border-b">
         <div className="max-w-4xl mx-auto px-6 py-8">
           <div className="text-center">
             <h1 className="text-3xl font-bold text-gray-900 mb-4">
@@ -59,7 +59,7 @@ export default function HorairesPage() {
       </div>
 
       {/* Section d'informations */}
-      <div className="bg-white border-t">
+      <div className="bg-white/70 border-t">
         <div className="max-w-4xl mx-auto px-6 py-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div>
