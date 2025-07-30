@@ -20,7 +20,7 @@ const SouratesList: React.FC = () => {
           placeholder="Rechercher une sourate" 
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full p-2 rounded-lg border border-[var(--color-border)]" 
+          className="w-full p-2 rounded-lg border border-[var(--color-border)] bg-[var(--color-muted)]/60 text-[var(--color-foreground)] placeholder-[var(--color-foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] focus:border-transparent transition-all duration-300" 
         />
         <button className="px-4 py-2 rounded-lg text-white font-bold text-lg border-accent bg-[var(--color-accent)] hover:shadow-lg hover:shadow-[var(--color-accent)]/20 transition-all duration-300 transform hover:-translate-y-1">Rechercher</button>
       </div>

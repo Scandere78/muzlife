@@ -24,6 +24,13 @@ function slugify(str: string) {
 
 export default function Lecture() {
   const [copiedSlug, setCopiedSlug] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState<string>("");
+
+  // Filtrer les sourates en fonction de la recherche
+  const filteredSourates = sourates.filter(sourate => 
+    sourate.nom_phonetique.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div className="page-container navbar-safe px-4 py-6 sm:py-8 flex flex-col items-center min-h-screen w-full overflow-x-visible" style={{ background: 'transparent', color: 'var(--color-foreground)' }}>
       <div className="text-center mb-8 sm:mb-12">
@@ -36,8 +43,22 @@ export default function Lecture() {
       </div>
 
       <div className="w-full max-w-4xl">
+        {/* Barre de recherche */}
+        <div className="flex items-center gap-2 mb-6">
+          <input 
+            type="text" 
+            placeholder="Rechercher une sourate..." 
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full p-3 rounded-lg border border-[var(--color-border)] bg-[var(--color-muted)]/60 text-[var(--color-foreground)] placeholder-[var(--color-foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] focus:border-transparent transition-all duration-300" 
+          />
+          <button className="px-6 py-3 rounded-lg text-white font-bold text-lg border-accent bg-[var(--color-accent)] hover:shadow-lg hover:shadow-[var(--color-accent)]/20 transition-all duration-300 transform hover:-translate-y-1">
+            Rechercher
+          </button>
+        </div>
+
         <div className="grid gap-4 sm:gap-6">
-          {sourates.map((sourate, index) => {
+          {filteredSourates.map((sourate, index) => {
             const detailsUrl = `/lecture/${sourate.slug}`;
             return (
               <div
@@ -75,7 +96,7 @@ export default function Lecture() {
                   aria-label="Partager la sourate" 
                   className="p-2 rounded-full hover:bg-[var(--color-foreground)]/20 transition-colors"
                   onClick={async () => {
-                    await navigator.clipboard.writeText(window.location.origin + `/ecoute/${sourate.slug}`);
+                    await navigator.clipboard.writeText(window.location.origin + `/lecture/${sourate.slug}`);
                     setCopiedSlug(sourate.slug);
                     setTimeout(() => setCopiedSlug(null), 1500);
                   }}
