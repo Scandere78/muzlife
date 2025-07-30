@@ -1,0 +1,14 @@
+# *
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /api
+Disallow: /_next
+Disallow: /dashboard
+Disallow: /profile
+
+# Host
+Host: https://muzlife.fr
+
+# Sitemaps
+Sitemap: https://muzlife.fr/sitemap.xml

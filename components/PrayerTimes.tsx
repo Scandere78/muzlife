@@ -128,23 +128,20 @@ export default function PrayerTimes() {
   const [error, setError] = useState<string | null>(null);
   const [timeUntilNext, setTimeUntilNext] = useState<{ nextPrayer: string; timeRemaining: string } | null>(null);
 
-  // Fonction pour récupérer les horaires de prière
+  // Fonction pour récupérer les horaires de prière depuis l'API Aladhan
   const fetchPrayerTimes = async () => {
     setLoading(true);
     setError(null);
-    
     try {
-      // Utiliser la ville sélectionnée ou la ville saisie
       const cityToSearch = selectedCity?.name || city;
       const countryToSearch = selectedCity?.country || country;
-      
-      const response = await fetch(`/api/prayer-times?city=${encodeURIComponent(cityToSearch)}&country=${encodeURIComponent(countryToSearch)}`);
-      
+      // Méthode 2 = Islamic Society of North America (ISNA), modifiable si besoin
+      const url = `https://api.aladhan.com/v1/timingsByCity?city=${encodeURIComponent(cityToSearch)}&country=${encodeURIComponent(countryToSearch)}&method=2`;
+      const response = await fetch(url);
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Erreur lors de la récupération des horaires');
+        throw new Error(errorData.data || 'Erreur lors de la récupération des horaires');
       }
-      
       const data = await response.json();
       setPrayerData(data.data);
     } catch (err) {

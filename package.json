@@ -33,7 +33,6 @@
     "lucide-react": "^0.525.0",
     "next": "15.4.3",
     "next-auth": "^4.24.11",
-    "next-sitemap": "^4.2.3",
     "node-fetch": "^3.3.2",
     "postinstall": "^0.11.2",
     "prisma": "^6.12.0",
@@ -53,6 +52,7 @@
     "autoprefixer": "^10.4.21",
     "eslint": "^9",
     "eslint-config-next": "15.4.3",
+    "next-sitemap": "^4.2.3",
     "postcss": "^8.5.6",
     "tailwindcss": "^4.1.11",
     "typescript": "^5"
