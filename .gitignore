@@ -24,6 +24,11 @@
 .DS_Store
 *.pem
 
+#sitemap
+sitemap.xml
+sitemap-O.xml
+robots.txt
+
 # debug
 npm-debug.log*
 yarn-debug.log*

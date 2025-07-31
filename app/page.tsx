@@ -8,7 +8,7 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/effect-fade";
 import { Pagination, Autoplay, EffectFade } from "swiper/modules";
-import { Navbar } from "../components";
+import { Navbar, LocalClock, PrayerTimer, NextPrayer } from "../components";
 import "../styles/globals.css";
 
 
@@ -31,19 +31,25 @@ export default function HomePage() {
       {/* Présentation */}
       <Navbar />
       <div className="text-center px-4 max-w-4xl mx-auto">
-        <h1 className="text-5xl font-extrabold bg-clip-text text-transparent" style={{ backgroundImage: 'linear-gradient(to right, var(--color-accent), var(--color-foreground))' }}>
+        <h1 className="text-4xl text-indigo-600 font-bold">  
           Bienvenue sur MuzLife
         </h1>
-        <p className="mt-4 text-xl text-[var(--color-muted)] leading-relaxed">
-          Écoutez et lisez le Coran facilement avec une interface intuitive.
-        </p>
+      </div>
+
+      {/* Horloge locale et prochaine prière */}
+      <div className="mt-12 px-6 max-w-4xl mx-auto">
+        <div className="mt-12 flex flex-col items-center">
+            <h2 className="text-2xl font-bold text-[var(--color-accent)] mb-4">🕌 Temps restant</h2>
+            <PrayerTimer />
+        </div>
+        <NextPrayer />  
       </div>
 
       {/* Cartes de fonctionnalités */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-16 px-6 max-w-7xl mx-auto">
         <div className="transition-all duration-300 transform hover:-translate-y-1">
           <Link href="/lecture" className="block">
-            <div className="bg-[var(--color-muted)] p-8 rounded-xl shadow-lg cursor-pointer hover:shadow-[var(--color-accent)]/20 hover:bg-[var(--color-background)] transition-all duration-300 border border-[var(--color-border)] h-full">
+            <div className="bg-[var(--color-muted)]/60 p-8 rounded-xl shadow-lg cursor-pointer hover:shadow-[var(--color-accent)]/20 hover:bg-[var(--color-background)] transition-all duration-300 border border-[var(--color-border)] h-full">
               <div className="bg-[var(--color-accent)]/10 w-16 h-16 rounded-full flex items-center justify-center mb-4">
                 <span className="text-3xl">📖</span>
               </div>
@@ -59,7 +65,7 @@ export default function HomePage() {
 
         <div className="transition-all duration-300 transform hover:-translate-y-1">
           <Link href="/ecoute" className="block">
-            <div className="bg-[var(--color-muted)] p-8 rounded-xl shadow-lg cursor-pointer hover:shadow-[var(--color-accent)]/20 hover:bg-[var(--color-background)] transition-all duration-300 border border-[var(--color-border)] h-full">
+            <div className="bg-[var(--color-muted)]/60 p-8 rounded-xl shadow-lg cursor-pointer hover:shadow-[var(--color-accent)]/20 hover:bg-[var(--color-background)] transition-all duration-300 border border-[var(--color-border)] h-full">
               <div className="bg-[var(--color-accent)]/10 w-16 h-16 rounded-full flex items-center justify-center mb-4">
                 <span className="text-3xl">🎧</span>
               </div>
@@ -75,7 +81,7 @@ export default function HomePage() {
 
         <div className="transition-all duration-300 transform hover:-translate-y-1">
           <Link href="/quizz" className="block">
-            <div className="bg-[var(--color-muted)] p-8 rounded-xl shadow-lg cursor-pointer hover:shadow-[var(--color-accent)]/20 hover:bg-[var(--color-background)] transition-all duration-300 border border-[var(--color-border)] h-full">
+            <div className="bg-[var(--color-muted)]/60 p-8 rounded-xl shadow-lg cursor-pointer hover:shadow-[var(--color-accent)]/20 hover:bg-[var(--color-background)] transition-all duration-300 border border-[var(--color-border)] h-full">
               <div className="bg-[var(--color-accent)]/10 w-16 h-16 rounded-full flex items-center justify-center mb-4">
                 <span className="text-3xl">🎯</span>
               </div>

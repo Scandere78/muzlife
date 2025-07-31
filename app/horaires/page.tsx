@@ -50,15 +50,15 @@ export default function HorairesPage() {
             <span
               className="font-extrabold text-3xl drop-shadow-lg text-center px-4 py-2 rounded-full bg-white/90 border border-indigo-200 shadow"
             >
-              <span style={{ color: '#A3B18A' }}>{date.getHours().toString().padStart(2, '0')}</span>
-              <span className="mx-1" style={{ color: '#E9C46A' }}>:</span>
-              <span style={{ color: '#E9C46A' }}>{date.getMinutes().toString().padStart(2, '0')}</span>
-              <span className="mx-1" style={{ color: '#90AFC5' }}>:</span>
-              <span style={{ color: '#90AFC5' }}>{date.getSeconds().toString().padStart(2, '0')}</span>
+              <span style={{ color: 'var(--color-foreground)' }}>{date.getHours().toString().padStart(2, '0')}</span>
+              <span className="mx-1" style={{ color: 'var(--color-foreground)' }}>:</span>
+              <span style={{ color: 'var(--color-foreground)' }}>{date.getMinutes().toString().padStart(2, '0')}</span>
+              <span className="mx-1" style={{ color: 'var(--color-foreground)' }}>:</span>
+              <span style={{ color: 'var(--color-foreground)' }}>{date.getSeconds().toString().padStart(2, '0')}</span>
             </span>
           </div>
           <div className="absolute bottom-4 left-1/2 z-30" style={{ transform: 'translateX(-50%)' }}>
-            <span className="text-sm text-indigo-600 font-semibold tracking-wide bg-white/80 px-2 rounded shadow">Heure locale</span>
+            <span className="text-sm text-white font-semibold tracking-wide px-2 rounded shadow">Heure locale</span>
           </div>
         </div>
       </div>
@@ -71,8 +71,8 @@ export default function HorairesPage() {
         <div className="mb-8 animate-in fade-in duration-700">
           <AnalogClock />
           <div className="text-center">
-            <h1 className="text-4xl font-extrabold text-indigo-700 mb-2 drop-shadow-lg tracking-tight">Horaires de Prière</h1>
-            <p className="text-lg text-gray-700 max-w-xl mx-auto mb-2">Consultez les horaires de prière pour votre ville avec précision. Trouvez facilement les temps de Fajr, Dhuhr, Asr, Maghrib et Isha.</p>
+            <h1 className="text-4xl font-extrabold mb-2 drop-shadow-lg tracking-tight">Horaires de Prière</h1>
+            <p className="text-lg text-foreground max-w-xl mx-auto mb-2">Consultez les horaires de prière pour votre ville avec précision. Trouvez facilement les temps de Fajr, Dhuhr, Asr, Maghrib et Isha.</p>
           </div>
         </div>
         <div className="w-full animate-in fade-in slide-in-from-bottom-2 duration-700">

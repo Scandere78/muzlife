@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import NewsletterForm from './NewsletterForm';
+import '../styles/globals.css';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -80,15 +81,7 @@ export default function Footer() {
 
             {/* Nos devs */}
            
-              <h3 className="text-lg sm:text-xl font-semibold mb-4 sm:mb-6 text-[var(--color-background)]">Nos devs</h3>
-              <p className="text-gray-300 text-sm sm:text-sm mb-2 sm:mb-4">
-                Nos devs sont disponibles sur les réseaux sociaux
-              </p>
-              {/* 
-                On affiche les devs dans des box cliquables, avec une animation douce au survol.
-                On utilise les composants Link de Next.js et on stylise avec Tailwind pour la lisibilité.
-                Les box sont accessibles et responsives.
-              */}
+              <br />
               <div className="flex flex-col gap-3">
                 <Link
                   href="https://www.scandere-tej.fr/"
@@ -136,12 +129,13 @@ export default function Footer() {
             
             {/* Navigation - style cohérent avec Navbar */}
             <div>
-              <h3 className="text-lg sm:text-xl font-semibold mb-4 sm:mb-6 text-[var(--color-background)]">Navigation</h3>
+              <h3 className="text-lg sm:text-xl font-semibold mb-4 sm:mb-6" style={{ color: 'var(--color-foreground)' }}>Navigation</h3>
               <ul className="space-y-2 sm:space-y-3">
                 <li>
                   <Link 
                     href="/" 
-                    className="text-gray-300 hover:text-[var(--color-muted)] transition-colors text-lg font-medium flex items-center group"
+                    className="text-white hover:text-[var(--color-muted)] transition-colors text-lg font-medium flex items-center group"
+                    style={{ color: 'white' }}
                   >
                     <span className="mr-2 group-hover:translate-x-1 transition-transform">🏠</span>
                     Accueil
@@ -150,7 +144,8 @@ export default function Footer() {
                 <li>
                   <Link 
                     href="/lecture" 
-                    className="text-gray-300 hover:text-green-400 transition-colors text-lg font-medium flex items-center group"
+                    className="text-white hover:text-green-400 transition-colors text-lg font-medium flex items-center group"
+                    style={{ color: 'white' }}
                   >
                     <span className="mr-2 group-hover:translate-x-1 transition-transform">📖</span>
                     Lecture
@@ -159,7 +154,8 @@ export default function Footer() {
                 <li>
                   <Link 
                     href="/ecoute" 
-                    className="text-gray-300 hover:text-green-400 transition-colors text-lg font-medium flex items-center group"
+                    className="text-white hover:text-green-400 transition-colors text-lg font-medium flex items-center group"
+                    style={{ color: 'white' }}
                   >
                     <span className="mr-2 group-hover:translate-x-1 transition-transform">🎧</span>
                     Écoute
@@ -168,7 +164,8 @@ export default function Footer() {
                 <li>
                   <Link 
                     href="/quizz" 
-                    className="text-gray-300 hover:text-green-400 transition-colors text-lg font-medium flex items-center group"
+                    className="text-white hover:text-green-400 transition-colors text-lg font-medium flex items-center group"
+                    style={{ color: 'white' }}
                   >
                     <span className="mr-2 group-hover:translate-x-1 transition-transform">🧠</span>
                     Quizz
@@ -177,7 +174,8 @@ export default function Footer() {
                 <li>
                   <Link 
                     href="/about" 
-                    className="text-gray-300 hover:text-green-400 transition-colors text-lg font-medium flex items-center group"
+                    className="text-white hover:text-green-400 transition-colors text-lg font-medium flex items-center group"
+                    style={{ color: 'white' }}
                   >
                     <span className="mr-2 group-hover:translate-x-1 transition-transform">ℹ️</span>
                     À propos
@@ -188,7 +186,7 @@ export default function Footer() {
             
             {/* Communauté & Réseaux sociaux */}
             <div>
-              <h3 className="text-lg sm:text-xl font-semibold mb-4 sm:mb-6 text-green-400">Communauté</h3>
+              <h3 className="text-lg sm:text-xl font-semibold mb-4 sm:mb-6" style={{ color: 'var(--color-foreground)' }}>Communauté</h3>
               <p className="text-gray-300 text-sm sm:text-sm mb-2 sm:mb-4">
                 Rejoignez notre communauté sur les réseaux sociaux
               </p>
@@ -241,7 +239,7 @@ export default function Footer() {
 
             {/* Newsletter - style harmonisé */}
             <div>
-              <h3 className="text-lg sm:text-xl font-semibold mb-4 sm:mb-6 text-green-400">Newsletter</h3>
+              <h3 className="text-lg sm:text-xl font-semibold mb-4 sm:mb-6" style={{ color: 'var(--color-foreground)' }}>Newsletter</h3>
               <p className="text-gray-300 text-sm sm:text-sm mb-2 sm:mb-4 leading-relaxed">
                 Restez informé de nos dernières actualités, nouveautés et conseils spirituels.
               </p>
