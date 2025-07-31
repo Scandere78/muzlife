@@ -157,9 +157,9 @@ export default function PrayerTimer() {
     return (
       <div className="mx-auto mb-6 flex justify-center">
         <div
-          className="relative rounded-full shadow-xl p-6 flex flex-col items-center w-56 h-56 bg-white/80"
+          className="relative rounded-full shadow-xl p-6 flex flex-col items-center w-70 h-70 bg-white/80"
           style={{
-            backgroundImage: 'url(/cadrant_horloge.png)',
+            backgroundImage: 'url(/cadrant_horloge_vert.png)',
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
@@ -180,9 +180,9 @@ export default function PrayerTimer() {
     return (
       <div className="mx-auto mb-6 flex justify-center">
         <div
-          className="relative rounded-full shadow-xl p-6 flex flex-col items-center w-56 h-56 bg-white/80"
+          className="relative rounded-full shadow-xl p-6 flex flex-col items-center w-70 h-70 bg-white/80"
           style={{
-            backgroundImage: 'url(/cadrant_horloge.png)',
+            backgroundImage: 'url(/cadrant_horloge_vert.png)',
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
