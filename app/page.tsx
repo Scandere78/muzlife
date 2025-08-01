@@ -10,6 +10,8 @@ import "swiper/css/effect-fade";
 import { Pagination, Autoplay, EffectFade } from "swiper/modules";
 import { Navbar, LocalClock, PrayerTimer, NextPrayer } from "../components";
 import "../styles/globals.css";
+import PrayerProgressBar from "@/components/PrayerProgressBar";
+import ExampleWithLottie from "@/components/ExampleWithLottie";
 
 
 interface Recitateur {
@@ -41,6 +43,7 @@ export default function HomePage() {
         <div className="mt-12 flex flex-col items-center">
             <h2 className="text-2xl font-bold text-[var(--color-accent)] mb-4">🕌 Temps restant</h2>
             <PrayerTimer />
+            <PrayerProgressBar />
         </div>
         <NextPrayer />  
       </div>
@@ -94,6 +97,7 @@ export default function HomePage() {
         </div>
       </div>
 
+    
       {/* Carrousel des récitateurs */}
       <div className="mt-20 px-6 max-w-7xl mx-auto">
         <h2 className="text-3xl font-bold bg-clip-text text-transparent text-center mb-10" style={{ backgroundImage: 'linear-gradient(to right, var(--color-accent), var(--color-foreground))' }}>

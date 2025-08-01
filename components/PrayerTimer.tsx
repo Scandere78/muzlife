@@ -61,7 +61,7 @@ const prayerConfig = {
 // Fonction pour calculer le temps restant jusqu'à la prochaine prière
 function getTimeUntilNextPrayer(timings: PrayerTimes): { nextPrayer: string; timeRemaining: string; hours: number; minutes: number; seconds: number } {
   const now = new Date();
-  const currentTime = now.getHours() * 60 + now.getMinutes();
+  const currentTimeInSeconds = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
   
   const prayerTimes = [
     { name: 'Fajr', time: timings.Fajr },
@@ -77,12 +77,12 @@ function getTimeUntilNextPrayer(timings: PrayerTimes): { nextPrayer: string; tim
   
   for (const prayer of prayerTimes) {
     const [hours, minutes] = prayer.time.split(':').map(Number);
-    const prayerMinutes = hours * 60 + minutes;
-    let diff = prayerMinutes - currentTime;
+    const prayerTimeInSeconds = hours * 3600 + minutes * 60;
+    let diff = prayerTimeInSeconds - currentTimeInSeconds;
     
     // Si la prière est déjà passée aujourd'hui, on passe à la suivante
     if (diff < 0) {
-      diff += 24 * 60; // Ajouter 24 heures
+      diff += 24 * 3600; // Ajouter 24 heures en secondes
     }
     
     if (diff < minDiff) {
@@ -91,13 +91,13 @@ function getTimeUntilNextPrayer(timings: PrayerTimes): { nextPrayer: string; tim
     }
   }
   
-  const hours = Math.floor(minDiff / 60);
-  const minutes = minDiff % 60;
-  const seconds = 0; // On calcule en minutes pour l'API, mais on peut ajouter les secondes si besoin
+  const hours = Math.floor(minDiff / 3600);
+  const minutes = Math.floor((minDiff % 3600) / 60);
+  const seconds = minDiff % 60;
   
   return { 
     nextPrayer, 
-    timeRemaining: `${hours}h ${minutes}m`,
+    timeRemaining: `${hours}h ${minutes}m ${seconds}s`,
     hours,
     minutes,
     seconds
