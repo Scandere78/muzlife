@@ -114,7 +114,7 @@ export default function HorairesPage() {
                     {/* Heures et minutes */}
                     <div className="text-4xl font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600">
                       {date.getHours().toString().padStart(2, '0')}
-                      <span className="animate-pulse mx-1">:</span>
+                      <span className="animate-pulse text-indigo-500 mx-1">:</span>
                       {date.getMinutes().toString().padStart(2, '0')}
                     </div>
                     
