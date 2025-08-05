@@ -63,20 +63,20 @@ const Navbar: React.FC = () => {
           ? "bg-gradient-to-b from-[var(--color-foreground)]/90 via-[var(--color-foreground)]/60 to-transparent"
           : "bg-gradient-to-b from-[var(--color-foreground)]/80 via-[var(--color-foreground)]/40 to-transparent "
       }`}>
-        <div className="max-w-7xl mx-auto h-full px-4 md:px-6">
+        <div className="max-w-7xl mx-auto h-full px-3 sm:px-4 md:px-6">
           <div className="flex items-center h-full justify-between">
             {/* Logo avec image et texte */}
             <div className="flex-shrink-0">
-              <Link href="/" className="font-bold text-3xl flex items-center group">
-                <Image src="/muzlife_v2.png" alt="MuzLife" width={48} height={48} className="h-12 w-12 mr-3 transition-transform duration-300 group-hover:scale-110" />
+              <Link href="/" className="font-bold text-2xl sm:text-3xl flex items-center group">
+                <Image src="/muzlife_v2.png" alt="MuzLife" width={48} height={48} className="h-10 w-10 sm:h-12 sm:w-12 mr-2 sm:mr-3 transition-transform duration-300 group-hover:scale-110" />
                 <span className="text-[var(--color-accent)] transition-colors duration-300 group-hover:text-[var(--color-accent)]/80">Muz</span>
-                <span className="text-white ml-2 transition-colors duration-300 group-hover:text-white/80">Life</span>
+                <span className="text-white ml-1 sm:ml-2 transition-colors duration-300 group-hover:text-white/80">Life</span>
               </Link>
             </div>
             {/* Desktop Menu */}
-            <div className="hidden md:flex items-center">
-              <div className="flex items-center space-x-6">
-                <Link href="/lecture" className="relative !text-white hover:!text-[var(--color-accent)] px-4 py-2.5 rounded-md transition-all duration-300 text-lg font-medium group">
+            <div className="hidden lg:flex items-center">
+              <div className="flex items-center space-x-4 xl:space-x-6">
+                <Link href="/lecture" className="relative !text-white hover:!text-[var(--color-accent)] px-3 lg:px-4 py-2.5 rounded-md transition-all duration-300 text-base lg:text-lg font-medium group">
                   🧑‍🏫 Lecture
                   <div className={`absolute bottom-0 left-1/2 transform -translate-x-1/2 h-1 bg-[var(--color-accent)] rounded-full transition-all duration-500 ease-out ${
                     isActive("/lecture") 
@@ -84,7 +84,7 @@ const Navbar: React.FC = () => {
                       : "w-0 opacity-0 group-hover:w-1/2 group-hover:opacity-70"
                   }`}></div>
                 </Link>
-                <Link href="/ecoute" className="relative !text-white hover:!text-[var(--color-accent)] px-4 py-2.5 rounded-md transition-all duration-300 text-lg font-medium group">
+                <Link href="/ecoute" className="relative !text-white hover:!text-[var(--color-accent)] px-3 lg:px-4 py-2.5 rounded-md transition-all duration-300 text-base lg:text-lg font-medium group">
                   🎧 Écoute
                   <div className={`absolute bottom-0 left-1/2 transform -translate-x-1/2 h-1 bg-[var(--color-accent)] rounded-full transition-all duration-500 ease-out ${
                     isActive("/ecoute") 
@@ -92,7 +92,7 @@ const Navbar: React.FC = () => {
                       : "w-0 opacity-0 group-hover:w-1/2 group-hover:opacity-70"
                   }`}></div>
                 </Link>
-                <Link href="/quizz" className="relative !text-white hover:!text-[var(--color-accent)] px-4 py-2.5 rounded-md transition-all duration-300 text-lg font-medium group">
+                <Link href="/quizz" className="relative !text-white hover:!text-[var(--color-accent)] px-3 lg:px-4 py-2.5 rounded-md transition-all duration-300 text-base lg:text-lg font-medium group">
                   🧠 Quizz
                   <div className={`absolute bottom-0 left-1/2 transform -translate-x-1/2 h-1 bg-[var(--color-accent)] rounded-full transition-all duration-500 ease-out ${
                     isActive("/quizz") 
@@ -100,7 +100,7 @@ const Navbar: React.FC = () => {
                       : "w-0 opacity-0 group-hover:w-1/2 group-hover:opacity-70"
                   }`}></div>
                 </Link>
-                <Link href="/horaires" className="relative !text-white hover:!text-[var(--color-accent)] px-4 py-2.5 rounded-md transition-all duration-300 text-lg font-medium group">
+                <Link href="/horaires" className="relative !text-white hover:!text-[var(--color-accent)] px-3 lg:px-4 py-2.5 rounded-md transition-all duration-300 text-base lg:text-lg font-medium group">
                   🕌 Horaires
                   <div className={`absolute bottom-0 left-1/2 transform -translate-x-1/2 h-1 bg-[var(--color-accent)] rounded-full transition-all duration-500 ease-out ${
                     isActive("/horaires") 
@@ -108,7 +108,7 @@ const Navbar: React.FC = () => {
                       : "w-0 opacity-0 group-hover:w-1/2 group-hover:opacity-70"
                   }`}></div>
                 </Link>
-                <Link href="/about" className="relative !text-white hover:!text-[var(--color-accent)] px-4 py-2.5 rounded-md transition-all duration-300 text-lg font-medium group">
+                <Link href="/about" className="relative !text-white hover:!text-[var(--color-accent)] px-3 lg:px-4 py-2.5 rounded-md transition-all duration-300 text-base lg:text-lg font-medium group">
                   👤 À propos
                   <div className={`absolute bottom-0 left-1/2 transform -translate-x-1/2 h-1 bg-[var(--color-accent)] rounded-full transition-all duration-500 ease-out ${
                     isActive("/about") 
@@ -118,26 +118,71 @@ const Navbar: React.FC = () => {
                 </Link>
               </div>
             </div>
-            {/* Bouton de connexion desktop */}
-            <div className="hidden md:block ml-6">
-              {isLoggedIn ? (
+            {/* réseaux sociaux seulement */}
+            <div className="hidden lg:flex items-center gap-3 ml-4 xl:ml-6">
+              {/* TikTok avec couleurs du site */}
+              <a
+                href="https://www.tiktok.com/@al.musafiroon?_t=ZN-8ydOZWVVCwY&_r=1"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group relative w-10 h-10 bg-gradient-to-r from-[var(--color-accent)] to-emerald-600 rounded-full flex items-center justify-center hover:shadow-lg transition-all duration-300 hover:scale-110 active:scale-95 border border-emerald-500/30"
+                aria-label="Suivez-nous sur TikTok"
+              >
+                <svg
+                  className="w-5 h-5 text-white transition-transform duration-300 group-hover:scale-110"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-.88-.05A6.33 6.33 0 0 0 5.76 20.9a6.34 6.34 0 0 0 10.86-4.43V7.83a8.2 8.2 0 0 0 4.77 1.52V6.69a4.83 4.83 0 0 1-1.8 0z"/>
+                </svg>
+                {/* Tooltip */}
+                <div className="absolute bottom-full mb-2 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-50">
+                  <div className="bg-[var(--color-foreground)] text-white text-xs rounded-lg px-2 py-1 whitespace-nowrap shadow-xl">
+                    TikTok
+                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-2 border-r-2 border-t-2 border-transparent border-t-[var(--color-foreground)]"></div>
+                  </div>
+                </div>
+              </a>
+
+              {/* Instagram avec couleurs du site */}
+              <a
+                href="https://www.instagram.com/muzlife.off/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group relative w-10 h-10 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-full flex items-center justify-center hover:shadow-lg transition-all duration-300 hover:scale-110 active:scale-95 border border-teal-500/30"
+                aria-label="Suivez-nous sur Instagram"
+              >
+                <svg
+                  className="w-5 h-5 text-white transition-transform duration-300 group-hover:scale-110"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                </svg>
+                {/* Tooltip */}
+                <div className="absolute bottom-full mb-2 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-50">
+                  <div className="bg-[var(--color-foreground)] text-white text-xs rounded-lg px-2 py-1 whitespace-nowrap shadow-xl">
+                    Instagram
+                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-2 border-r-2 border-t-2 border-transparent border-t-[var(--color-foreground)]"></div>
+                  </div>
+                </div>
+              </a>
+
+              {/* Bouton de connexion masqué - garde la fonctionnalité pour les utilisateurs connectés */}
+              {isLoggedIn && (
                 <div className="relative">
                   <Button
                     onClick={() => setShowDropdown(!showDropdown)}
-                    className="flex items-center bg-gradient-to-r from-[var(--color-foreground)] to-[var(--color-muted)] text-white px-6 py-2.5 rounded-full hover:shadow-lg transition-all duration-300 border border-green-500/30 group hover:scale-105"
+                    className="w-10 h-10 bg-gradient-to-r from-[var(--color-foreground)] to-[var(--color-muted)] text-white rounded-full hover:shadow-lg transition-all duration-300 border border-green-500/30 group hover:scale-105 flex items-center justify-center p-0"
                     variant="default"
                   >
                     {user?.avatar ? (
-                      <Image src={user.avatar} alt={user.name} width={32} height={32} className="h-8 w-8 rounded-full mr-2.5 border border-white/30 transition-transform duration-300 group-hover:scale-110" />
+                      <Image src={user.avatar} alt={user.name} width={32} height={32} className="h-8 w-8 rounded-full border border-white/30 transition-transform duration-300 group-hover:scale-110" />
                     ) : (
-                      <div className="h-8 w-8 bg-[var(--color-foreground)] rounded-full mr-2.5 flex items-center justify-center text-white text-sm font-bold border border-white/30 transition-transform duration-300 group-hover:scale-110">
+                      <div className="h-8 w-8 bg-[var(--color-foreground)] rounded-full flex items-center justify-center text-white text-sm font-bold border border-white/30 transition-transform duration-300 group-hover:scale-110">
                         {user?.name?.charAt(0) || "U"}
                       </div>
                     )}
-                    <span className="mr-1 text-base transition-colors duration-300 group-hover:text-[var(--color-accent)]">{user?.name || "Profil"}</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" className={`h-4 w-4 transition-transform duration-300 ${showDropdown ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                    </svg>
                   </Button>
                   {showDropdown && (
                     <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-2xl py-1.5 z-20 border border-gray-100 dropdown-container animate-in slide-in-from-top-2 duration-300">
@@ -179,26 +224,10 @@ const Navbar: React.FC = () => {
                     </div>
                   )}
                 </div>
-              ) : (
-                <Button
-                  onClick={() => setShowAuthModal(true)}
-                  className="relative overflow-hidden group transition-all duration-300 hover:scale-105"
-                  variant="default"
-                >
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-                  <div className="absolute inset-0 "></div>
-                  <div className="relative z-10 flex items-center text-white px-6 py-2.5 rounded-full font-medium text-lg transition-colors duration-300 group-hover:text-[var(--color-accent)]">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 transition-transform duration-300 group-hover:rotate-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
-                    </svg>
-                    Connexion
-                  </div>
-                  <div className="absolute top-0 right-0 bottom-0 w-8 bg-gradient-to-l from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                </Button>
               )}
             </div>
             {/* Mobile menu button */}
-            <div className="md:hidden">
+            <div className="lg:hidden">
               <Button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
                 className="inline-flex items-center justify-center p-2 rounded-full bg-green-600/30 backdrop-blur-sm text-white hover:bg-green-500/40 focus:outline-none transition-all duration-300 hover:scale-110"
@@ -231,7 +260,7 @@ const Navbar: React.FC = () => {
         )}
         {/* Menu mobile */}
         <div
-          className={`fixed top-20 right-2 md:hidden z-50 w-64 rounded-xl shadow-2xl transition-all duration-500 ease-out transform ${
+          className={`fixed top-20 right-2 md:hidden z-50 w-72 max-w-[calc(100vw-1rem)] rounded-xl shadow-2xl transition-all duration-500 ease-out transform ${
             isMenuOpen ? "translate-x-0 opacity-100 scale-100" : "translate-x-full opacity-0 scale-95"
           }`}
         >
