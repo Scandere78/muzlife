@@ -76,10 +76,10 @@ const Navbar: React.FC = () => {
             {/* Desktop Menu */}
             <div className="hidden lg:flex items-center">
               <div className="flex items-center space-x-4 xl:space-x-6">
-                <Link href="/lecture" className="relative !text-white hover:!text-[var(--color-accent)] px-3 lg:px-4 py-2.5 rounded-md transition-all duration-300 text-base lg:text-lg font-medium group">
-                  🧑‍🏫 Lecture
+                <Link href="/tuto/wudu" className="relative !text-white hover:!text-[var(--color-accent)] px-3 lg:px-4 py-2.5 rounded-md transition-all duration-300 text-base lg:text-lg font-medium group">
+                  🧑‍🏫 Ablutions
                   <div className={`absolute bottom-0 left-1/2 transform -translate-x-1/2 h-1 bg-[var(--color-accent)] rounded-full transition-all duration-500 ease-out ${
-                    isActive("/lecture") 
+                    isActive("/tuto/wudu") 
                       ? "w-full opacity-100" 
                       : "w-0 opacity-0 group-hover:w-1/2 group-hover:opacity-70"
                   }`}></div>
@@ -305,9 +305,9 @@ const Navbar: React.FC = () => {
             <div className="px-2 py-3">
               <div className="space-y-1">
                 <Link
-                  href="/lecture"
+                    href="/tuto/wudu"
                   className={`flex items-center px-3 py-3 rounded-lg transition-all duration-300 hover:translate-x-2 ${
-                    isActive("/lecture")
+                    isActive("/tuto/wudu")
                       ? "bg-white/20 text-white shadow-lg scale-105"
                       : "text-white hover:text-[var(--color-background)] hover:bg-white/10"
                   }`}
@@ -316,7 +316,7 @@ const Navbar: React.FC = () => {
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-3 transition-transform duration-300 hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="var(--color-muted)">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                   </svg>
-                  <span className="text-lg text-[var(--color-muted)]">Lecture</span>
+                  <span className="text-lg text-[var(--color-muted)]">Ablutions</span>
                 </Link>
                 <Link
                   href="/ecoute"
