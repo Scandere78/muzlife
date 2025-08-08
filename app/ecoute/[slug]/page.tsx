@@ -34,6 +34,20 @@ async function fetchTranslation(num: number) {
   }
 }
 
+// Fonction pour récupérer la translittération (lecture phonétique)
+async function fetchTransliteration(num: number) {
+  try {
+    const response = await fetch(`https://api.alquran.cloud/v1/surah/${num}/en.transliteration`, {
+      next: { revalidate: 3600 }
+    });
+    if (!response.ok) throw new Error('Erreur lors de la récupération de la translittération');
+    return await response.json();
+  } catch (error) {
+    console.error('Erreur:', error);
+    return null;
+  }
+}
+
 // Génération des métadonnées
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
@@ -70,9 +84,10 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
       </main>
     );
   }
-  const [sourateData, translationData] = await Promise.all([
+  const [sourateData, translationData, transliterationData] = await Promise.all([
     fetchSourateData(num),
-    fetchTranslation(num)
+    fetchTranslation(num),
+    fetchTransliteration(num)
   ]);
   const sourate = sourateData?.data;
   const translation = translationData?.data;
@@ -97,6 +112,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
     <SourateDetail
       sourate={sourate}
       translation={translation}
+      transliteration={transliterationData?.data}
       showReciterSelector={true}
       showPlayAllButton={true}
     />

@@ -9,6 +9,7 @@ import ReciterSelector, { RECITERS } from './ReciterSelector';
 interface SourateDetailProps {
   sourate: any;
   translation: any;
+  transliteration?: any;
   showReciterSelector?: boolean;
   showPlayAllButton?: boolean;
 }
@@ -37,7 +38,7 @@ const getRecitationUrl = (reciterId: string, sourateId: number) => {
     : `https://www.al-hamdoulillah.com/coran/mp3/files/${reciterId}/${paddedId}.mp3`;
 };
 
-const SourateDetail: React.FC<SourateDetailProps> = ({ sourate, translation, showReciterSelector, showPlayAllButton }) => {
+const SourateDetail: React.FC<SourateDetailProps> = ({ sourate, translation, transliteration, showReciterSelector, showPlayAllButton }) => {
   const [playingAyah, setPlayingAyah] = useState<number | null>(null);
   const [isPaused, setIsPaused] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -428,14 +429,35 @@ const SourateDetail: React.FC<SourateDetailProps> = ({ sourate, translation, sho
 
               {/* Texte arabe */}
               <div className="mb-4">
+                <div className="mb-1 inline-flex items-center gap-2 px-2 py-0.5 rounded-full bg-[var(--color-accent)]/20 text-[var(--color-accent)] text-xs font-semibold">
+                  Arabe
+                </div>
                 <p className="text-right text-2xl leading-loose font-amiri text-[var(--color-foreground)]">
                   {ayah.text}
                 </p>
               </div>
 
+              {/* Translittération (lecture phonétique) */}
+              {(() => {
+                const translitAyah = transliteration?.ayahs?.[index]?.text;
+                return translitAyah ? (
+                  <div className="pt-4 border-t border-[var(--color-border)]">
+                    <div className="mb-1 inline-flex items-center gap-2 px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-semibold">
+                      Phonétique
+                    </div>
+                    <p className="text-left text-lg leading-relaxed italic text-emerald-300">
+                      {translitAyah}
+                    </p>
+                  </div>
+                ) : null;
+              })()}
+
               {/* Traduction française */}
               {translationAyah && (
                 <div className="pt-4 border-t border-[var(--color-border)]">
+                  <div className="mb-1 inline-flex items-center gap-2 px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300 text-xs font-semibold">
+                    Français
+                  </div>
                   <p className="text-[var(--color-foreground)] leading-relaxed">
                     {translationAyah.text}
                   </p>

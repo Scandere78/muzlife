@@ -151,19 +151,35 @@ export default function PrayerProgressBar() {
     }
   }
 
-  // 4. Calculer la position du bonhomme (en pourcentage de la barre)
+  // 4. Calculer la position du bonhomme (progression continue) et l'emplacement du croissant (snappé avant/après la prière)
   let progress = 0;
-  
   if (isAfterLastPrayer) {
-    // Après la dernière prière, réinitialiser à 0% pour le lendemain
-    progress = 0;
+    // Après la dernière prière, à la fin de la barre
+    progress = 100;
   } else if (nowSeconds <= checkpoints[0].seconds) {
     // Avant la première prière
     progress = 0;
   } else {
-    // Position entre les checkpoints
     const segmentProgress = (nowSeconds - segmentStart) / (segmentEnd - segmentStart);
     progress = ((segmentIdx + segmentProgress) / (checkpoints.length - 1)) * 100;
+  }
+
+  // Emplacement du croissant: juste AVANT la prochaine prière, sinon juste APRÈS la dernière prière
+  const totalCheckpoints = checkpoints.length - 1;
+  const positionFromIndex = (idx: number) => (totalCheckpoints > 0 ? (idx / totalCheckpoints) * 80 + 10 : 50);
+  const nextIndexRaw = checkpoints.findIndex((cp) => nowSeconds < cp.seconds);
+  const hasNextToday = nextIndexRaw !== -1;
+  const nextIndex = hasNextToday ? nextIndexRaw : 0;
+  const lastIndex = checkpoints.length - 1;
+  const INDICATOR_OFFSET = 2; // en pourcentage de largeur
+
+  let indicatorLeftPercent = 10; // défaut: début
+  if (hasNextToday) {
+    // Avant la prochaine prière
+    indicatorLeftPercent = Math.max(10, positionFromIndex(nextIndex) - INDICATOR_OFFSET);
+  } else {
+    // Après la dernière prière
+    indicatorLeftPercent = Math.min(90, positionFromIndex(lastIndex) + INDICATOR_OFFSET);
   }
 
   // Calculer la prochaine prière et le temps restant
@@ -401,9 +417,9 @@ export default function PrayerProgressBar() {
 
         {/* Indicateur de progression avec style mawaquit */}
         <div
-          className="absolute top-1/2 -translate-y-1/2 z-20 transition-all duration-1000 ease-out cursor-pointer group"
+          className="absolute top-1/2 -translate-y-1/2 z-20 transition-all duration-500 ease-out cursor-pointer group"
           style={{ 
-            left: `calc(10% + ${Math.max(progress, 0)}% * 0.8)`,
+            left: `${indicatorLeftPercent}%`,
             transform: 'translateX(-50%) translateY(-50%)'
           }}
           onClick={() => setShowDetails(!showDetails)}

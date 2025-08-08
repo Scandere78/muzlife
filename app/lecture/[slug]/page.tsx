@@ -2,18 +2,26 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { slugToNumber } from "../../../lib/sourateSlugs";
 
-// Récupère le texte arabe et la traduction française d'une sourate via l'API alquran.cloud
+// Récupère le texte arabe, la translittération (lecture phonétique) et la traduction française d'une sourate via l'API alquran.cloud
 async function fetchSourateWithTranslation(id: string): Promise<any | null> {
   const num = Number(id);
   if (isNaN(num) || num < 1 || num > 114) return null;
-  const resAr = await fetch(`https://api.alquran.cloud/v1/surah/${num}/ar.alafasy`, { next: { revalidate: 3600 } });
-  const resFr = await fetch(`https://api.alquran.cloud/v1/surah/${num}/fr.hamidullah`, { next: { revalidate: 3600 } });
+  const [resAr, resFr, resTr] = await Promise.all([
+    fetch(`https://api.alquran.cloud/v1/surah/${num}/ar.alafasy`, { next: { revalidate: 3600 } }),
+    fetch(`https://api.alquran.cloud/v1/surah/${num}/fr.hamidullah`, { next: { revalidate: 3600 } }),
+    // Translittération en alphabet latin pour faciliter la prononciation
+    fetch(`https://api.alquran.cloud/v1/surah/${num}/en.transliteration`, { next: { revalidate: 3600 } })
+  ]);
   if (!resAr.ok || !resFr.ok) return null;
-  const dataAr = await resAr.json();
-  const dataFr = await resFr.json();
+  const [dataAr, dataFr, dataTr] = await Promise.all([
+    resAr.json(),
+    resFr.json(),
+    resTr.ok ? resTr.json() : Promise.resolve(null)
+  ]);
   const ayahs = (dataAr.data.ayahs).map((ayah: any, idx: number) => ({
     text: ayah.text,
     numberInSurah: ayah.numberInSurah,
+    transliteration: dataTr?.data?.ayahs?.[idx]?.text || undefined,
     translation: dataFr.data.ayahs[idx]?.text || ""
   }));
   return {
@@ -84,6 +92,11 @@ export default async function SouratePage({ params }: PageParams) {
               <span className="block text-2xl md:text-3xl text-right font-quran">{ayah.text}</span>
               <span className="text-[var(--color-background)] text-lg align-super ml-2">({ayah.numberInSurah})</span>
             </div>
+            {ayah.transliteration && (
+              <div className="text-base text-left text-gray-300 mt-2 italic" lang="en">
+                {ayah.transliteration}
+              </div>
+            )}
             <div className="text-base text-left text-[var(--color-background)] mt-2 font-sans">{ayah.translation}</div>
           </div>
         ))}

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -8,135 +8,11 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/effect-fade";
 import { Pagination, Autoplay, EffectFade } from "swiper/modules";
-import { Navbar, LocalClock, PrayerTimer, NextPrayer } from "../components";
+import { Navbar, PrayerTimer, NextPrayer, CitationOfTheDay, QiblaCompass } from "../components";
 import "../styles/globals.css";
-import PrayerProgressBar from "@/components/PrayerProgressBar";
-import ExampleWithLottie from "@/components/ExampleWithLottie";
+ 
 
-// Composant PrayerTimer avec modale améliorée
-function PrayerTimerWithModal() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  // Fonction pour fermer la modale proprement
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
-
-  // Gestion du scroll de la modale principale - VERSION ULTRA-ROBUSTE
-  React.useEffect(() => {
-    if (isModalOpen) {
-      // Sauvegarder la position de scroll actuelle
-      const scrollY = window.scrollY;
-      
-      // Bloquer le scroll de façon ultra-robuste
-      document.body.style.position = 'fixed';
-      document.body.style.top = `-${scrollY}px`;
-      document.body.style.left = '0';
-      document.body.style.right = '0';
-      document.body.style.width = '100%';
-      document.body.style.overflowY = 'hidden';
-      document.documentElement.style.overflow = 'hidden';
-      
-      // Forcer un nouveau contexte de stacking pour les modales
-      document.body.style.isolation = 'isolate';
-      
-      // Cleanup - restaurer le scroll
-      return () => {
-        document.body.style.position = '';
-        document.body.style.top = '';
-        document.body.style.left = '';
-        document.body.style.right = '';
-        document.body.style.width = '';
-        document.body.style.overflowY = '';
-        document.documentElement.style.overflow = '';
-        document.body.style.isolation = '';
-        
-        // Restaurer la position exacte du scroll
-        window.scrollTo(0, scrollY);
-      };
-    }
-  }, [isModalOpen]);
-
-  return (
-    <>
-      <div onClick={() => setIsModalOpen(true)} className="cursor-pointer group">
-        <div className="relative">
-          <PrayerTimer />
-          {/* Indicateur visuel que c'est cliquable */}
-          <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <div className="bg-purple-600 text-white text-xs px-3 py-1 rounded-full shadow-lg">
-              📊 Voir la progression
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      {/* Modale PrayerProgressBar améliorée */}
-      {isModalOpen && (
-        <div 
-          className="fixed inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm animate-in fade-in duration-300" 
-          style={{ zIndex: 2147483647 }}
-          onClick={closeModal}
-        >
-          <div 
-            className="bg-white rounded-3xl shadow-2xl w-full max-w-4xl mx-4 relative animate-in slide-in-from-bottom-4 duration-300 overflow-hidden" 
-            onClick={e => e.stopPropagation()}
-            style={{ maxHeight: '90vh' }}
-          >
-            {/* En-tête de la modale */}
-            <div className="sticky top-0 bg-gradient-to-r from-purple-600 to-indigo-600 text-white p-6 rounded-t-3xl z-10">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div>
-                    <h2 className="text-2xl font-bold">Progression Spirituelle</h2>
-                    <p className="text-purple-100 text-sm">Suivez votre parcours de prière quotidien</p>
-                  </div>
-                </div>
-                <button 
-                  className="w-10 h-10 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center text-white text-xl transition-colors duration-200" 
-                  onClick={closeModal}
-                >
-                  ✕
-                </button>
-              </div>
-            </div>
-            
-            {/* Contenu de la modale avec scroll optimisé */}
-            <div className="overflow-y-auto" style={{ maxHeight: 'calc(90vh - 140px)' }}>
-              <div className="p-6">
-                <PrayerProgressBar />
-                
-                {/* Conseils spirituels */}
-                <div className="mt-8 bg-gradient-to-r from-amber-50 to-orange-50 rounded-2xl p-6 border border-amber-200">
-                  <div className="flex items-start gap-4">
-                    <div>
-                      <h3 className="text-lg font-semibold text-amber-800 mb-2">Conseil Spirituel</h3>
-                      <p className="text-amber-700 text-sm leading-relaxed">
-                        &ldquo;Et accomplis la prière aux deux extrémités du jour et à certaines heures de la nuit. 
-                        Les bonnes œuvres chassent les mauvaises. Cela est une exhortation pour ceux qui réfléchissent.&rdquo;
-                        <span className="block mt-2 font-medium">- Sourate Hud, verset 114</span>
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            {/* Pied de la modale */}
-            <div className="sticky bottom-0 bg-gray-50 px-6 py-4 rounded-b-3xl flex justify-center border-t border-gray-100">
-              <button 
-                onClick={closeModal}
-                className="px-6 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-full transition-colors duration-200 font-medium"
-              >
-                Fermer
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-    </>
-  );
-}
+// Composant local supprimé: la modale est désormais gérée dans `components/PrayerTimer`
 
 
 interface Recitateur {
@@ -163,13 +39,19 @@ export default function HomePage() {
         </h1>
       </div>
 
-      {/* Horloge locale et prochaine prière */}
+      {/* Horloge locale, prochaine prière et citation du jour */}
       <div className="mt-12 px-6 max-w-4xl mx-auto">
         <div className="mt-12 flex flex-col items-center">
             <h2 className="text-2xl font-bold text-[var(--color-accent)] mb-4">🕌 Temps restant</h2>
-            <PrayerTimerWithModal />
+            <PrayerTimer />
         </div>
         <NextPrayer />  
+        <div className="mt-8">
+          <CitationOfTheDay />
+        </div>
+        <div className="mt-8">
+          <QiblaCompass />
+        </div>
       </div>
 
       {/* Cartes de fonctionnalités */}
