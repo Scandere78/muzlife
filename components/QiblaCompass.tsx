@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
+import { useCompass } from "../hooks/useCompass";
 
 type Geo = { lat: number; lng: number };
 
@@ -35,53 +36,11 @@ function computeBearing(from: Geo, to: Geo): number {
 export default function QiblaCompass(): React.ReactElement {
   const [position, setPosition] = useState<Geo | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [heading, setHeading] = useState<number | null>(null); // 0-360° from North
-  const [needsPermission, setNeedsPermission] = useState(false);
+  const { heading, error: compassError, isSupported, needsPermission, requestPermission } = useCompass();
 
-  // Ask for device orientation permission on iOS 13+
-  const requestOrientationPermission = async () => {
-    try {
-      // @ts-expect-error: webkit API on iOS
-      if (typeof DeviceOrientationEvent !== "undefined" && typeof DeviceOrientationEvent.requestPermission === "function") {
-        // @ts-expect-error: webkit API on iOS
-        const response = await DeviceOrientationEvent.requestPermission();
-        if (response === "granted") {
-          setNeedsPermission(false);
-          startOrientationListener();
-        } else {
-          setError("Permission capteurs refusée");
-        }
-        return;
-      }
-      // Non-iOS: nothing special
-      startOrientationListener();
-    } catch (e) {
-      setError("Impossible d'obtenir la permission des capteurs");
-    }
-  };
-
-  const startOrientationListener = () => {
-    const handleOrientation = (e: DeviceOrientationEvent) => {
-      // iOS provides webkitCompassHeading (0=N, clockwise)
-      // @ts-expect-error: iOS property
-      const iosHeading: number | undefined = e.webkitCompassHeading;
-      if (typeof iosHeading === "number") {
-        setHeading(normalizeDegrees(iosHeading));
-        return;
-      }
-
-      // Fallback: use alpha if absolute (may vary by device)
-      // alpha: rotation around z-axis in degrees (0-360). We try to treat it as compass heading.
-      if (typeof e.alpha === "number") {
-        const abs = (e as any).absolute === true; // some browsers set absolute
-        const candidate = normalizeDegrees(e.alpha);
-        // Heuristic: if not absolute, still use alpha as a rough heading
-        setHeading(candidate);
-      }
-    };
-
-    window.addEventListener("deviceorientation", handleOrientation, true);
-  };
+  useEffect(() => {
+    if (compassError) setError(compassError);
+  }, [compassError]);
 
   useEffect(() => {
     let geoWatchId: number | null = null;
@@ -97,20 +56,8 @@ export default function QiblaCompass(): React.ReactElement {
       setError("Géolocalisation non disponible");
     }
 
-    // Detect if explicit permission is needed for orientation (iOS)
-    // @ts-expect-error: iOS webkit API
-    if (typeof DeviceOrientationEvent !== "undefined" && typeof DeviceOrientationEvent.requestPermission === "function") {
-      setNeedsPermission(true);
-    } else {
-      // Try start immediately for non-iOS devices
-      startOrientationListener();
-    }
-
     return () => {
       if (geoWatchId !== null) navigator.geolocation.clearWatch(geoWatchId);
-      window.removeEventListener("deviceorientation", () => {
-        // Empty function
-      });
     };
   }, []);
 
@@ -164,11 +111,11 @@ export default function QiblaCompass(): React.ReactElement {
                 <div className="mb-2">Obtention de votre position…</div>
               )}
 
-              {heading != null ? (
+              {isSupported ? (
                 <div className="mb-2">Boussole: {heading.toFixed(0)}°</div>
               ) : needsPermission ? (
                 <button
-                  onClick={requestOrientationPermission}
+                  onClick={requestPermission}
                   className="px-3 py-2 rounded bg-[var(--color-accent)] text-white text-sm font-semibold"
                 >
                   Autoriser l'accès aux capteurs
