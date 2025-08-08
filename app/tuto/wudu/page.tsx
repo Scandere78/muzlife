@@ -180,18 +180,20 @@ export default function TutoWuduPage(): React.ReactElement {
   }, []);
 
   return (
-    <div className="relative h-screen w-full bg-gradient-to-b from-cyan-50 to-white">
-      <div className="mx-auto flex h-full w-full max-w-6xl items-stretch gap-3 px-3 md:gap-6 md:px-6">
+    <div className="relative h-screen w-full dark:bg-[var(--color-foreground)] dark:text-gray-100">
+      {/* Dark overlay to further dim background on this page */}
+      <div className="pointer-events-none absolute inset-0 bg-transparent dark:bg-black/50 transition-colors" />
+      <div className="relative z-10 mx-auto flex h-full w-full max-w-6xl items-stretch gap-3 px-3 md:gap-6 md:px-6">
         {/* Side vertical progress bar (not overlapping) */}
         <aside className="flex h-full w-8 flex-col items-center justify-center sm:w-10 md:w-14">
           <div className="flex h-4/5 w-2 flex-col items-center justify-between">
-            <div className="relative h-full w-full overflow-hidden rounded-full bg-gray-200 shadow-inner">
+            <div className="relative h-full w-full overflow-hidden rounded-full bg-gray-200 dark:bg-gray-800 shadow-inner">
               <div
-                className="absolute left-0 top-0 w-full bg-emerald-500 transition-all"
+                className="absolute left-0 top-0 w-full bg-emerald-500 dark:bg-emerald-400 transition-all"
                 style={{ height: `${slideProgressPercent}%` }}
               />
             </div>
-            <div className="mt-2 text-center text-[10px] font-semibold text-gray-600">
+            <div className="mt-2 text-center text-[10px] font-semibold text-gray-600 dark:text-gray-300">
               {slideProgressPercent}%
             </div>
           </div>
@@ -212,10 +214,10 @@ export default function TutoWuduPage(): React.ReactElement {
             aria-labelledby={`wudu-step-title-${idx}`}
           >
             <div className="mx-auto w-full max-w-3xl">
-              <div className="max-h-[82vh] overflow-auto rounded-3xl border border-emerald-100 bg-white/80 p-5 shadow-xl backdrop-blur-sm md:max-h-[78vh] md:p-8">
+              <div className="max-h-[82vh] overflow-auto rounded-3xl border border-emerald-100 dark:border-emerald-900/40 bg-white/80 dark:bg-gray-900/70 p-5 shadow-xl backdrop-blur-sm md:max-h-[78vh] md:p-8">
                 {/* Image d'illustration si disponible */}
                 {IMAGE_INDEX_BY_STEP_ID[step.id] ? (
-                  <div className="relative mx-auto mt-2 w-full max-w-md overflow-hidden rounded-2xl bg-emerald-50 md:mt-0">
+                  <div className="relative mx-auto mt-2 w-full max-w-md overflow-hidden rounded-2xl bg-emerald-50 dark:bg-emerald-900/20 md:mt-0">
                     <div className="relative aspect-[3/4] w-full">
                       <Image
                         src={`/wudu_step/${IMAGE_INDEX_BY_STEP_ID[step.id]}.png`}
@@ -237,13 +239,13 @@ export default function TutoWuduPage(): React.ReactElement {
                   </div>
                   <h2
                     id={`wudu-step-title-${idx}`}
-                    className="text-balance text-xl font-bold text-gray-900 md:text-2xl"
+                    className="text-balance text-xl font-bold text-gray-900 dark:text-gray-100 md:text-2xl"
                   >
                     {step.title}
                   </h2>
                 </div>
 
-                <p className="mt-3 text-pretty text-base leading-relaxed text-gray-700 md:mt-4 md:text-lg">
+                <p className="mt-3 text-pretty text-base leading-relaxed text-gray-700 dark:text-gray-200 md:mt-4 md:text-lg">
                   {step.description}
                 </p>
 
@@ -264,7 +266,7 @@ export default function TutoWuduPage(): React.ReactElement {
                               "h-10 w-10 rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-emerald-400 md:h-12 md:w-12 " +
                               (filled
                                 ? "bg-emerald-500 text-white shadow"
-                                : "bg-emerald-100 text-emerald-800")
+                                : "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-200")
                             }
                             aria-label={`Marquer la répétition ${i + 1} sur ${
                               step.repeatCount
@@ -276,7 +278,7 @@ export default function TutoWuduPage(): React.ReactElement {
                       })}
                     </div>
 
-                    <div className="mt-4 text-sm text-gray-600">
+                    <div className="mt-4 text-sm text-gray-600 dark:text-gray-300">
                       {stepRepetitions[step.id] === step.repeatCount ? (
                         <span>
                           ✅ Bien joué ! Tu as complété cette étape.
@@ -296,7 +298,7 @@ export default function TutoWuduPage(): React.ReactElement {
                       <button
                         type="button"
                         onClick={handleResetCounts}
-                        className="mt-4 rounded-full bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-200"
+                        className="mt-4 rounded-full bg-gray-100 dark:bg-gray-800 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 transition hover:bg-gray-200 dark:hover:bg-gray-700"
                       >
                         Réinitialiser les compteurs
                       </button>
@@ -310,7 +312,7 @@ export default function TutoWuduPage(): React.ReactElement {
                     <button
                       type="button"
                       onClick={() => scrollToStep(idx - 1)}
-                      className="rounded-full bg-white px-4 py-2 text-sm font-medium text-gray-700 ring-1 ring-gray-200 transition hover:bg-gray-50"
+                      className="rounded-full bg-white dark:bg-gray-900 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-100 ring-1 ring-gray-200 dark:ring-gray-700 transition hover:bg-gray-50 dark:hover:bg-gray-800"
                     >
                       ← Précédent
                     </button>
@@ -330,7 +332,7 @@ export default function TutoWuduPage(): React.ReactElement {
                     <button
                       type="button"
                       onClick={handleResetCounts}
-                      className="rounded-full bg-emerald-100 px-5 py-2 text-sm font-semibold text-emerald-900 ring-1 ring-emerald-200 transition hover:bg-emerald-200"
+                      className="rounded-full bg-emerald-100 dark:bg-emerald-900/40 px-5 py-2 text-sm font-semibold text-emerald-900 dark:text-emerald-100 ring-1 ring-emerald-200 dark:ring-emerald-800 transition hover:bg-emerald-200 dark:hover:bg-emerald-900/60"
                     >
                       Recommencer
                     </button>
@@ -341,7 +343,7 @@ export default function TutoWuduPage(): React.ReactElement {
               {/* Slide hint arrow (only on intro) */}
               {idx === 0 ? (
                 <div className="pointer-events-none absolute bottom-8 left-1/2 -translate-x-1/2 text-center">
-                  <p className="text-sm text-gray-600">Glisse vers le bas</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">Glisse vers le bas</p>
                   <div className="mt-2 animate-bounce text-2xl">⬇️</div>
                 </div>
               ) : null}

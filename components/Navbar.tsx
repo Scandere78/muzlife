@@ -54,6 +54,40 @@ const Navbar: React.FC = () => {
     setTimeout(() => window.location.reload(), 500);
   };
 
+  // Theme handling
+  const [theme, setTheme] = useState<string>("light");
+  const getCookie = (name: string): string | null => {
+    if (typeof document === 'undefined') return null;
+    const match = document.cookie.match(
+      new RegExp("(?:^|; )" + encodeURIComponent(name) + "=([^;]*)")
+    );
+    return match ? decodeURIComponent(match[1]) : null;
+  };
+  const setCookie = (name: string, value: string, days = 365) => {
+    if (typeof document === 'undefined') return;
+    const expires = new Date(Date.now() + days * 864e5).toUTCString();
+    document.cookie = `${encodeURIComponent(name)}=${encodeURIComponent(
+      value
+    )}; expires=${expires}; path=/; SameSite=Lax`;
+  };
+  useEffect(() => {
+    const initial =
+      getCookie("theme") ||
+      (window.matchMedia &&
+      window.matchMedia('(prefers-color-scheme: dark)').matches
+        ? 'dark'
+        : 'light');
+    setTheme(initial);
+    document.documentElement.classList.toggle('dark', initial === 'dark');
+  }, []);
+
+  const toggleTheme = () => {
+    const next = theme === 'dark' ? 'light' : 'dark';
+    setTheme(next);
+    setCookie('theme', next, 365);
+    document.documentElement.classList.toggle('dark', next === 'dark');
+  };
+
   if (isDashboardPage) return null;
 
   return (
@@ -118,8 +152,24 @@ const Navbar: React.FC = () => {
                 </Link>
               </div>
             </div>
-            {/* réseaux sociaux seulement */}
+            {/* Theme toggle + réseaux sociaux */}
             <div className="hidden lg:flex items-center gap-3 ml-4 xl:ml-6">
+              <button
+                onClick={toggleTheme}
+                className="group relative w-10 h-10 rounded-full border border-white/20 bg-white/10 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white/20 transition-all duration-300 hover:scale-110"
+                aria-label="Basculer le thème"
+                title="Basculer le thème"
+              >
+                {theme === 'dark' ? (
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+                    <path fillRule="evenodd" d="M9.528 1.718a.75.75 0 01.858.278 8.25 8.25 0 1011.618 11.618.75.75 0 01.278.858 9.75 9.75 0 11-12.754-12.754z" clipRule="evenodd" />
+                  </svg>
+                ) : (
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+                    <path d="M12 2.25a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V3A.75.75 0 0112 2.25zm5.657 2.343a.75.75 0 011.06 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061zM21.75 12a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5H21a.75.75 0 01.75.75zm-3.033 6.591a.75.75 0 00-1.061 1.06l1.06 1.061a.75.75 0 001.061-1.06l-1.06-1.061zM12 18.75a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V19.5a.75.75 0 01.75-.75zm-6.591-3.033a.75.75 0 10-1.06 1.061l1.06 1.061a.75.75 0 001.06-1.061l-1.06-1.061zM3.75 12A.75.75 0 014.5 11.25h1.5a.75.75 0 010 1.5H4.5A.75.75 0 013.75 12zm3.033-6.591a.75.75 0 011.061-1.06L8.905 5.41a.75.75 0 11-1.061 1.06L6.783 5.409zM9.75 12a2.25 2.25 0 114.5 0 2.25 2.25 0 01-4.5 0z" />
+                  </svg>
+                )}
+              </button>
               {/* TikTok avec couleurs du site */}
               <a
                 href="https://www.tiktok.com/@al.musafiroon?_t=ZN-8ydOZWVVCwY&_r=1"
@@ -304,6 +354,27 @@ const Navbar: React.FC = () => {
             {/* Navigation mobile */}
             <div className="px-2 py-3">
               <div className="space-y-1">
+                {/* Toggle thème mobile */}
+                <button
+                  onClick={() => {
+                    toggleTheme();
+                    setIsMenuOpen(false);
+                  }}
+                  className="flex w-full items-center px-3 py-3 rounded-lg text-white hover:text-[var(--color-background)] hover:bg-white/10 transition-all duration-300 hover:translate-x-2"
+                >
+                  <div className="h-6 w-6 mr-3 flex items-center justify-center">
+                    {theme === 'dark' ? (
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
+                        <path fillRule="evenodd" d="M9.528 1.718a.75.75 0 01.858.278 8.25 8.25 0 1011.618 11.618.75.75 0 01.278.858 9.75 9.75 0 11-12.754-12.754z" clipRule="evenodd" />
+                      </svg>
+                    ) : (
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
+                        <path d="M12 2.25a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V3A.75.75 0 0112 2.25zm5.657 2.343a.75.75 0 011.06 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061zM21.75 12a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5H21a.75.75 0 01.75.75zm-3.033 6.591a.75.75 0 00-1.061 1.06l1.06 1.061a.75.75 0 001.061-1.06l-1.06-1.061zM12 18.75a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V19.5a.75.75 0 01.75-.75zm-6.591-3.033a.75.75 0 10-1.06 1.061l1.06 1.061a.75.75 0 001.06-1.061l-1.06-1.061zM3.75 12A.75.75 0 014.5 11.25h1.5a.75.75 0 010 1.5H4.5A.75.75 0 013.75 12zm3.033-6.591a.75.75 0 011.061-1.06L8.905 5.41a.75.75 0 11-1.061 1.06L6.783 5.409zM9.75 12a2.25 2.25 0 114.5 0 2.25 2.25 0 01-4.5 0z" />
+                      </svg>
+                    )}
+                  </div>
+                  <span className="text-lg">Thème {theme === 'dark' ? 'sombre' : 'clair'}</span>
+                </button>
                 <Link
                     href="/tuto/wudu"
                   className={`flex items-center px-3 py-3 rounded-lg transition-all duration-300 hover:translate-x-2 ${

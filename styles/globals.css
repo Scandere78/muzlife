@@ -11,15 +11,15 @@
   --font-sans: Arial, Helvetica, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-background: #f8f5ef; /* Blanc cassé/beige doux */
-    --color-foreground: #174c43; /* Vert profond du logo */
-    --color-accent: #c7a96b; /* Doré du croissant et du texte */
-    --color-accent-dark: #a88a4a; /* Variante doré plus foncé */
-    --color-border: #c7a96b; /* Pour les bordures dorées */
-    --color-muted: #e6f0ed; /* Vert très clair pour fonds secondaires */
-  }
+/* Thème sombre via classe .dark sur html */
+.dark {
+  /* Palette sombre plus neutre et apaisée */
+  --color-background: #060a09; /* quasi noir avec teinte verte */
+  --color-foreground: #0f2b26; /* vert profond (utilisé pour certains fonds) */
+  --color-accent: #c2a25a; /* or atténué */
+  --color-accent-dark: #9a7f3d; /* or plus terne */
+  --color-border: #264a43; /* bordures sombres verdâtres */
+  --color-muted: #0b1f1c; /* surfaces secondaires très sombres */
 }
 
 /* Arrière-plan principal avec l'image de calligraphie */
@@ -46,12 +46,22 @@ body::before {
   height: 100%;
   background: linear-gradient(
     135deg,
-    rgba(23, 76, 67, 0.3) 0%, /* Vert profond avec transparence */
-    rgba(248, 245, 239, 0.7) 50%, /* Beige semi-transparent */
-    rgba(23, 76, 67, 0.2) 100% /* Vert plus subtil */
+    rgba(23, 76, 67, 0.3) 0%,
+    rgba(248, 245, 239, 0.7) 50%,
+    rgba(23, 76, 67, 0.2) 100%
   );
   z-index: -1;
   pointer-events: none;
+}
+
+/* Variante overlay en dark mode pour lisibilité */
+.dark body::before {
+  background: linear-gradient(
+    135deg,
+    rgba(2, 6, 6, 0.75) 0%,
+    rgba(6, 10, 9, 0.7) 50%,
+    rgba(2, 6, 6, 0.75) 100%
+  );
 }
 
 /* Ajustements pour les conteneurs principaux */
@@ -73,6 +83,12 @@ body::before {
   border: 1px solid rgba(199, 169, 107, 0.2);
 }
 
+/* Surfaces en dark */
+.dark .card, .dark .bg-white, .dark .bg-gray-800, .dark .bg-gray-900 {
+  background-color: rgba(8, 16, 14, 0.85) !important; /* plus sombre */
+  border-color: rgba(38, 74, 67, 0.5);
+}
+
 /* Styles de base */
 a:not(nav a) {
   color: var(--color-accent);
@@ -89,6 +105,13 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 600;
   line-height: 1.2;
 }
+
+/* Texte clair en thème sombre (tout en gardant var(--color-foreground) sombre pour certains fonds) */
+.dark body { color: #e7f2ef; }
+.dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 { color: #e7f2ef; }
+
+/* Couleurs d'appui en sombre */
+.dark .bg-muted { background-color: rgba(11, 31, 28, 0.95) !important; }
 
 button, .btn {
   background-color: var(--color-accent);

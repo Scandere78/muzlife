@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 import { Inter, Amiri } from "next/font/google";
 import { AuthProvider } from "../contexts/AuthContext";
 import { Navbar } from "../components";
@@ -14,13 +15,15 @@ export const metadata: Metadata = {
   description: "Application moderne pour la communauté musulmane",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = await cookies();
+  const theme = cookieStore.get("theme")?.value || "light";
   return (
-    <html lang="fr" className={`${inter.className} ${amiri.variable}`}>
+    <html lang="fr" className={`${inter.className} ${amiri.variable} ${theme === 'dark' ? 'dark' : ''}`}>
       <body style={{ backgroundImage: 'url(/caligraphie.png)', color: 'var(--color-accent)' }} className="min-h-screen font-amiri">
         <AuthProvider>
           <Navbar />
