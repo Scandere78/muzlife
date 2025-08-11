@@ -45,7 +45,7 @@ export async function GET(req: NextRequest) {
           averageScore: 0,
           totalVersesRead: 0,
           readingStreak: 0,
-          dailyGoal: 10,
+          dailyReadingGoal: 10,
         },
       });
     }
@@ -115,8 +115,8 @@ let recentReadingProgress: any[] = [];
       totalVerses: stats?.totalVersesRead || 0,
       currentPosition,
       streak: stats?.readingStreak || 0,
-      dailyGoal: stats?.dailyGoal || 10,
-      goalProgress: Math.min((todayProgress / (stats?.dailyGoal || 10)) * 100, 100),
+      dailyGoal: stats?.dailyReadingGoal || 10,
+      goalProgress: Math.min((todayProgress / (stats?.dailyReadingGoal || 10)) * 100, 100),
     };
     return NextResponse.json({
       user: { id: user.id, email: user.email, name: user.name },

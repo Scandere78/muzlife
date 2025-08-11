@@ -25,9 +25,12 @@ model User {
   // Relations
   quizResults QuizResult[]
   readingProgress ReadingProgress[]
+  studySessions StudySession[]
+  verseStates VerseState[]
   
   // Stats intégrées
   stats UserStats?
+  preferences UserPreferences?
   
   @@map("users")
 }
@@ -43,11 +46,19 @@ model UserStats {
   
   // Statistiques de lecture
   totalVersesRead Int    @default(0)
+  totalVersesMemorized Int @default(0)
   currentSurah    Int?   // Numéro de la sourate actuelle
   currentVerse    Int?   // Numéro du verset actuel
   readingStreak   Int    @default(0) // Jours consécutifs de lecture
+  memorizationStreak Int @default(0) // Jours consécutifs de mémorisation
   lastReadDate    DateTime?
-  dailyGoal       Int    @default(10) // Objectif de versets par jour
+  lastMemorizedDate DateTime?
+  dailyReadingGoal Int @default(10) // Objectif de versets par jour
+  dailyMemorizationGoal Int @default(3) // Objectif de mémorisation par jour
+  
+  // Statistiques de temps d'étude
+  totalStudyTime  Int    @default(0) // en minutes
+  averageStudySession Int @default(0) // en minutes
   
   // Relation
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -116,4 +127,121 @@ model ReadingProgress {
   
   @@unique([userId, surahNumber, verseNumber])
   @@map("reading_progress")
+}
+
+// Énumération pour les modes d'étude
+enum StudyMode {
+  READING      // Mode lecture normal
+  MEMORIZATION // Mode mémorisation
+  PRONUNCIATION // Mode prononciation
+  REVIEW       // Mode révision/test
+}
+
+// États détaillés par verset pour chaque utilisateur
+model VerseState {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String   @db.ObjectId
+  surahNumber Int      // Numéro de la sourate (1-114)
+  verseNumber Int      // Numéro du verset dans la sourate
+  
+  // États du verset
+  isRead      Boolean  @default(false)
+  isMemorized Boolean  @default(false)
+  isFavorite  Boolean  @default(false)
+  
+  // Progression détaillée
+  readCount       Int      @default(0)     // Nombre de fois lu
+  memorizationLevel Int    @default(0)     // Niveau de mémorisation (0-5)
+  lastReadAt      DateTime?
+  lastMemorizedAt DateTime?
+  
+  // Temps d'étude par mode
+  readingTime      Int @default(0)   // en secondes
+  memorizationTime Int @default(0)   // en secondes
+  pronunciationTime Int @default(0)  // en secondes
+  
+  // Métadonnées
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, surahNumber, verseNumber])
+  @@map("verse_states")
+}
+
+// Sessions d'étude détaillées
+model StudySession {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String   @db.ObjectId
+  surahNumber Int      // Sourate étudiée
+  studyMode   StudyMode // Mode d'étude utilisé
+  
+  // Détails de la session
+  startedAt   DateTime @default(now())
+  endedAt     DateTime?
+  duration    Int?     // en secondes (calculé à la fin)
+  
+  // Progression de la session
+  versesStudied    Int[]    // Liste des numéros de versets étudiés
+  versesCompleted  Int[]    // Liste des versets complétés/mémorisés
+  totalVerses      Int      @default(0)
+  completedVerses  Int      @default(0)
+  
+  // Métriques de performance
+  accuracy         Float?   // Pourcentage de réussite pour les modes test
+  focusTime        Int?     // Temps effectif de concentration (hors pauses)
+  averageTimePerVerse Int?  // Temps moyen par verset
+  
+  // Paramètres audio utilisés
+  reciterUsed     String?  // Nom du récitateur
+  playbackSpeed   Float?   // Vitesse de lecture (0.5, 1.0, 1.5, etc.)
+  repetitionsPerVerse Int? // Nombre de répétitions par verset
+  
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("study_sessions")
+}
+
+// Préférences utilisateur pour l'expérience d'apprentissage
+model UserPreferences {
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  userId String @unique @db.ObjectId
+  
+  // Préférences d'affichage
+  arabicFontSize      Int     @default(24)    // Taille police arabe
+  phoneticFontSize    Int     @default(16)    // Taille police phonétique
+  translationFontSize Int     @default(14)    // Taille police traduction
+  preferredLanguage   String  @default("fr")  // Langue de traduction préférée
+  
+  // Préférences audio
+  preferredReciter    String  @default("mishary") // Récitateur préféré
+  defaultPlaybackSpeed Float  @default(1.0)       // Vitesse de lecture par défaut
+  autoPlayNext        Boolean @default(false)     // Lecture automatique verset suivant
+  repeatCount         Int     @default(1)         // Nombre de répétitions par défaut
+  
+  // Préférences d'étude
+  defaultStudyMode    StudyMode @default(READING) // Mode d'étude par défaut
+  showPhonetics       Boolean   @default(true)    // Afficher la phonétique
+  showTranslation     Boolean   @default(true)    // Afficher la traduction
+  enableNotifications Boolean   @default(true)    // Notifications rappel d'étude
+  
+  // Objectifs personnalisés
+  dailyReadingGoal       Int @default(10)  // Versets à lire par jour
+  dailyMemorizationGoal  Int @default(3)   // Versets à mémoriser par jour
+  weeklyStudyTimeGoal    Int @default(300) // Minutes d'étude par semaine
+  
+  // Paramètres de rappel
+  reminderTime           String?  // Heure de rappel quotidien (HH:MM)
+  studyDaysOfWeek        Int[]    // Jours d'étude (0=dimanche, 6=samedi)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("user_preferences")
 }

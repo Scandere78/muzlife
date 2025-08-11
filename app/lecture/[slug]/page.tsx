@@ -1,6 +1,7 @@
-import Link from "next/link";
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { slugToNumber } from "../../../lib/sourateSlugs";
+import SourateStudyPage from "../../../components/study/SourateStudyPage";
 
 // Récupère le texte arabe, la translittération (lecture phonétique) et la traduction française d'une sourate via l'API alquran.cloud
 async function fetchSourateWithTranslation(id: string): Promise<any | null> {
@@ -33,13 +34,14 @@ async function fetchSourateWithTranslation(id: string): Promise<any | null> {
   };
 }
 
+// Fonction pour récupérer les métadonnées côté serveur
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const num = slugToNumber(slug);
   const sourate = num ? await fetchSourateWithTranslation(num.toString()) : null;
   return {
     title: sourate ? `${sourate.englishName} - Sourate ${sourate.number} | MuzLife` : "Sourate inconnue | MuzLife",
-    description: sourate ? `Détail de la sourate ${sourate.englishName} (${sourate.name})` : "Détail d'une sourate du Coran sur MuzLife."
+    description: sourate ? `Étude interactive de la sourate ${sourate.englishName} (${sourate.name}) avec progression personnalisée` : "Étude interactive du Coran sur MuzLife."
   };
 }
 
@@ -47,60 +49,60 @@ interface PageParams {
   params: Promise<{ slug: string }>
 }
 
-export default async function SouratePage({ params }: PageParams) {
-  const { slug } = await params;
+// Composant skeleton pour le chargement
+function SouratePageSkeleton() {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 p-4">
+      <div className="max-w-4xl mx-auto">
+        {/* Header skeleton */}
+        <div className="mb-8">
+          <div className="h-8 bg-gray-200 rounded-lg w-3/4 mb-4 animate-pulse"></div>
+          <div className="h-6 bg-gray-200 rounded-lg w-1/2 animate-pulse"></div>
+        </div>
+
+        {/* Controls skeleton */}
+        <div className="mb-6 p-4 bg-white/80 backdrop-blur-sm rounded-xl border border-white/50 shadow-lg">
+          <div className="flex flex-wrap gap-2 mb-4">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="h-10 bg-gray-200 rounded-lg w-24 animate-pulse"></div>
+            ))}
+          </div>
+          <div className="h-12 bg-gray-200 rounded-lg w-full animate-pulse"></div>
+        </div>
+
+        {/* Verses skeleton */}
+        <div className="space-y-4">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <div key={i} className="p-6 bg-white/80 backdrop-blur-sm rounded-xl border border-white/50 shadow-lg">
+              <div className="flex items-center justify-between mb-4">
+                <div className="h-8 bg-gray-200 rounded-full w-8 animate-pulse"></div>
+                <div className="h-6 bg-gray-200 rounded-lg w-16 animate-pulse"></div>
+              </div>
+              <div className="space-y-3">
+                <div className="h-8 bg-gray-200 rounded-lg w-full animate-pulse"></div>
+                <div className="h-6 bg-gray-200 rounded-lg w-5/6 animate-pulse"></div>
+                <div className="h-5 bg-gray-200 rounded-lg w-4/5 animate-pulse"></div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+async function SourateContent({ slug }: { slug: string }) {
   const num = slugToNumber(slug);
   const sourate = num ? await fetchSourateWithTranslation(num.toString()) : null;
-  if (!sourate) {
-    return (
-      <main className="max-w-3xl mx-auto py-10 px-4">
-        <div className="mb-6">
-          <Link
-            href="/lecture"
-            className="inline-flex items-center px-4 py-2 rounded-full bg-[var(--color-accent)] hover:scale-105 text-white font-medium transition-colors shadow-sm"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-            Retour à la liste
-          </Link>
-        </div>
-        <div className="text-red-500 text-lg font-semibold">Impossible de charger la sourate. Veuillez réessayer plus tard.</div>
-      </main>
-    );
-  }
+  return <SourateStudyPage sourate={sourate} surahNumber={num || 0} />;
+}
 
+export default async function SouratePage({ params }: PageParams) {
+  const { slug } = await params;
+  
   return (
-    <main className="max-w-3xl mx-auto py-10 px-4">
-      <div className="mb-6">
-        <Link
-          href="/lecture"
-          className="inline-flex items-center px-4 py-2 rounded-full bg-[var(--color-background)] hover:scale-105 text-white font-medium transition-colors shadow-sm"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-          Retour à la liste
-        </Link>
-      </div>
-      <h1 className="text-3xl font-bold text-[var(--color-accent)] mb-2">{sourate.name}</h1>
-      <div className="text-gray-400 mb-4">Sourate n°{sourate.number} • {sourate.englishName} • {sourate.englishNameTranslation}</div>
-      <div className="bg-black/30 rounded-xl p-6 text-gray-100 text-2xl leading-loose text-right font-quran mb-6">
-        {sourate.ayahs.map((ayah: any) => (
-          <div key={ayah.numberInSurah} className="mb-6">
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
-              <span className="block text-2xl md:text-3xl text-right font-quran">{ayah.text}</span>
-              <span className="text-[var(--color-background)] text-lg align-super ml-2">({ayah.numberInSurah})</span>
-            </div>
-            {ayah.transliteration && (
-              <div className="text-base text-left text-gray-300 mt-2 italic" lang="en">
-                {ayah.transliteration}
-              </div>
-            )}
-            <div className="text-base text-left text-[var(--color-background)] mt-2 font-sans">{ayah.translation}</div>
-          </div>
-        ))}
-      </div>
-    </main>
+    <Suspense fallback={<SouratePageSkeleton />}>
+      <SourateContent slug={slug} />
+    </Suspense>
   );
 } 
