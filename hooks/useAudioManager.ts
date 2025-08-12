@@ -22,7 +22,7 @@ export interface UseAudioManagerReturn {
   audioState: AudioState;
   selectedReciter: string;
   setSelectedReciter: (reciter: string) => void;
-  playVerse: (verseNumber: number, audioUrl: string) => Promise<void>;
+  playVerse: (verseNumber: number, audioUrl: string, verses?: any[]) => Promise<void>;
   playAutoMode: (startVerse: number, verses: any[], surahNumber: number) => void;
   playComplete: (surahNumber: number) => void;
   pauseAudio: () => void;
@@ -163,8 +163,13 @@ export function useAudioManager(options: AudioManagerOptions = {}): UseAudioMana
   }, [audioState.currentVerse, onVerseComplete, onSessionComplete, onError, onTimeUpdate, cleanupAudio]);
 
   // Jouer un verset spécifique
-  const playVerse = useCallback(async (verseNumber: number, audioUrl: string) => {
+  const playVerse = useCallback(async (verseNumber: number, audioUrl: string, verses?: any[]) => {
     try {
+      // Mettre à jour les versets pour la navigation si fournis
+      if (verses && verses.length > 0) {
+        versesRef.current = verses;
+      }
+      
       // Si c'est le même verset qui joue, basculer pause/play
       if (audioState.currentVerse === verseNumber && audioRef.current) {
         if (audioState.isPaused) {
@@ -288,10 +293,15 @@ export function useAudioManager(options: AudioManagerOptions = {}): UseAudioMana
       
       if (nextIndex < versesRef.current.length) {
         const nextVerse = versesRef.current[nextIndex];
+        // Activer le mode auto si on était en mode individuel
+        if (audioState.currentMode === 'verse') {
+          autoModeRef.current = true;
+          setAudioState(prev => ({ ...prev, currentMode: 'auto' }));
+        }
         playVerse(nextVerse.numberInSurah, nextVerse.audio);
       }
     }
-  }, [audioState.currentVerse, playVerse]);
+  }, [audioState.currentVerse, audioState.currentMode, playVerse]);
 
   const previousVerse = useCallback(() => {
     if (audioState.currentVerse !== null && versesRef.current.length > 0) {
@@ -300,10 +310,15 @@ export function useAudioManager(options: AudioManagerOptions = {}): UseAudioMana
       
       if (previousIndex >= 0) {
         const previousVerse = versesRef.current[previousIndex];
+        // Activer le mode auto si on était en mode individuel
+        if (audioState.currentMode === 'verse') {
+          autoModeRef.current = true;
+          setAudioState(prev => ({ ...prev, currentMode: 'auto' }));
+        }
         playVerse(previousVerse.numberInSurah, previousVerse.audio);
       }
     }
-  }, [audioState.currentVerse, playVerse]);
+  }, [audioState.currentVerse, audioState.currentMode, playVerse]);
 
   // Cleanup à la destruction du composant
   useEffect(() => {

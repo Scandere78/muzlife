@@ -5,10 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Play, 
   Pause, 
-  RotateCcw, 
   Heart, 
   BookOpen, 
-  Volume2, 
   CheckCircle,
   Clock,
   Eye,
@@ -56,6 +54,7 @@ interface VerseCardProps {
     repeatCount: number;
   } | null;
   isCurrentlyPlaying?: boolean;
+  isCurrentlyPaused?: boolean;
   onVerseRead: (verseNumber: number, timeSpent: number) => void;
   onVerseMemorized: (verseNumber: number, timeSpent: number) => void;
   onVerseFavoriteToggle: (verseNumber: number) => void;
@@ -70,6 +69,7 @@ export default function VerseCard({
   studyMode,
   preferences,
   isCurrentlyPlaying = false,
+  isCurrentlyPaused = false,
   onVerseRead,
   onVerseMemorized,
   onVerseFavoriteToggle,
@@ -237,20 +237,17 @@ export default function VerseCard({
       : '4px solid transparent',
   };
 
-  const getMemorizationColor = () => {
-    if (!verseState?.memorizationLevel) return 'text-gray-400';
-    const level = verseState.memorizationLevel;
-    if (level >= 5) return 'text-emerald-500';
-    if (level >= 3) return 'text-yellow-500';
-    return 'text-orange-500';
-  };
 
   // Déterminer si ce verset est en cours de lecture
   // Priorité à isCurrentlyPlaying (venant du gestionnaire externe)
   const isPlayingAudio = isCurrentlyPlaying || isPlaying;
   
-  // State pour le bouton play/pause - synchronisé avec l'état global OU local
-  const isVersePlayButtonActive = isCurrentlyPlaying || isPlaying;
+  // Déterminer l'état réel du bouton play/pause
+  // Si c'est le verset actuel et qu'il est en pause, on montre l'icône pause
+  // Si c'est le verset actuel et qu'il joue, on montre l'icône pause
+  // Sinon on montre l'icône play
+  const shouldShowPauseIcon = isCurrentlyPlaying || (isPlaying && !isCurrentlyPaused);
+  const isVerseActive = isCurrentlyPlaying || isCurrentlyPaused || isPlaying;
 
   return (
     <motion.div
@@ -265,7 +262,7 @@ export default function VerseCard({
       transition={{ duration: 0.3 }}
       className={`rounded-xl p-4 mb-4 border transition-all duration-300 hover:shadow-lg overflow-hidden ${
         isPlayingAudio 
-          ? 'bg-green-100/20 border-green-300 shadow-lg backdrop-blur-sm' 
+          ? 'bg-green-100/20 border-green-300 shadow-lg shadow-green-500/20 backdrop-blur-sm' 
           : 'bg-black/50 backdrop-blur-sm border-white/10 hover:border-white/20'
       } ${className}`}
       style={cardStyle}
@@ -273,64 +270,139 @@ export default function VerseCard({
       {/* En-tête avec numéro de verset et contrôles */}
       <div className="flex items-start justify-between mb-4 gap-4">
         <div className="flex items-center space-x-3 flex-1 min-w-0">
-          <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold transition-all duration-300 flex-shrink-0 ${
-            isPlayingAudio 
-              ? 'bg-green-500 text-white animate-pulse' 
-              : 'bg-[var(--color-accent)] text-white'
-          }`}>
+          <motion.div 
+            className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold transition-all duration-300 flex-shrink-0 ${
+              isPlayingAudio 
+                ? 'bg-green-500 text-white' 
+                : 'bg-[var(--color-accent)] text-white'
+            }`}
+            animate={isPlayingAudio ? {
+              scale: [1, 1.1, 1],
+              boxShadow: [
+                '0 0 0 0 rgba(34, 197, 94, 0)',
+                '0 0 0 6px rgba(34, 197, 94, 0.2)',
+                '0 0 0 0 rgba(34, 197, 94, 0)'
+              ]
+            } : {}}
+            transition={{
+              duration: 2,
+              repeat: isPlayingAudio ? Infinity : 0,
+              ease: "easeInOut"
+            }}
+          >
             {verse.numberInSurah}
-          </div>
+          </motion.div>
           
           <div className="flex-1 min-w-0">
             <div className="flex items-center space-x-2">
               <span className="text-white font-medium">Verset {verse.numberInSurah}</span>
               
-              {isPlayingAudio && (
-                <span className="text-green-400 text-xs font-semibold animate-pulse flex items-center space-x-1">
-                  <span className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse"></span>
-                  <span>En cours</span>
-                </span>
-              )}
+              <AnimatePresence>
+                {(isCurrentlyPlaying || isCurrentlyPaused) && (
+                  <motion.span 
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.8 }}
+                    className={`text-xs font-semibold flex items-center space-x-1 ${
+                      isCurrentlyPlaying ? 'text-green-400' : 'text-orange-400'
+                    }`}
+                  >
+                    <motion.span 
+                      className={`w-1.5 h-1.5 rounded-full ${
+                        isCurrentlyPlaying ? 'bg-green-400' : 'bg-orange-400'
+                      }`}
+                      animate={isCurrentlyPlaying ? {
+                        scale: [1, 1.3, 1],
+                        opacity: [1, 0.6, 1]
+                      } : {
+                        scale: 1,
+                        opacity: 0.8
+                      }}
+                      transition={{
+                        duration: 1,
+                        repeat: isCurrentlyPlaying ? Infinity : 0,
+                        ease: "easeInOut"
+                      }}
+                    />
+                    <motion.span
+                      animate={isCurrentlyPlaying ? {
+                        opacity: [1, 0.7, 1]
+                      } : {
+                        opacity: 0.8
+                      }}
+                      transition={{
+                        duration: 2,
+                        repeat: isCurrentlyPlaying ? Infinity : 0,
+                        ease: "easeInOut"
+                      }}
+                    >
+                      {isCurrentlyPlaying ? 'En cours' : 'En pause'}
+                    </motion.span>
+                  </motion.span>
+                )}
+              </AnimatePresence>
             </div>
             
             {/* Indicateurs d'état */}
             <div className="flex items-center space-x-2 mt-1">
-              {verseState?.isRead && (
-                <motion.div
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  className="text-blue-400"
-                  title="Verset lu"
-                >
-                  <Eye size={14} />
-                </motion.div>
-              )}
+              <AnimatePresence>
+                {verseState?.isRead && (
+                  <motion.div
+                    initial={{ scale: 0, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    exit={{ scale: 0, opacity: 0 }}
+                    className="text-blue-400"
+                    title="Verset lu"
+                    whileHover={{ scale: 1.2 }}
+                  >
+                    <Eye size={14} />
+                  </motion.div>
+                )}
+              </AnimatePresence>
               
-              {verseState?.isMemorized && (
-                <motion.div
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  className="text-emerald-400"
-                  title="Verset mémorisé"
-                >
-                  <CheckCircle size={14} />
-                </motion.div>
-              )}
+              <AnimatePresence>
+                {verseState?.isMemorized && (
+                  <motion.div
+                    initial={{ scale: 0, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    exit={{ scale: 0, opacity: 0 }}
+                    className="text-emerald-400"
+                    title="Verset mémorisé"
+                    whileHover={{ scale: 1.2 }}
+                  >
+                    <CheckCircle size={14} />
+                  </motion.div>
+                )}
+              </AnimatePresence>
               
-              {verseState?.memorizationLevel && verseState.memorizationLevel > 0 && (
-                <div className="flex items-center space-x-1">
-                  {[1, 2, 3, 4, 5].map((level) => (
-                    <div
-                      key={level}
-                      className={`w-1.5 h-1.5 rounded-full ${
-                        level <= (verseState?.memorizationLevel || 0)
-                          ? 'bg-emerald-400'
-                          : 'bg-gray-600'
-                      }`}
-                    />
-                  ))}
-                </div>
-              )}
+              <AnimatePresence>
+                {verseState?.memorizationLevel && verseState.memorizationLevel > 0 && (
+                  <motion.div 
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -10 }}
+                    className="flex items-center space-x-1"
+                  >
+                    {[1, 2, 3, 4, 5].map((level) => (
+                      <motion.div
+                        key={level}
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ delay: level * 0.1 }}
+                        className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
+                          level <= (verseState?.memorizationLevel || 0)
+                            ? 'bg-emerald-400'
+                            : 'bg-gray-600'
+                        }`}
+                        whileHover={{
+                          scale: level <= (verseState?.memorizationLevel || 0) ? 1.3 : 1.1,
+                          backgroundColor: level <= (verseState?.memorizationLevel || 0) ? '#34d399' : '#6b7280'
+                        }}
+                      />
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </div>
         </div>
@@ -338,79 +410,156 @@ export default function VerseCard({
         {/* Contrôles */}
         <div className="flex items-center space-x-1 flex-shrink-0">
           {/* Bouton lecture audio */}
-          <button
+          <motion.button
             onClick={handlePlayAudio}
-            className={`p-2 rounded-lg transition-colors ${
-              isVersePlayButtonActive
+            className={`p-2 rounded-lg transition-all duration-300 ${
+              isVerseActive
                 ? 'bg-green-500/20 text-green-400 border border-green-500/30'
                 : 'bg-white/10 hover:bg-white/20'
             }`}
-            title={isVersePlayButtonActive ? "En cours de lecture" : "Écouter"}
+            title={
+              shouldShowPauseIcon 
+                ? "Mettre en pause" 
+                : (isCurrentlyPaused ? "Reprendre" : "Écouter")
+            }
+            whileTap={{ scale: 0.95 }}
+            whileHover={{ scale: 1.05 }}
           >
-            {isVersePlayButtonActive ? <Pause size={16} /> : <Play size={16} />}
-          </button>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={shouldShowPauseIcon ? 'pause' : 'play'}
+                initial={{ scale: 0.8, opacity: 0, rotate: -90 }}
+                animate={{ scale: 1, opacity: 1, rotate: 0 }}
+                exit={{ scale: 0.8, opacity: 0, rotate: 90 }}
+                transition={{ 
+                  duration: 0.2,
+                  type: "spring",
+                  stiffness: 300,
+                  damping: 20
+                }}
+              >
+                {shouldShowPauseIcon ? <Pause size={16} /> : <Play size={16} />}
+              </motion.div>
+            </AnimatePresence>
+          </motion.button>
 
           {/* Bouton favori */}
-          <button
+          <motion.button
             onClick={() => onVerseFavoriteToggle(verse.numberInSurah)}
-            className={`p-2 rounded-lg transition-colors ${
+            className={`p-2 rounded-lg transition-all duration-300 ${
               verseState?.isFavorite
                 ? 'text-red-400 bg-red-400/20'
                 : 'bg-white/10 hover:bg-white/20'
             }`}
             title="Ajouter aux favoris"
+            whileTap={{ scale: 0.95 }}
+            whileHover={{ scale: 1.05 }}
           >
-            <Heart size={16} fill={verseState?.isFavorite ? 'currentColor' : 'none'} />
-          </button>
+            <motion.div
+              animate={{
+                scale: verseState?.isFavorite ? [1, 1.2, 1] : 1,
+                color: verseState?.isFavorite ? '#f87171' : undefined
+              }}
+              transition={{ duration: 0.3 }}
+            >
+              <Heart size={16} fill={verseState?.isFavorite ? 'currentColor' : 'none'} />
+            </motion.div>
+          </motion.button>
 
           {/* Bouton mémorisation */}
-          <button
+          <motion.button
             onClick={handleMemorizeToggle}
-            className={`p-2 rounded-lg transition-colors ${
+            className={`p-2 rounded-lg transition-all duration-300 ${
               verseState?.isMemorized
                 ? 'text-emerald-400 bg-emerald-400/20'
                 : 'bg-white/10 hover:bg-white/20'
             }`}
             title={verseState?.isMemorized ? 'Mémorisé' : 'Marquer comme mémorisé'}
+            whileTap={{ scale: 0.95 }}
+            whileHover={{ scale: 1.05 }}
           >
-            <CheckCircle size={16} />
-          </button>
+            <motion.div
+              animate={{
+                scale: verseState?.isMemorized ? [1, 1.2, 1] : 1,
+                rotate: verseState?.isMemorized ? [0, 360, 0] : 0
+              }}
+              transition={{ duration: 0.5 }}
+            >
+              <CheckCircle size={16} />
+            </motion.div>
+          </motion.button>
 
           {/* Bouton copier lien */}
-          <button
+          <motion.button
             onClick={handleCopyVerseLink}
-            className={`p-2 rounded-lg transition-colors ${
+            className={`p-2 rounded-lg transition-all duration-300 ${
               copySuccess
                 ? 'text-green-400 bg-green-400/20'
                 : 'bg-white/10 hover:bg-white/20'
             }`}
             title={copySuccess ? 'Lien copié !' : 'Copier le lien du verset'}
+            whileTap={{ scale: 0.95 }}
+            whileHover={{ scale: 1.05 }}
           >
-            {copySuccess ? <Check size={16} /> : <Copy size={16} />}
-          </button>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={copySuccess ? 'check' : 'copy'}
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.8, opacity: 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                {copySuccess ? <Check size={16} /> : <Copy size={16} />}
+              </motion.div>
+            </AnimatePresence>
+          </motion.button>
 
           {/* Contrôles de visibilité pour mode d'étude */}
           {studyMode.mode !== 'READING' && (
             <div className="flex items-center space-x-1 ml-2 border-l border-white/20 pl-2">
-              <button
+              <motion.button
                 onClick={() => toggleElementVisibility('phonetics')}
-                className={`p-1 rounded transition-colors ${
-                  showElements.phonetics ? 'text-blue-400' : 'text-gray-500'
+                className={`p-1 rounded transition-all duration-300 ${
+                  showElements.phonetics ? 'text-blue-400 bg-blue-400/20' : 'text-gray-500 hover:text-blue-400'
                 }`}
                 title="Afficher/Cacher phonétique"
+                whileTap={{ scale: 0.9 }}
+                whileHover={{ scale: 1.1 }}
               >
-                {showElements.phonetics ? <Eye size={14} /> : <EyeOff size={14} />}
-              </button>
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={showElements.phonetics ? 'eye' : 'eye-off'}
+                    initial={{ scale: 0.8, opacity: 0, rotate: -90 }}
+                    animate={{ scale: 1, opacity: 1, rotate: 0 }}
+                    exit={{ scale: 0.8, opacity: 0, rotate: 90 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    {showElements.phonetics ? <Eye size={14} /> : <EyeOff size={14} />}
+                  </motion.div>
+                </AnimatePresence>
+              </motion.button>
               
-              <button
+              <motion.button
                 onClick={() => toggleElementVisibility('translation')}
-                className={`p-1 rounded transition-colors ${
-                  showElements.translation ? 'text-green-400' : 'text-gray-500'
+                className={`p-1 rounded transition-all duration-300 ${
+                  showElements.translation ? 'text-green-400 bg-green-400/20' : 'text-gray-500 hover:text-green-400'
                 }`}
                 title="Afficher/Cacher traduction"
+                whileTap={{ scale: 0.9 }}
+                whileHover={{ scale: 1.1 }}
               >
-                {showElements.translation ? <Eye size={14} /> : <EyeOff size={14} />}
-              </button>
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={showElements.translation ? 'eye' : 'eye-off'}
+                    initial={{ scale: 0.8, opacity: 0, rotate: -90 }}
+                    animate={{ scale: 1, opacity: 1, rotate: 0 }}
+                    exit={{ scale: 0.8, opacity: 0, rotate: 90 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    {showElements.translation ? <Eye size={14} /> : <EyeOff size={14} />}
+                  </motion.div>
+                </AnimatePresence>
+              </motion.button>
             </div>
           )}
         </div>

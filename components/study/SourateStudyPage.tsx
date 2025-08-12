@@ -122,8 +122,31 @@ export default function SourateStudyPage({ sourate, surahNumber }: SourateStudyP
     studySession.addVerseCompleted(verseNumber);
   };
   
-  const handleVerseFavoriteToggle = (verseNumber: number) => {
-    verseProgress.toggleVerseFavorite(verseNumber);
+  const handleVerseFavoriteToggle = async (verseNumber: number) => {
+    // Si l'utilisateur n'est pas connecté, ouvrir le modal d'authentification
+    if (!user) {
+      // Stocker les données du verset à ajouter en favoris après connexion
+      sessionStorage.setItem('pendingFavorite', JSON.stringify({
+        surahNumber,
+        verseNumber,
+        action: 'toggle'
+      }));
+      
+      // Ici, nous devons trouver un moyen d'ouvrir le modal d'auth
+      // Pour l'instant, on va utiliser un event custom ou passer par le parent
+      const event = new CustomEvent('openAuthModal', { 
+        detail: { 
+          reason: 'favorite',
+          surahNumber,
+          verseNumber 
+        } 
+      });
+      window.dispatchEvent(event);
+      return;
+    }
+    
+    // Si connecté, utiliser la fonction existante
+    await verseProgress.toggleVerseFavorite(verseNumber);
   };
   
   const handlePronunciationTime = (verseNumber: number, timeSpent: number) => {
@@ -267,7 +290,8 @@ export default function SourateStudyPage({ sourate, surahNumber }: SourateStudyP
             className="space-y-4"
           >
             {sourate.ayahs.map((ayah: any, index: number) => {
-              const isCurrentlyPlaying = audioManager.audioState.currentVerse === ayah.numberInSurah;
+              const isCurrentlyPlaying = audioManager.audioState.currentVerse === ayah.numberInSurah && audioManager.audioState.isPlaying;
+              const isCurrentlyPaused = audioManager.audioState.currentVerse === ayah.numberInSurah && audioManager.audioState.isPaused;
               
               return (
                 <VerseCard
@@ -280,12 +304,18 @@ export default function SourateStudyPage({ sourate, surahNumber }: SourateStudyP
                   studyMode={studyMode}
                   preferences={currentPreferences}
                   isCurrentlyPlaying={isCurrentlyPlaying}
+                  isCurrentlyPaused={isCurrentlyPaused}
                   onVerseRead={handleVerseRead}
                   onVerseMemorized={handleVerseMemorized}
                   onVerseFavoriteToggle={handleVerseFavoriteToggle}
                   onPronunciationTime={handlePronunciationTime}
                   onPlayVerse={(verseNumber: number, audioUrl: string) => {
-                    audioManager.playVerse(verseNumber, audioUrl);
+                    // Préparer les versets avec audio pour la navigation
+                    const versesWithAudio = sourate.ayahs.map(ayah => ({
+                      ...ayah,
+                      audio: `https://cdn.islamic.network/quran/audio-surah/128/ar.alafasy/${ayah.numberInSurah}.mp3`
+                    }));
+                    audioManager.playVerse(verseNumber, audioUrl, versesWithAudio);
                   }}
                 />
               );
@@ -296,7 +326,7 @@ export default function SourateStudyPage({ sourate, surahNumber }: SourateStudyP
       
       {/* Contrôles audio flottants */}
       <AutoPlayerControls
-        isVisible={audioManager.audioState.currentMode !== null && audioManager.audioState.isPlaying}
+        isVisible={audioManager.audioState.currentMode !== null && (audioManager.audioState.isPlaying || audioManager.audioState.isPaused)}
         isPlaying={audioManager.audioState.isPlaying}
         isMinimized={isPlayerMinimized}
         currentVerse={audioManager.audioState.currentVerse || 1}

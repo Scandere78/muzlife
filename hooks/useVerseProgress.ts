@@ -184,9 +184,71 @@ export function useVerseProgress(surahNumber: number): UseVerseProgressReturn {
     return updateVerseState(verseNumber, 'mark_memorized', { timeSpent });
   }, [updateVerseState]);
 
-  const toggleVerseFavorite = useCallback((verseNumber: number) => {
-    return updateVerseState(verseNumber, 'toggle_favorite');
-  }, [updateVerseState]);
+  const toggleVerseFavorite = useCallback(async (verseNumber: number) => {
+    if (!user) {
+      throw new Error('Utilisateur non connecté');
+    }
+    
+    try {
+      const { toggleVerseFavorite } = await import('@/contexts/AuthContext');
+      // On utilise l'API directement via AuthContext
+      const authContext = useAuth();
+      const result = await authContext.toggleVerseFavorite(surahNumber, verseNumber);
+      
+      if (result.success) {
+        // Mise à jour optimiste de l'état local
+        setVerseStates(prev => {
+          const currentState = prev[verseNumber];
+          if (currentState) {
+            return {
+              ...prev,
+              [verseNumber]: {
+                ...currentState,
+                isFavorite: result.isFavorite,
+                updatedAt: new Date(),
+              }
+            };
+          } else {
+            // Créer un nouvel état si pas existant
+            return {
+              ...prev,
+              [verseNumber]: {
+                id: `temp-${verseNumber}`,
+                userId: user.email || '',
+                surahNumber,
+                verseNumber,
+                isRead: false,
+                isMemorized: false,
+                isFavorite: result.isFavorite,
+                readCount: 0,
+                memorizationLevel: 0,
+                readingTime: 0,
+                memorizationTime: 0,
+                pronunciationTime: 0,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+              }
+            };
+          }
+        });
+        
+        // Recalculer les stats
+        setTimeout(() => {
+          const states = Object.values(verseStates);
+          const favoriteCount = states.filter(vs => vs.isFavorite).length + (result.isFavorite ? 1 : -1);
+          setSurahStats(prev => prev ? {
+            ...prev,
+            favoriteVerses: Math.max(0, favoriteCount)
+          } : null);
+        }, 0);
+      }
+      
+      return result;
+    } catch (error) {
+      setError('Erreur lors de la modification des favoris');
+      throw error;
+    }
+  }, [user, surahNumber, verseStates]);
 
   const updatePronunciationTime = useCallback((verseNumber: number, timeSpent: number) => {
     return updateVerseState(verseNumber, 'update_pronunciation_time', { timeSpent });

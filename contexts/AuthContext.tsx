@@ -59,6 +59,7 @@ interface AuthContextType {
   recordReadingProgress: (surahNumber: number, verseNumber: number, surahName: string, readingTime?: number) => Promise<ReadingProgress | null>;
   getReadingProgress: () => Promise<DashboardStats | null>;
   updateReadingGoal: (dailyGoal: number) => Promise<UserStats | null>;
+  toggleVerseFavorite: (surahNumber: number, verseNumber: number) => Promise<{ success: boolean; isFavorite: boolean; message?: string }>;
 }
 
 const AuthContext = React.createContext<AuthContextType | undefined>(undefined);
@@ -275,6 +276,42 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
+  const toggleVerseFavorite = async (surahNumber: number, verseNumber: number) => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch("/api/favorites/toggle", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ surahNumber, verseNumber }),
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        return {
+          success: data.success,
+          isFavorite: data.isFavorite,
+          message: data.message
+        };
+      } else {
+        const error = await response.json();
+        return {
+          success: false,
+          isFavorite: false,
+          message: error.error || 'Erreur lors de la modification des favoris'
+        };
+      }
+    } catch {
+      return {
+        success: false,
+        isFavorite: false,
+        message: 'Erreur de connexion'
+      };
+    }
+  };
+
   const value: AuthContextType = {
     user,
     loading,
@@ -287,6 +324,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     recordReadingProgress,
     getReadingProgress,
     updateReadingGoal,
+    toggleVerseFavorite,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

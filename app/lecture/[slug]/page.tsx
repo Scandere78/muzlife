@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { slugToNumber } from "../../../lib/sourateSlugs";
-import SourateStudyPage from "../../../components/study/SourateStudyPage";
+import StudyPageWithAuth from "../../../components/study/StudyPageWithAuth";
 
 // Récupère le texte arabe, la translittération (lecture phonétique) et la traduction française d'une sourate via l'API alquran.cloud
 async function fetchSourateWithTranslation(id: string): Promise<any | null> {
@@ -94,7 +94,7 @@ function SouratePageSkeleton() {
 async function SourateContent({ slug }: { slug: string }) {
   const num = slugToNumber(slug);
   const sourate = num ? await fetchSourateWithTranslation(num.toString()) : null;
-  return <SourateStudyPage sourate={sourate} surahNumber={num || 0} />;
+  return <StudyPageWithAuth sourate={sourate} surahNumber={num || 0} />;
 }
 
 export default async function SouratePage({ params }: PageParams) {

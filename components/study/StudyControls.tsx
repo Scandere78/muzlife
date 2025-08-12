@@ -93,7 +93,7 @@ const studyModes = [
     icon: BookOpen,
     description: 'Lecture complète avec tous les textes visibles',
     color: 'text-blue-400',
-    bgColor: 'bg-blue-400/20',
+    bgColor: 'bg-blue-400/29',
   },
   {
     key: 'MEMORIZATION',
@@ -194,7 +194,7 @@ export default function StudyControls({
             <BarChart3 size={20} className="text-[var(--color-accent)]" />
           </div>
           <div>
-            <h3 className="font-semibold text-white">Contrôles d'étude</h3>
+            <h3 className="font-semibold !text-white/80">Contrôles d'étude</h3>
             <p className="text-sm text-gray-400">
               {isSessionActive ? 'Session active' : 'Prêt à commencer'}
             </p>
@@ -228,7 +228,7 @@ export default function StudyControls({
         <div className="p-4 space-y-6">
           {/* Sélection du mode d'étude */}
           <div>
-            <h4 className="text-sm font-medium text-gray-300 mb-3">Mode d'étude</h4>
+            <h4 className="text-sm font-medium !text-white mb-3">Mode d'étude</h4>
             <div className="space-y-2">
               {studyModes.map((mode) => {
                 const Icon = mode.icon;
@@ -384,7 +384,7 @@ export default function StudyControls({
 
           {/* Contrôles audio */}
           <div>
-            <h4 className="text-sm font-medium text-gray-300 mb-3 flex items-center space-x-2">
+            <h4 className="text-sm font-medium !text-gray-300 mb-3 flex items-center space-x-2">
               <Volume2 size={16} />
               <span>Audio</span>
             </h4>
