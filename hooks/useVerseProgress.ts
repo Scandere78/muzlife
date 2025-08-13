@@ -244,7 +244,7 @@ export function useVerseProgress(surahNumber: number): UseVerseProgressReturn {
         }, 0);
       }
       
-      return result;
+      // Return void as expected by the interface
     } catch (error) {
       setError('Erreur lors de la modification des favoris');
       throw error;

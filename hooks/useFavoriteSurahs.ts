@@ -113,7 +113,7 @@ export function useFavoriteSurahs(): UseFavoriteSurahsReturn {
         // Ajouter aux favoris
         const newFavorite: FavoriteSurah = {
           id: `temp-${Date.now()}`, // ID temporaire
-          userId: user.id || user.email,
+          userId: user.email,
           surahNumber: surahData.surahNumber,
           surahName: surahData.surahName,
           surahSlug: surahData.surahSlug,
