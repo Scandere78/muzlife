@@ -522,7 +522,7 @@ const Quiz: React.FC<QuizProps> = ({ difficulty }) => {
                               ? "bg-gradient-to-r from-green-500 to-emerald-600 text-white border-green-500 shadow-2xl shadow-green-200 scale-105"
                               : !isCorrect && option === selectedAnswer
                                 ? "bg-gradient-to-r from-red-500 to-pink-600 text-white border-red-500 shadow-2xl shadow-red-200 scale-105"
-                                : "bg-gray-100 text-gray-800 border-gray-300"
+                                : "bg-gray-100 text-gray-800 dark:text-white border-gray-300"
                             : showCorrectAnswer && option === currentQuestion.answer
                               ? "bg-gradient-to-r from-green-600 to-emerald-700 text-white border-green-600 shadow-2xl shadow-green-300 animate-pulse scale-105"
                               : isAnswering
@@ -641,6 +641,8 @@ const Quiz: React.FC<QuizProps> = ({ difficulty }) => {
                     <div className="flex-1">
                       <p className={`font-bold text-lg mb-2 ${
                         isCorrect ? 'text-green-800' : 'text-red-800'
+                          `${isCorrect ? 'text-green-800 dark:text-green-300' : 'text-red-800 dark:text-red-300'}`
+                          `${isCorrect ? 'text-green-800 dark:text-green-300' : 'text-red-800 dark:text-red-300'}`
                       }`}>
                         {isCorrect ? "Excellente réponse !" : "Pas tout à fait..."}
                       </p>
@@ -716,12 +718,15 @@ const Quiz: React.FC<QuizProps> = ({ difficulty }) => {
                     <span className="text-gray-400 text-4xl"> / {questions.length}</span>
                   </div>
                   <div className="text-center">
-                    <div className={`inline-flex items-center gap-2 px-6 py-3 rounded-full font-bold text-xl ${
-                      score >= questions.length * 0.9 ? 'bg-[var(--color-accent)]/20 text-[var(--color-accent-dark)]' :
-                      score >= questions.length * 0.7 ? 'bg-green-100 text-green-800' :
-                      score >= questions.length * 0.5 ? 'bg-[var(--color-foreground)]/10 text-[var(--color-foreground)]' :
-                      'bg-gray-100 text-gray-800'
-                    }`}>
+                      <div className={`inline-flex items-center gap-2 px-6 py-3 rounded-full font-bold text-xl ${
+                        score >= questions.length * 0.9
+                          ? 'bg-[var(--color-accent)]/20 text-[var(--color-accent-dark)]'
+                          : score >= questions.length * 0.7
+                          ? 'bg-green-100 text-green-800 dark:text-green-300'
+                          : score >= questions.length * 0.5
+                          ? 'bg-[var(--color-foreground)]/10 text-[var(--color-foreground)]'
+                          : 'bg-gray-100 text-gray-800 dark:text-white'
+                      }`}>
                       <span className="text-2xl">
                         {score >= questions.length * 0.9 ? '🔥' :
                          score >= questions.length * 0.7 ? '⚡' :
@@ -741,6 +746,7 @@ const Quiz: React.FC<QuizProps> = ({ difficulty }) => {
                       </div>
                       <div>
                         <div className="text-green-800 font-bold text-lg">Bonnes réponses</div>
+                          <div className="text-green-800 dark:text-green-300 font-bold text-lg">Bonnes réponses</div>
                         <div className="text-green-600 text-sm">Réponses correctes</div>
                       </div>
                     </div>

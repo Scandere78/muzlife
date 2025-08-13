@@ -24,7 +24,7 @@ export default function CitationOfTheDay(): React.ReactElement {
       <div className="pointer-events-none absolute -bottom-24 -left-24 h-56 w-56 rounded-full bg-[var(--color-foreground)]/10 blur-3xl" />
 
       <div className="relative p-6 sm:p-8">
-        <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-[var(--color-accent)]/20 px-3 py-1 text-xs font-semibold text-[var(--color-accent)]">
+        <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-[var(--color-accent)]/20 px-3 py-1 text-xs font-semibold text-green-800 dark:text-white">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 20 20"
@@ -37,16 +37,16 @@ export default function CitationOfTheDay(): React.ReactElement {
           Citation du jour
         </div>
 
-        <blockquote className="text-lg sm:text-xl leading-relaxed text-[var(--color-foreground)]">
+        <blockquote className="text-lg sm:text-xl leading-relaxed text-green-800 dark:text-white drop-shadow">
           « {quote.text} »
         </blockquote>
 
-        <div className="mt-4 flex flex-wrap items-center gap-2 text-sm text-[var(--color-foreground)]/80">
-          <span className="rounded-md bg-[var(--color-background)]/40 px-2 py-0.5 font-medium">
+        <div className="mt-4 flex flex-wrap items-center gap-2 text-sm text-green-700 dark:text-gray-200">
+          <span className="rounded-md bg-[var(--color-background)]/40 px-2 py-0.5 font-medium text-green-800 dark:text-white">
             {quote.source}
           </span>
           {quote.reference ? (
-            <span className="text-[var(--color-foreground)]/60">• {quote.reference}</span>
+            <span className="text-green-600 dark:text-gray-300">• {quote.reference}</span>
           ) : null}
         </div>
       </div>

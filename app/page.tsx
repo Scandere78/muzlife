@@ -34,15 +34,16 @@ export default function HomePage() {
       {/* Présentation */}
       <Navbar />
       <div className="text-center px-4 max-w-4xl mx-auto">
-        <h1 className="text-4xl text-indigo-600 font-bold">  
+        <h1 className="text-4xl text-green-800 dark:text-white font-bold drop-shadow-lg">  
           Bienvenue sur MuzLife
         </h1>
+        <p className="text-lg text-green-700 dark:text-gray-200 mt-2">Votre compagnon spirituel numérique</p>
       </div>
 
       {/* Horloge locale, prochaine prière et citation du jour */}
       <div className="mt-12 px-6 max-w-4xl mx-auto">
         <div className="mt-12 flex flex-col items-center">
-            <h2 className="text-2xl font-bold text-[var(--color-accent)] mb-4">🕌 Temps restant</h2>
+            <h2 className="text-3xl font-bold text-green-800 dark:text-white mb-4 drop-shadow">🕌 Temps restant</h2>
             <PrayerTimer />
         </div>
         <NextPrayer />  
@@ -62,10 +63,10 @@ export default function HomePage() {
               <div className="bg-[var(--color-accent)]/10 w-16 h-16 rounded-full flex items-center justify-center mb-4">
                 <span className="text-3xl">📖</span>
               </div>
-              <h2 className="text-2xl font-bold text-[var(--color-accent)] mb-2">
+              <h2 className="text-2xl font-bold text-green-800 dark:text-white mb-2 drop-shadow">
                 Lecture du Coran
               </h2>
-              <p className="text-[var(--color-foreground)]">
+              <p className="text-green-700 dark:text-gray-200">
                 Lisez le Coran avec traduction et explication des versets.
               </p>
             </div>
@@ -78,10 +79,10 @@ export default function HomePage() {
               <div className="bg-[var(--color-accent)]/10 w-16 h-16 rounded-full flex items-center justify-center mb-4">
                 <span className="text-3xl">🎧</span>
               </div>
-              <h2 className="text-2xl font-bold text-[var(--color-accent)] mb-2">
+              <h2 className="text-2xl font-bold text-green-800 dark:text-white mb-2 drop-shadow">
                 Écoute du Coran
               </h2>
-              <p className="text-[var(--color-foreground)]">
+              <p className="text-green-700 dark:text-gray-200">
                 Écoutez le Coran récité par différents imams renommés.
               </p>
             </div>
@@ -94,8 +95,8 @@ export default function HomePage() {
               <div className="bg-[var(--color-accent)]/10 w-16 h-16 rounded-full flex items-center justify-center mb-4">
                 <span className="text-3xl">🎯</span>
               </div>
-              <h2 className="text-2xl font-bold text-[var(--color-accent)] mb-2">Quizz</h2>
-              <p className="text-[var(--color-foreground)]">
+              <h2 className="text-2xl font-bold text-green-800 dark:text-white mb-2 drop-shadow">Quizz</h2>
+              <p className="text-green-700 dark:text-gray-200">
                 Testez vos connaissances sur différents thèmes du Coran.
               </p>
             </div>
@@ -106,7 +107,7 @@ export default function HomePage() {
     
       {/* Carrousel des récitateurs */}
       <div className="mt-20 px-6 max-w-7xl mx-auto">
-        <h2 className="text-3xl font-bold bg-clip-text text-transparent text-center mb-10" style={{ backgroundImage: 'linear-gradient(to right, var(--color-accent), var(--color-foreground))' }}>
+        <h2 className="text-3xl font-bold text-green-800 dark:text-white text-center mb-10 drop-shadow">
           Récitateurs Renommés
         </h2>
         <Swiper
@@ -136,7 +137,7 @@ export default function HomePage() {
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
                   </div>
-                  <h3 className="text-xl font-bold text-[var(--color-accent)]">
+                  <h3 className="text-xl font-bold text-green-800 dark:text-white drop-shadow">
                     {recitateur.name}
                   </h3>
                 </div>
