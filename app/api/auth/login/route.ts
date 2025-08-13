@@ -27,6 +27,15 @@ export async function POST(request: Request) {
     if (!isPasswordValid) {
       return NextResponse.json({ message: "Mot de passe incorrect" }, { status: 401 });
     }
+
+    // Vérifier si l'email est vérifié
+    if (!user.isEmailVerified) {
+      return NextResponse.json({ 
+        message: "Email non vérifié", 
+        requiresVerification: true,
+        email: user.email 
+      }, { status: 403 });
+    }
     const secret = new TextEncoder().encode(process.env.JWT_SECRET);
     const token = await new SignJWT({ userId: user.id, email: user.email })
       .setProtectedHeader({ alg: "HS256" })

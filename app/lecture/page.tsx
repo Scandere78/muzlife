@@ -5,31 +5,45 @@ import Link from "next/link";
 import ReadingTracker from "../../components/ReadingTracker";
 import { sourates } from "../../lib/sourateSlugs";
 import { useState } from "react";
+import { useFavoriteSurahs } from "../../hooks/useFavoriteSurahs";
+import { useAuth } from "../../contexts/AuthContext";
+import AuthModal from "../../components/auth/AuthModal";
 
 
-interface Sourate {
-  position: number;
-  nom: string;
-  nom_phonetique: string;
-  englishNameTranslation: string;
-}
-
-// Fonction utilitaire pour générer un slug à partir du nom phonétique
-function slugify(str: string) {
-  return str
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
-}
 
 export default function Lecture() {
+  const { user } = useAuth();
+  const { isFavorite, toggleFavorite, loading: favoritesLoading } = useFavoriteSurahs();
   const [copiedSlug, setCopiedSlug] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [showAuthModal, setShowAuthModal] = useState(false);
 
   // Filtrer les sourates en fonction de la recherche
   const filteredSourates = sourates.filter(sourate => 
     sourate.nom_phonetique.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const handleFavoriteToggle = async (sourate: { number: number; nom_phonetique: string; slug: string }) => {
+    if (!user) {
+      // Si l'utilisateur n'est pas connecté, ouvrir le modal d'authentification
+      setShowAuthModal(true);
+      return;
+    }
+
+    try {
+      await toggleFavorite({
+        surahNumber: sourate.number,
+        surahName: sourate.nom_phonetique,
+        surahSlug: sourate.slug,
+      });
+    } catch (error) {
+      console.error('Erreur lors du toggle favori:', error);
+    }
+  };
+
+  const handleCloseAuthModal = () => {
+    setShowAuthModal(false);
+  };
 
   return (
     <div className="page-container navbar-safe px-4 py-6 sm:py-8 flex flex-col items-center min-h-screen w-full overflow-x-visible" style={{ background: 'transparent', color: 'var(--color-foreground)' }}>
@@ -84,10 +98,27 @@ export default function Lecture() {
                   <div className="flex items-center gap-3 ml-6">
                     {/* Coeur cliquable (favori) */}
                     <button
-                      aria-label="Ajouter aux favoris"
-                      className="p-3 rounded-full hover:bg-[var(--color-muted)]/20 transition-colors group"
+                      onClick={() => handleFavoriteToggle(sourate)}
+                      disabled={favoritesLoading}
+                      aria-label={isFavorite(sourate.number) ? "Supprimer des favoris" : "Ajouter aux favoris"}
+                      className={`p-3 rounded-full transition-all duration-300 group ${
+                        isFavorite(sourate.number)
+                          ? 'bg-red-500/20 hover:bg-red-500/30'
+                          : 'hover:bg-[var(--color-muted)]/20'
+                      } ${favoritesLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
                     >
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="var(--color-muted)" className="w-6 h-6 text-[var(--color-foreground)] group-hover:text-[var(--color-accent)] transition-colors">
+                      <svg 
+                        xmlns="http://www.w3.org/2000/svg" 
+                        fill={isFavorite(sourate.number) ? "currentColor" : "none"} 
+                        viewBox="0 0 24 24" 
+                        strokeWidth={1.5} 
+                        stroke="currentColor" 
+                        className={`w-6 h-6 transition-colors ${
+                          isFavorite(sourate.number)
+                            ? 'text-red-400 group-hover:text-red-300'
+                            : 'text-[var(--color-foreground)] group-hover:text-[var(--color-accent)]'
+                        }`}
+                      >
                         <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 3.75a5.25 5.25 0 00-4.5 2.472A5.25 5.25 0 007.5 3.75 5.25 5.25 0 003 9c0 7.25 9 11.25 9 11.25s9-4 9-11.25a5.25 5.25 0 00-5.25-5.25z" />
                       </svg>
                     </button>
@@ -131,6 +162,12 @@ export default function Lecture() {
         @keyframes fade-in { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
         .animate-fade-in { animation: fade-in 0.7s cubic-bezier(.4,0,.2,1) both; }
       `}</style>
+
+      {/* Modal d'authentification */}
+      <AuthModal
+        isOpen={showAuthModal}
+        onCloseAction={handleCloseAuthModal}
+      />
     </div>
   );
 }

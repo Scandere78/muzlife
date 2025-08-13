@@ -8,6 +8,7 @@ import { Label } from "../ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
 import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
 import { useAuth } from "../../contexts/AuthContext";
+import EmailVerificationModal from "./EmailVerificationModal";
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -29,29 +30,69 @@ export default function AuthModal({ isOpen, onCloseAction }: AuthModalProps) {
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const { login, register } = useAuth();
+  const [showEmailVerification, setShowEmailVerification] = useState(false);
+  const [pendingEmail, setPendingEmail] = useState("");
+  const [pendingPassword, setPendingPassword] = useState("");
+  const { login } = useAuth();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
     setLoading(true);
     try {
-      let result: { success: boolean; error?: string };
+      let result: { success: boolean; error?: string; requiresVerification?: boolean; email?: string } = { success: false };
       if (isLogin) {
         result = await login(formData.email, formData.password);
+        
+        // Si la connexion échoue à cause d'un email non vérifié
+        if (!result.success && result.requiresVerification && result.email) {
+          setPendingEmail(result.email);
+          setPendingPassword(formData.password);
+          setShowEmailVerification(true);
+          setFormData({ email: "", password: "", name: "", confirmPassword: "" });
+          setLoading(false);
+          return;
+        }
       } else {
         if (formData.password !== formData.confirmPassword) {
           setError("Les mots de passe ne correspondent pas");
           setLoading(false);
           return;
         }
-        result = await register(formData.email, formData.name, formData.password);
+        // Pour l'inscription, on fait appel direct à l'API pour gérer la vérification d'email
+        const response = await fetch("/api/auth/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email: formData.email,
+            name: formData.name,
+            password: formData.password,
+          }),
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+          if (data.needsEmailVerification) {
+            // Afficher le modal de vérification d'email
+            setPendingEmail(formData.email);
+            setPendingPassword(formData.password);
+            setShowEmailVerification(true);
+            setFormData({ email: "", password: "", name: "", confirmPassword: "" });
+          } else {
+            // Inscription réussie sans vérification nécessaire
+            result = { success: true };
+          }
+        } else {
+          result = { success: false, error: data.message || "Erreur d'inscription" };
+        }
       }
-      if (result.success) {
+      
+      if (result && result.success && !showEmailVerification) {
         onCloseAction();
         setFormData({ email: "", password: "", name: "", confirmPassword: "" });
         setIsLogin(true);
-      } else {
+      } else if (result && !result.success) {
         setError(result.error || "Erreur inconnue");
       }
     } catch {
@@ -68,6 +109,31 @@ export default function AuthModal({ isOpen, onCloseAction }: AuthModalProps) {
     });
   };
 
+  const handleEmailVerificationSuccess = async () => {
+    // Une fois l'email vérifié, on connecte automatiquement l'utilisateur
+    try {
+      const result = await login(pendingEmail, pendingPassword);
+      if (result.success) {
+        setShowEmailVerification(false);
+        setPendingEmail("");
+        setPendingPassword("");
+        onCloseAction();
+      }
+    } catch {
+      // Si la connexion automatique échoue, on ferme quand même les modals
+      setShowEmailVerification(false);
+      setPendingEmail("");
+      setPendingPassword("");
+      onCloseAction();
+    }
+  };
+
+  const handleEmailVerificationClose = () => {
+    setShowEmailVerification(false);
+    setPendingEmail("");
+    setPendingPassword("");
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -82,12 +148,12 @@ export default function AuthModal({ isOpen, onCloseAction }: AuthModalProps) {
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.9, opacity: 0 }}
-        className="w-full max-w-md"
+        className="w-full max-w-sm"
         onClick={(e) => e.stopPropagation()}
       >
-        <Card className="bg-gray-800 border-gray-700 text-white">
+        <Card className="!bg-gray-800/90 border-gray-700 text-white">
           <CardHeader className="text-center">
-            <CardTitle className="text-2xl text-green-400">
+            <CardTitle className="text-3xl !text-white font-bold mb-2">
               {isLogin ? "Connexion" : "Inscription"}
             </CardTitle>
             <CardDescription className="text-gray-400">
@@ -97,8 +163,8 @@ export default function AuthModal({ isOpen, onCloseAction }: AuthModalProps) {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Tabs value={isLogin ? "login" : "register"} className="w-full">
-              <TabsList className="grid w-full grid-cols-2 mb-6">
+            <Tabs value={isLogin ? "login" : "register"} className="w-full mb-4">
+              <TabsList className="grid w-full grid-cols-2 gap-2 mb-6">
                 <TabsTrigger
                   value="login"
                   onClick={() => setIsLogin(true)}
@@ -106,6 +172,7 @@ export default function AuthModal({ isOpen, onCloseAction }: AuthModalProps) {
                 >
                   Connexion
                 </TabsTrigger>
+
                 <TabsTrigger
                   value="register"
                   onClick={() => setIsLogin(false)}
@@ -192,6 +259,14 @@ export default function AuthModal({ isOpen, onCloseAction }: AuthModalProps) {
           </CardContent>
         </Card>
       </motion.div>
+      
+      {/* Modal de vérification d'email */}
+      <EmailVerificationModal
+        isOpen={showEmailVerification}
+        email={pendingEmail}
+        onVerificationSuccess={handleEmailVerificationSuccess}
+        onClose={handleEmailVerificationClose}
+      />
     </motion.div>
   );
 }

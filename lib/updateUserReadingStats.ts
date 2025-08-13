@@ -18,7 +18,7 @@ export async function updateUserReadingStats(userId: string, surahNumber: number
           averageScore: 0,
           totalVersesRead: 0,
           readingStreak: 0,
-          dailyGoal: 10,
+          dailyReadingGoal: 10,
         },
       });
     }

@@ -1,120 +1,42 @@
+import { redirect } from 'next/navigation';
 import { slugToNumber } from '../../../lib/sourateSlugs';
 import { Metadata } from 'next';
-import SourateDetail from '../../../components/SourateDetail';
-// This is a server component, do not use useState
 
-// Typage pour Next.js App Router
-// Next.js App Router expects params: { slug: string }
-
-// Fonction pour récupérer les données de la sourate
-async function fetchSourateData(num: number) {
-  try {
-    const response = await fetch(`https://api.alquran.cloud/v1/surah/${num}/ar.alafasy`, {
-      next: { revalidate: 3600 } // Cache 1 heure
-    });
-    if (!response.ok) throw new Error('Erreur lors de la récupération de la sourate');
-    return await response.json();
-  } catch (error) {
-    console.error('Erreur:', error);
-    return null;
-  }
-}
-
-// Fonction pour récupérer la traduction
-async function fetchTranslation(num: number) {
-  try {
-    const response = await fetch(`https://api.alquran.cloud/v1/surah/${num}/fr.hamidullah`, {
-      next: { revalidate: 3600 }
-    });
-    if (!response.ok) throw new Error('Erreur lors de la récupération de la traduction');
-    return await response.json();
-  } catch (error) {
-    console.error('Erreur:', error);
-    return null;
-  }
-}
-
-// Fonction pour récupérer la translittération (lecture phonétique)
-async function fetchTransliteration(num: number) {
-  try {
-    const response = await fetch(`https://api.alquran.cloud/v1/surah/${num}/en.transliteration`, {
-      next: { revalidate: 3600 }
-    });
-    if (!response.ok) throw new Error('Erreur lors de la récupération de la translittération');
-    return await response.json();
-  } catch (error) {
-    console.error('Erreur:', error);
-    return null;
-  }
-}
-
-// Génération des métadonnées
+// Génération des métadonnées avant redirection
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const num = slugToNumber(slug);
+  
   if (!num) {
     return {
       title: 'Sourate non trouvée - MuzLife',
       description: "La sourate demandée n'existe pas."
     };
   }
-  const sourateData = await fetchSourateData(num);
-  const sourate = sourateData?.data;
-  return {
-    title: `${sourate?.name || 'Sourate'} - MuzLife`,
-    description: `Écoutez la récitation de ${sourate?.name || 'cette sourate'} par Sheikh Alafasy sur MuzLife.`,
-  };
+
+  // Récupérer les informations de base pour les métadonnées
+  try {
+    const response = await fetch(`https://api.alquran.cloud/v1/surah/${num}/ar.alafasy`, {
+      next: { revalidate: 3600 }
+    });
+    const data = await response.json();
+    const sourate = data?.data;
+    
+    return {
+      title: `${sourate?.name || 'Sourate'} - Étude Interactive | MuzLife`,
+      description: `Étudiez la sourate ${sourate?.englishName || ''} (${sourate?.name || ''}) avec audio, phonétique et traduction sur MuzLife.`,
+    };
+  } catch {
+    return {
+      title: 'Étude Interactive - MuzLife',
+      description: 'Étude interactive du Coran avec progression personnalisée sur MuzLife.'
+    };
+  }
 }
 
-export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
+export default async function EcoutePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const num = slugToNumber(slug);
-  if (!num) {
-    return (
-      <main className="max-w-3xl mx-auto py-10 px-4">
-        <div className="mb-6">
-          <a href="/ecoute" className="inline-flex items-center px-4 py-2 rounded-full bg-[var(--color-accent)] hover:bg-[var(--color-accent-dark)] text-white font-medium transition-colors shadow-sm">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-            Retour à la liste
-          </a>
-        </div>
-        <div className="text-red-500 text-lg font-semibold">Sourate inconnue.</div>
-      </main>
-    );
-  }
-  const [sourateData, translationData, transliterationData] = await Promise.all([
-    fetchSourateData(num),
-    fetchTranslation(num),
-    fetchTransliteration(num)
-  ]);
-  const sourate = sourateData?.data;
-  const translation = translationData?.data;
-  if (!sourate) {
-    return (
-      <main className="max-w-3xl mx-auto py-10 px-4">
-        <div className="mb-6">
-          <a href="/ecoute" className="inline-flex items-center px-4 py-2 rounded-full bg-[var(--color-foreground)] hover:scale-105 text-white font-medium transition-colors shadow-sm">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="var(--color-foreground)">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-            Retour à la liste
-          </a>
-        </div>
-        <div className="text-red-500 text-lg font-semibold">Erreur lors du chargement de la sourate.</div>
-      </main>
-    );
-  }
-  // Ajout de la sélection d'imam et du bouton Lecture complète
-  // La logique audio et UI sera gérée dans SourateDetail
-  return (
-    <SourateDetail
-      sourate={sourate}
-      translation={translation}
-      transliteration={transliterationData?.data}
-      showReciterSelector={true}
-      showPlayAllButton={true}
-    />
-  );
+  
+  // Redirection immédiate vers la page lecture unifiée
+  redirect(`/lecture/${slug}`);
 }

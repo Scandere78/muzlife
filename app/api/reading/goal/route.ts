@@ -30,8 +30,8 @@ export async function PUT(req: NextRequest) {
     // Mettre à jour ou créer les statistiques utilisateur
     const userStats = await prisma.userStats.upsert({
       where: { userId: decoded.userId },
-      update: { dailyGoal: goal },
-      create: { userId: decoded.userId, dailyGoal: goal },
+      update: { dailyReadingGoal: goal },
+      create: { userId: decoded.userId, dailyReadingGoal: goal },
     });
 
     return NextResponse.json({

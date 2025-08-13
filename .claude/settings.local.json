@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx prisma generate:*)",
+      "Bash(pnpm run:*)",
+      "Bash(pnpm build:*)",
+      "mcp__context7__resolve-library-id",
+      "mcp__context7__get-library-docs",
+      "Bash(pnpm prisma:*)",
+      "Bash(pnpm add:*)",
+      "Bash(rm:*)",
+      "Bash(pnpm lint:*)"
+    ],
+    "deny": []
+  }
+}
