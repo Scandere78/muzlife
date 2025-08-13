@@ -45,6 +45,7 @@ interface UseVerseProgressReturn {
   toggleVerseFavorite: (verseNumber: number) => Promise<void>;
   updatePronunciationTime: (verseNumber: number, timeSpent: number) => Promise<void>;
   resetVerseMemorization: (verseNumber: number) => Promise<void>;
+  resetVerseRead: (verseNumber: number) => Promise<void>;
   refreshVerseStates: () => Promise<void>;
   getVerseState: (verseNumber: number) => VerseState | null;
   isVerseRead: (verseNumber: number) => boolean;
@@ -184,16 +185,16 @@ export function useVerseProgress(surahNumber: number): UseVerseProgressReturn {
     return updateVerseState(verseNumber, 'mark_memorized', { timeSpent });
   }, [updateVerseState]);
 
+  const { toggleVerseFavorite: authToggleFavorite } = useAuth();
+  
   const toggleVerseFavorite = useCallback(async (verseNumber: number) => {
     if (!user) {
       throw new Error('Utilisateur non connecté');
     }
     
     try {
-      const { toggleVerseFavorite } = await import('@/contexts/AuthContext');
-      // On utilise l'API directement via AuthContext
-      const authContext = useAuth();
-      const result = await authContext.toggleVerseFavorite(surahNumber, verseNumber);
+      // On utilise la méthode toggleVerseFavorite du contexte d'authentification
+      const result = await authToggleFavorite(surahNumber, verseNumber);
       
       if (result.success) {
         // Mise à jour optimiste de l'état local
@@ -248,7 +249,7 @@ export function useVerseProgress(surahNumber: number): UseVerseProgressReturn {
       setError('Erreur lors de la modification des favoris');
       throw error;
     }
-  }, [user, surahNumber, verseStates]);
+  }, [user, surahNumber, verseStates, authToggleFavorite]);
 
   const updatePronunciationTime = useCallback((verseNumber: number, timeSpent: number) => {
     return updateVerseState(verseNumber, 'update_pronunciation_time', { timeSpent });
@@ -256,6 +257,10 @@ export function useVerseProgress(surahNumber: number): UseVerseProgressReturn {
 
   const resetVerseMemorization = useCallback((verseNumber: number) => {
     return updateVerseState(verseNumber, 'reset_memorization');
+  }, [updateVerseState]);
+
+  const resetVerseRead = useCallback((verseNumber: number) => {
+    return updateVerseState(verseNumber, 'reset_read');
   }, [updateVerseState]);
 
   const refreshVerseStates = useCallback(() => {
@@ -289,6 +294,7 @@ export function useVerseProgress(surahNumber: number): UseVerseProgressReturn {
     toggleVerseFavorite,
     updatePronunciationTime,
     resetVerseMemorization,
+    resetVerseRead,
     refreshVerseStates,
     getVerseState,
     isVerseRead,

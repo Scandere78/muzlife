@@ -12,8 +12,10 @@ import {
   Eye,
   EyeOff,
   Copy,
-  Check
+  Check,
+  Brain
 } from 'lucide-react';
+import { getVerseAudioUrl } from './ReciterSelector';
 
 interface VerseData {
   text: string;
@@ -53,10 +55,13 @@ interface VerseCardProps {
     defaultPlaybackSpeed: number;
     repeatCount: number;
   } | null;
+  surahNumber: number; // Ajouté pour générer l'URL audio correcte
   isCurrentlyPlaying?: boolean;
   isCurrentlyPaused?: boolean;
   onVerseRead: (verseNumber: number, timeSpent: number) => void;
   onVerseMemorized: (verseNumber: number, timeSpent: number) => void;
+  onVerseUnread?: (verseNumber: number) => void;
+  onVerseUnmemorized?: (verseNumber: number) => void;
   onVerseFavoriteToggle: (verseNumber: number) => void;
   onPronunciationTime: (verseNumber: number, timeSpent: number) => void;
   onPlayVerse?: (verseNumber: number, audioUrl: string) => void;
@@ -68,10 +73,13 @@ export default function VerseCard({
   verseState,
   studyMode,
   preferences,
+  surahNumber,
   isCurrentlyPlaying = false,
   isCurrentlyPaused = false,
   onVerseRead,
   onVerseMemorized,
+  onVerseUnread,
+  onVerseUnmemorized,
   onVerseFavoriteToggle,
   onPronunciationTime,
   onPlayVerse,
@@ -102,8 +110,12 @@ export default function VerseCard({
   
   const currentPreferences = preferences || defaultPreferences;
 
-  // Audio URL basé sur les préférences utilisateur ou fourni par le parent
-  const audioUrl = verse.audio || `https://cdn.islamic.network/quran/audio-surah/128/ar.alafasy/${verse.numberInSurah}.mp3`;
+  // Audio URL basé sur les préférences utilisateur pour ce verset spécifique
+  const audioUrl = verse.audio || getVerseAudioUrl(
+    currentPreferences.preferredReciter, 
+    surahNumber, 
+    verse.numberInSurah
+  );
 
   // Démarrer le chrono de lecture quand le composant devient visible
   useEffect(() => {
@@ -129,26 +141,26 @@ export default function VerseCard({
     };
   }, [readingStartTime]);
 
-  // Calculer le temps passé et marquer comme lu lors du défilement
+  // Calculer le temps passé et marquer comme lu lors du défilement (seulement en mode READING)
   useEffect(() => {
     return () => {
-      if (readingStartTime && !verseState?.isRead) {
+      if (readingStartTime && !verseState?.isRead && studyMode.mode === 'READING') {
         const timeSpent = Math.round((Date.now() - readingStartTime) / 1000);
         if (timeSpent >= 3) { // Au moins 3 secondes pour considérer comme "lu"
           onVerseRead(verse.numberInSurah, timeSpent);
         }
       }
     };
-  }, [readingStartTime, verse.numberInSurah, onVerseRead, verseState?.isRead]);
+  }, [readingStartTime, verse.numberInSurah, onVerseRead, verseState?.isRead, studyMode.mode]);
 
   const handlePlayAudio = async () => {
-    // Priorité au gestionnaire externe pour la cohérence globale
-    if (onPlayVerse && verse.audio) {
-      onPlayVerse(verse.numberInSurah, verse.audio);
+    // Toujours utiliser le gestionnaire externe pour assurer qu'un seul verset joue à la fois
+    if (onPlayVerse) {
+      onPlayVerse(verse.numberInSurah, audioUrl);
       return;
     }
     
-    // Logique locale uniquement si pas de gestionnaire externe
+    // Logique locale uniquement si pas de gestionnaire externe (fallback)
     if (!audioRef.current) {
       audioRef.current = new Audio(audioUrl);
       audioRef.current.playbackRate = currentPreferences.defaultPlaybackSpeed;
@@ -184,11 +196,28 @@ export default function VerseCard({
   };
 
   const handleMemorizeToggle = () => {
-    if (!verseState?.isMemorized) {
+    if (verseState?.isMemorized) {
+      // Démarquer comme mémorisé
+      onVerseUnmemorized?.(verse.numberInSurah);
+    } else {
+      // Marquer comme mémorisé
       const memorizationTime = readingStartTime 
         ? Math.round((Date.now() - readingStartTime) / 1000)
         : 0;
       onVerseMemorized(verse.numberInSurah, memorizationTime);
+    }
+  };
+
+  const handleReadToggle = () => {
+    if (verseState?.isRead) {
+      // Démarquer comme lu
+      onVerseUnread?.(verse.numberInSurah);
+    } else {
+      // Marquer comme lu
+      const readingTime = readingStartTime 
+        ? Math.round((Date.now() - readingStartTime) / 1000)
+        : 3; // Temps minimum pour marquer comme lu
+      onVerseRead(verse.numberInSurah, readingTime);
     }
   };
 
@@ -233,7 +262,7 @@ export default function VerseCard({
     borderLeft: verseState?.isMemorized 
       ? '4px solid #10b981' 
       : verseState?.isRead 
-      ? '4px solid #3b82f6' 
+      ? '4px solid #22c55e' 
       : '4px solid transparent',
   };
 
@@ -262,8 +291,8 @@ export default function VerseCard({
       transition={{ duration: 0.3 }}
       className={`rounded-xl p-4 mb-4 border transition-all duration-300 hover:shadow-lg overflow-hidden ${
         isPlayingAudio 
-          ? 'bg-green-100/20 border-green-300 shadow-lg shadow-green-500/20 backdrop-blur-sm' 
-          : 'bg-black/50 backdrop-blur-sm border-white/10 hover:border-white/20'
+          ? 'bg-green-900/70 border-green-300 shadow-lg shadow-green-500/20 backdrop-blur-sm' 
+          : 'bg-black/60 backdrop-blur-sm border-white/10 hover:border-white/20'
       } ${className}`}
       style={cardStyle}
     >
@@ -351,7 +380,7 @@ export default function VerseCard({
                     initial={{ scale: 0, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     exit={{ scale: 0, opacity: 0 }}
-                    className="text-blue-400"
+                    className="text-green-400"
                     title="Verset lu"
                     whileHover={{ scale: 1.2 }}
                   >
@@ -370,7 +399,7 @@ export default function VerseCard({
                     title="Verset mémorisé"
                     whileHover={{ scale: 1.2 }}
                   >
-                    <CheckCircle size={14} />
+                    <Brain size={14} />
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -425,22 +454,7 @@ export default function VerseCard({
             whileTap={{ scale: 0.95 }}
             whileHover={{ scale: 1.05 }}
           >
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={shouldShowPauseIcon ? 'pause' : 'play'}
-                initial={{ scale: 0.8, opacity: 0, rotate: -90 }}
-                animate={{ scale: 1, opacity: 1, rotate: 0 }}
-                exit={{ scale: 0.8, opacity: 0, rotate: 90 }}
-                transition={{ 
-                  duration: 0.2,
-                  type: "spring",
-                  stiffness: 300,
-                  damping: 20
-                }}
-              >
-                {shouldShowPauseIcon ? <Pause size={16} /> : <Play size={16} />}
-              </motion.div>
-            </AnimatePresence>
+            {shouldShowPauseIcon ? <Pause size={16} /> : <Play size={16} />}
           </motion.button>
 
           {/* Bouton favori */}
@@ -466,28 +480,53 @@ export default function VerseCard({
             </motion.div>
           </motion.button>
 
-          {/* Bouton mémorisation */}
+          {/* Bouton marquer comme lu */}
           <motion.button
-            onClick={handleMemorizeToggle}
+            onClick={handleReadToggle}
             className={`p-2 rounded-lg transition-all duration-300 ${
-              verseState?.isMemorized
-                ? 'text-emerald-400 bg-emerald-400/20'
+              verseState?.isRead
+                ? 'text-green-400 bg-green-400/20'
                 : 'bg-white/10 hover:bg-white/20'
             }`}
-            title={verseState?.isMemorized ? 'Mémorisé' : 'Marquer comme mémorisé'}
+            title={verseState?.isRead ? 'Marquer comme non lu' : 'Marquer comme lu'}
             whileTap={{ scale: 0.95 }}
             whileHover={{ scale: 1.05 }}
           >
             <motion.div
               animate={{
-                scale: verseState?.isMemorized ? [1, 1.2, 1] : 1,
-                rotate: verseState?.isMemorized ? [0, 360, 0] : 0
+                scale: verseState?.isRead ? [1, 1.2, 1] : 1,
+                color: verseState?.isRead ? '#22c55e' : undefined
               }}
-              transition={{ duration: 0.5 }}
+              transition={{ duration: 0.3 }}
             >
-              <CheckCircle size={16} />
+              <Eye size={16} fill={verseState?.isRead ? 'currentColor' : 'none'} />
             </motion.div>
           </motion.button>
+
+          {/* Bouton mémorisation - visible uniquement en mode MEMORIZATION */}
+          {studyMode.mode === 'MEMORIZATION' && (
+            <motion.button
+              onClick={handleMemorizeToggle}
+              className={`p-2 rounded-lg transition-all duration-300 ${
+                verseState?.isMemorized
+                  ? 'text-emerald-400 bg-emerald-400/20'
+                  : 'bg-white/10 hover:bg-white/20'
+              }`}
+              title={verseState?.isMemorized ? 'Marquer comme non mémorisé' : 'Marquer comme mémorisé'}
+              whileTap={{ scale: 0.95 }}
+              whileHover={{ scale: 1.05 }}
+            >
+              <motion.div
+                animate={{
+                  scale: verseState?.isMemorized ? [1, 1.2, 1] : 1,
+                  color: verseState?.isMemorized ? '#10b981' : undefined
+                }}
+                transition={{ duration: 0.3 }}
+              >
+                <Brain size={16} fill={verseState?.isMemorized ? 'currentColor' : 'none'} />
+              </motion.div>
+            </motion.button>
+          )}
 
           {/* Bouton copier lien */}
           <motion.button
@@ -582,7 +621,7 @@ export default function VerseCard({
               <p 
                 className="text-right font-amiri leading-loose text-white break-words"
                 style={{ 
-                  fontSize: `${Math.min(currentPreferences.arabicFontSize, 20)}px`,
+                  fontSize: `${currentPreferences.arabicFontSize}px`,
                   wordWrap: 'break-word',
                   overflowWrap: 'break-word'
                 }}
@@ -609,7 +648,7 @@ export default function VerseCard({
               <p 
                 className="text-left leading-relaxed italic text-gray-300 break-words"
                 style={{ 
-                  fontSize: `${Math.min(currentPreferences.phoneticFontSize, 16)}px`,
+                  fontSize: `${currentPreferences.phoneticFontSize}px`,
                   wordWrap: 'break-word',
                   overflowWrap: 'break-word'
                 }}
@@ -635,7 +674,7 @@ export default function VerseCard({
               <p 
                 className="text-white leading-relaxed break-words"
                 style={{ 
-                  fontSize: `${Math.min(currentPreferences.translationFontSize, 16)}px`,
+                  fontSize: `${currentPreferences.translationFontSize}px`,
                   wordWrap: 'break-word',
                   overflowWrap: 'break-word'
                 }}

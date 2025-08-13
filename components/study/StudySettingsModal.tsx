@@ -50,8 +50,6 @@ const reciters = [
 const studyModes = [
   { value: 'READING', label: 'Lecture' },
   { value: 'MEMORIZATION', label: 'Mémorisation' },
-  { value: 'PRONUNCIATION', label: 'Prononciation' },
-  { value: 'REVIEW', label: 'Révision' },
 ];
 
 const languages = [

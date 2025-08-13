@@ -19,6 +19,9 @@ model User {
   name      String
   password  String
   avatar    String?
+  isEmailVerified Boolean @default(false) // Indique si l'email a été vérifié
+  emailVerificationToken String?
+  emailVerificationExpires DateTime?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   
@@ -27,6 +30,7 @@ model User {
   readingProgress ReadingProgress[]
   studySessions StudySession[]
   verseStates VerseState[]
+  favoriteSurahs FavoriteSurah[]
   
   // Stats intégrées
   stats UserStats?
@@ -244,4 +248,20 @@ model UserPreferences {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   
   @@map("user_preferences")
+}
+
+// Sourates favorites des utilisateurs
+model FavoriteSurah {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String   @db.ObjectId
+  surahNumber Int      // Numéro de la sourate (1-114)
+  surahName   String   // Nom de la sourate (pour référence)
+  surahSlug   String   // Slug de la sourate (pour les URLs)
+  addedAt     DateTime @default(now())
+  
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, surahNumber])
+  @@map("favorite_surahs")
 }

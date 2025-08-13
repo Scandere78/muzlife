@@ -22,7 +22,7 @@ export interface UseAudioManagerReturn {
   audioState: AudioState;
   selectedReciter: string;
   setSelectedReciter: (reciter: string) => void;
-  playVerse: (verseNumber: number, audioUrl: string, verses?: any[]) => Promise<void>;
+  playVerse: (verseNumber: number, audioUrl: string, verses?: any[], surahNumber?: number) => Promise<void>;
   playAutoMode: (startVerse: number, verses: any[], surahNumber: number) => void;
   playComplete: (surahNumber: number) => void;
   pauseAudio: () => void;
@@ -163,11 +163,16 @@ export function useAudioManager(options: AudioManagerOptions = {}): UseAudioMana
   }, [audioState.currentVerse, onVerseComplete, onSessionComplete, onError, onTimeUpdate, cleanupAudio]);
 
   // Jouer un verset spécifique
-  const playVerse = useCallback(async (verseNumber: number, audioUrl: string, verses?: any[]) => {
+  const playVerse = useCallback(async (verseNumber: number, audioUrl: string, verses?: any[], surahNumber?: number) => {
     try {
       // Mettre à jour les versets pour la navigation si fournis
       if (verses && verses.length > 0) {
         versesRef.current = verses;
+      }
+      
+      // Mettre à jour le numéro de sourate si fourni
+      if (surahNumber !== undefined) {
+        surahNumberRef.current = surahNumber;
       }
       
       // Si c'est le même verset qui joue, basculer pause/play
@@ -292,13 +297,16 @@ export function useAudioManager(options: AudioManagerOptions = {}): UseAudioMana
       const nextIndex = currentIndex + 1;
       
       if (nextIndex < versesRef.current.length) {
-        const nextVerse = versesRef.current[nextIndex];
+        const nextVerseData = versesRef.current[nextIndex];
         // Activer le mode auto si on était en mode individuel
         if (audioState.currentMode === 'verse') {
           autoModeRef.current = true;
           setAudioState(prev => ({ ...prev, currentMode: 'auto' }));
         }
-        playVerse(nextVerse.numberInSurah, nextVerse.audio);
+        
+        // Utiliser l'URL audio du verset ou fallback si pas disponible
+        const audioUrl = nextVerseData.audio || `https://everyayah.com/data/Alafasy_128kbps/${String(surahNumberRef.current).padStart(3, '0')}${String(nextVerseData.numberInSurah).padStart(3, '0')}.mp3`;
+        playVerse(nextVerseData.numberInSurah, audioUrl);
       }
     }
   }, [audioState.currentVerse, audioState.currentMode, playVerse]);
@@ -309,13 +317,16 @@ export function useAudioManager(options: AudioManagerOptions = {}): UseAudioMana
       const previousIndex = currentIndex - 1;
       
       if (previousIndex >= 0) {
-        const previousVerse = versesRef.current[previousIndex];
+        const previousVerseData = versesRef.current[previousIndex];
         // Activer le mode auto si on était en mode individuel
         if (audioState.currentMode === 'verse') {
           autoModeRef.current = true;
           setAudioState(prev => ({ ...prev, currentMode: 'auto' }));
         }
-        playVerse(previousVerse.numberInSurah, previousVerse.audio);
+        
+        // Utiliser l'URL audio du verset ou fallback si pas disponible
+        const audioUrl = previousVerseData.audio || `https://everyayah.com/data/Alafasy_128kbps/${String(surahNumberRef.current).padStart(3, '0')}${String(previousVerseData.numberInSurah).padStart(3, '0')}.mp3`;
+        playVerse(previousVerseData.numberInSurah, audioUrl);
       }
     }
   }, [audioState.currentVerse, audioState.currentMode, playVerse]);

@@ -12,7 +12,7 @@ import StudyControls from "./StudyControls";
 import StudySettingsModal from "./StudySettingsModal";
 import AutoPlayerControls from "./AutoPlayerControls";
 import { motion } from "framer-motion";
-import { RECITERS } from "./ReciterSelector";
+import { RECITERS, getVerseAudioUrl } from "./ReciterSelector";
 
 interface StudyMode {
   mode: 'READING' | 'MEMORIZATION';
@@ -296,10 +296,8 @@ export default function SourateStudyPage({ sourate, surahNumber }: SourateStudyP
               return (
                 <VerseCard
                   key={ayah.numberInSurah}
-                  verse={{
-                    ...ayah,
-                    audio: `https://cdn.islamic.network/quran/audio-surah/128/ar.alafasy/${ayah.numberInSurah}.mp3`
-                  }}
+                  verse={ayah}
+                  surahNumber={surahNumber}
                   verseState={verseProgress.getVerseState(ayah.numberInSurah)}
                   studyMode={studyMode}
                   preferences={currentPreferences}
@@ -307,15 +305,21 @@ export default function SourateStudyPage({ sourate, surahNumber }: SourateStudyP
                   isCurrentlyPaused={isCurrentlyPaused}
                   onVerseRead={handleVerseRead}
                   onVerseMemorized={handleVerseMemorized}
+                  onVerseUnread={(verseNumber) => {
+                    verseProgress.resetVerseRead(verseNumber);
+                  }}
+                  onVerseUnmemorized={(verseNumber) => {
+                    verseProgress.resetVerseMemorization(verseNumber);
+                  }}
                   onVerseFavoriteToggle={handleVerseFavoriteToggle}
                   onPronunciationTime={handlePronunciationTime}
                   onPlayVerse={(verseNumber: number, audioUrl: string) => {
-                    // Préparer les versets avec audio pour la navigation
+                    // Préparer tous les versets avec leurs URLs audio correctes pour la navigation
                     const versesWithAudio = sourate.ayahs.map(ayah => ({
                       ...ayah,
-                      audio: `https://cdn.islamic.network/quran/audio-surah/128/ar.alafasy/${ayah.numberInSurah}.mp3`
+                      audio: getVerseAudioUrl(currentPreferences.preferredReciter, surahNumber, ayah.numberInSurah)
                     }));
-                    audioManager.playVerse(verseNumber, audioUrl, versesWithAudio);
+                    audioManager.playVerse(verseNumber, audioUrl, versesWithAudio, surahNumber);
                   }}
                 />
               );

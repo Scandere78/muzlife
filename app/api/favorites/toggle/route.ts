@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import { prisma } from '../../../../lib/prisma';
 import jwt from 'jsonwebtoken';
 
 export async function POST(req: NextRequest) {
@@ -18,11 +18,66 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Token invalide' }, { status: 401 });
     }
 
-    const { surahNumber, verseNumber } = await req.json();
+    const { surahNumber, verseNumber, surahName, surahSlug } = await req.json();
 
-    if (!surahNumber || !verseNumber) {
+    if (!surahNumber) {
       return NextResponse.json({ 
-        error: 'Numéro de sourate et de verset requis' 
+        error: 'Numéro de sourate requis' 
+      }, { status: 400 });
+    }
+
+    // Si verseNumber n'est pas fourni, on traite cela comme un favori de sourate
+    if (!verseNumber) {
+      // Gérer les favoris de sourate complète
+      const existingFavorite = await prisma.favoriteSurah.findUnique({
+        where: {
+          userId_surahNumber: {
+            userId: decoded.userId,
+            surahNumber: parseInt(surahNumber),
+          },
+        },
+      });
+
+      let isFavorite = false;
+      let message = '';
+
+      if (existingFavorite) {
+        // Supprimer des favoris
+        await prisma.favoriteSurah.delete({
+          where: {
+            userId_surahNumber: {
+              userId: decoded.userId,
+              surahNumber: parseInt(surahNumber),
+            },
+          },
+        });
+        isFavorite = false;
+        message = 'Sourate supprimée des favoris';
+      } else {
+        // Ajouter aux favoris
+        await prisma.favoriteSurah.create({
+          data: {
+            userId: decoded.userId,
+            surahNumber: parseInt(surahNumber),
+            surahName: surahName || `Sourate ${surahNumber}`,
+            surahSlug: surahSlug || `sourate-${surahNumber}`,
+          },
+        });
+        isFavorite = true;
+        message = 'Sourate ajoutée aux favoris';
+      }
+
+      return NextResponse.json({
+        success: true,
+        isFavorite,
+        message,
+      });
+    }
+
+    // Logique existante pour les versets
+    if (!verseNumber) {
+      return NextResponse.json({ 
+        error: 'Numéro de verset requis pour les favoris de verset' 
       }, { status: 400 });
     }
 

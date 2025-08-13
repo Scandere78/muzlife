@@ -97,7 +97,7 @@ const studyModes = [
   },
   {
     key: 'MEMORIZATION',
-    label: 'Mémorisation',
+    label: 'Apprentissage',
     icon: Brain,
     description: 'Masquez/affichez les textes pour vous entraîner',
     color: 'text-emerald-400',
@@ -166,8 +166,8 @@ export default function StudyControls({
   };
 
   const getProgressPercentage = () => {
-    if (!currentSession || currentSession.totalVerses === 0) return 0;
-    return Math.round((currentSession.versesStudied.length / currentSession.totalVerses) * 100);
+    if (!surahStats || surahStats.totalVerses === 0) return 0;
+    return Math.round((surahStats.memorizedVerses / surahStats.totalVerses) * 100);
   };
 
   const getTodayGoalProgress = () => {
@@ -185,7 +185,7 @@ export default function StudyControls({
     <motion.div
       initial={{ y: -20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      className={`sticky top-20 z-20 bg-black/40 backdrop-blur-xl border border-white/20 rounded-xl overflow-hidden ${className}`}
+      className={`sticky top-20 z-20 bg-black/50 backdrop-blur-xl border border-white/20 rounded-xl overflow-hidden ${className}`}
     >
       {/* En-tête avec bouton de réduction */}
       <div className="flex items-center justify-between p-4 border-b border-white/10">
@@ -223,7 +223,7 @@ export default function StudyControls({
       <motion.div
         initial={false}
         animate={{ height: isExpanded ? 'auto' : 0 }}
-        className="overflow-hidden"
+        className="overflow-hidden transition"
       >
         <div className="p-4 space-y-6">
           {/* Sélection du mode d'étude */}
@@ -275,9 +275,9 @@ export default function StudyControls({
                 </div>
                 
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-400">Versets étudiés</span>
+                  <span className="text-sm text-gray-400">Versets lus</span>
                   <span className="text-white">
-                    {currentSession.versesStudied.length}/{currentSession.totalVerses}
+                    {surahStats?.readVerses || 0}/{surahStats?.totalVerses || 0}
                   </span>
                 </div>
 
@@ -339,39 +339,41 @@ export default function StudyControls({
             </div>
           )}
 
-          {/* Contrôles de session */}
-          <div className="flex items-center space-x-3">
-            <button
-              onClick={handleSessionToggle}
-              className={`flex-1 flex items-center justify-center space-x-2 py-3 px-4 rounded-lg font-medium transition-all ${
-                isSessionActive
-                  ? 'bg-orange-500 hover:bg-orange-600 text-white'
-                  : 'bg-[var(--color-accent)] hover:bg-[var(--color-accent)]/80 text-white'
-              }`}
-            >
-              {isSessionActive ? (
-                <>
-                  <Pause size={18} />
-                  <span>Pause</span>
-                </>
-              ) : (
-                <>
-                  <Play size={18} />
-                  <span>{currentSession ? 'Reprendre' : 'Commencer'}</span>
-                </>
-              )}
-            </button>
-
-            {currentSession && (
+          {/* Contrôles de session - visible uniquement en mode MEMORIZATION */}
+          {selectedMode === 'MEMORIZATION' && (
+            <div className="flex items-center space-x-3">
               <button
-                onClick={onEndSession}
-                className="py-3 px-4 rounded-lg bg-red-500/20 border border-red-500/50 text-red-300 hover:bg-red-500/30 transition-colors"
-                title="Terminer la session"
+                onClick={handleSessionToggle}
+                className={`flex-1 flex items-center justify-center space-x-2 py-3 px-4 rounded-lg font-medium transition-all ${
+                  isSessionActive
+                    ? 'bg-orange-500 hover:bg-orange-600 text-white'
+                    : 'bg-[var(--color-accent)] hover:bg-[var(--color-accent)]/80 text-white'
+                }`}
               >
-                <RotateCcw size={18} />
+                {isSessionActive ? (
+                  <>
+                    <Pause size={18} />
+                    <span>Pause</span>
+                  </>
+                ) : (
+                  <>
+                    <Play size={18} />
+                    <span>{currentSession ? 'Reprendre' : 'Commencer'}</span>
+                  </>
+                )}
               </button>
-            )}
-          </div>
+
+              {currentSession && (
+                <button
+                  onClick={onEndSession}
+                  className="py-3 px-4 rounded-lg bg-red-500/20 border border-red-500/50 text-red-300 hover:bg-red-500/30 transition-colors"
+                  title="Terminer la session"
+                >
+                  <RotateCcw size={18} />
+                </button>
+              )}
+            </div>
+          )}
 
           {/* Sélecteur de récitateur */}
           <div>

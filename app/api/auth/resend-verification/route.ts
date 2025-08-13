@@ -1,11 +1,10 @@
-import { NextResponse } from "next/server";
-import bcrypt from "bcryptjs";
-import { prisma } from "@/lib/prisma";
+import { NextRequest, NextResponse } from "next/server";
+import { PrismaClient } from "@prisma/client";
 import * as nodemailer from 'nodemailer';
 
-export const dynamic = "force-dynamic";
+const prisma = new PrismaClient();
 
-// Configuration SMTP
+// Configuration SMTP (vous devez configurer vos propres identifiants)
 const SMTP_CONFIG = {
   host: process.env.SMTP_HOST || 'smtp.gmail.com',
   port: parseInt(process.env.SMTP_PORT || '587'),
@@ -86,92 +85,71 @@ async function sendVerificationEmail(email: string, code: string): Promise<boole
   }
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
-    const { email, name, password } = await request.json();
-    if (!email || !name || !password) {
-      return NextResponse.json({ message: "Tous les champs sont requis" }, { status: 400 });
-    }
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return NextResponse.json({ message: "Format email invalide" }, { status: 400 });
-    }
-    if (password.length < 6) {
-      return NextResponse.json({ message: "Le mot de passe doit contenir au moins 6 caractères" }, { status: 400 });
-    }
-    const existingUserByEmail = await prisma.user.findUnique({ where: { email } });
-    if (existingUserByEmail) {
-      return NextResponse.json({ message: "Cet email est déjà utilisé" }, { status: 400 });
-    }
-    const hashedPassword = await bcrypt.hash(password, 12);
-    
-    // Générer le code de vérification
-    const verificationCode = generateVerificationCode();
-    const verificationExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+    const { email } = await request.json();
 
-    const user = await prisma.user.create({
-      data: {
-        email,
-        name,
-        password: hashedPassword,
-        isEmailVerified: false,
-        emailVerificationToken: verificationCode,
-        emailVerificationExpires: verificationExpires,
-        stats: {
-          create: {
-            totalQuizzes: 0,
-            totalPoints: 0,
-            averageScore: 0,
-            streakRecord: 0,
-            totalVersesRead: 0,
-            totalVersesMemorized: 0,
-            readingStreak: 0,
-            memorizationStreak: 0,
-            dailyReadingGoal: 10,
-            dailyMemorizationGoal: 3,
-            totalStudyTime: 0,
-            averageStudySession: 0,
-          },
-        },
-      },
-      include: { stats: true },
+    if (!email) {
+      return NextResponse.json(
+        { error: "Email requis" },
+        { status: 400 }
+      );
+    }
+
+    // Vérifier si l'utilisateur existe
+    const user = await prisma.user.findUnique({
+      where: { email }
     });
 
-    // Envoyer l'email de vérification
+    if (!user) {
+      return NextResponse.json(
+        { error: "Utilisateur non trouvé" },
+        { status: 404 }
+      );
+    }
+
+    if (user.isEmailVerified) {
+      return NextResponse.json(
+        { error: "Email déjà vérifié" },
+        { status: 400 }
+      );
+    }
+
+    // Générer un nouveau code de vérification
+    const verificationCode = generateVerificationCode();
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+
+    // Mettre à jour l'utilisateur avec le nouveau code
+    await prisma.user.update({
+      where: { email },
+      data: {
+        emailVerificationToken: verificationCode,
+        emailVerificationExpires: expiresAt,
+      }
+    });
+
+    // Envoyer l'email
     const emailSent = await sendVerificationEmail(email, verificationCode);
 
     if (!emailSent) {
-      // Si l'email n'a pas pu être envoyé, on peut soit supprimer l'utilisateur soit le laisser avec isEmailVerified = false
-      console.warn(`Email de vérification non envoyé pour ${email}`);
+      return NextResponse.json(
+        { error: "Erreur lors de l'envoi de l'email" },
+        { status: 500 }
+      );
     }
 
-    return NextResponse.json({
-      message: "Compte créé avec succès. Vérifiez votre email pour activer votre compte.",
-      user: {
-        id: user.id,
-        email: user.email,
-        name: user.name,
-        avatar: user.avatar,
-        isEmailVerified: user.isEmailVerified,
-      },
-      needsEmailVerification: true,
-    }, { status: 201 });
+    return NextResponse.json(
+      { message: "Code de vérification envoyé" },
+      { status: 200 }
+    );
+
   } catch (error) {
-    console.error("Erreur lors de la création:", error);
-    if (
-      typeof error === "object" &&
-      error !== null &&
-      "code" in error &&
-      (error as { code?: string }).code === "P2010"
-    ) {
-      return NextResponse.json({ message: "Erreur de connexion à la base de données", error: "Service temporairement indisponible" }, { status: 503 });
-    }
-    return NextResponse.json({
-      message: "Erreur serveur",
-      error:
-        process.env.NODE_ENV === "development" && error instanceof Error
-          ? (error as Error).message
-          : "Erreur interne",
-    }, { status: 500 });
+    console.error("Erreur lors du renvoi de la vérification:", error);
+    return NextResponse.json(
+      { error: "Erreur serveur" },
+      { status: 500 }
+    );
+  } finally {
+    await prisma.$disconnect();
   }
 }

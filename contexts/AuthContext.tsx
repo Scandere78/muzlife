@@ -50,7 +50,7 @@ export interface DashboardStats {
 interface AuthContextType {
   user: User | null;
   loading: boolean;
-  login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  login: (email: string, password: string) => Promise<{ success: boolean; error?: string; requiresVerification?: boolean; email?: string }>;
   register: (email: string, name: string, password: string) => Promise<{ success: boolean; error?: string }>;
   logout: () => void;
   updateProfile: (updatedUser: User) => void;
@@ -105,6 +105,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         localStorage.setItem("user", JSON.stringify(data.user));
         setUser(data.user);
         return { success: true };
+      } else if (response.status === 403 && data.requiresVerification) {
+        // Email non vérifié, retourner les informations pour afficher le modal
+        return { 
+          success: false, 
+          error: data.message, 
+          requiresVerification: true,
+          email: data.email 
+        };
       } else {
         return { success: false, error: data.message };
       }

@@ -70,6 +70,11 @@ export async function POST(req: NextRequest) {
         updateData.memorizationLevel = Math.max((verseState.memorizationLevel || 1) - 1, 0);
         break;
 
+      case 'reset_read':
+        updateData.isRead = false;
+        updateData.readCount = Math.max((verseState.readCount || 1) - 1, 0);
+        break;
+
       default:
         return NextResponse.json({ message: 'Action non reconnue' }, { status: 400 });
     }

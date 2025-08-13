@@ -65,7 +65,7 @@ export const RECITERS: Reciter[] = [
   },
 ];
 
-// Fonction utilitaire pour obtenir l'URL de récitation
+// Fonction utilitaire pour obtenir l'URL de récitation complète d'une sourate
 export const getRecitationUrl = (reciterId: string, sourateId: number): string => {
   const paddedId = String(sourateId).padStart(3, '0');
   
@@ -90,6 +90,27 @@ export const getRecitationUrl = (reciterId: string, sourateId: number): string =
       return `https://server11.mp3quran.net/sds/${paddedId}.mp3`;
     default:
       return `https://www.al-hamdoulillah.com/coran/mp3/files/${reciterId}/${paddedId}.mp3`;
+  }
+};
+
+// Fonction utilitaire pour obtenir l'URL audio d'un verset spécifique
+export const getVerseAudioUrl = (reciterId: string, sourateId: number, verseNumber: number): string => {
+  const paddedSurah = String(sourateId).padStart(3, '0');
+  const paddedVerse = String(verseNumber).padStart(3, '0');
+  
+  // Utilisation de l'API EveryAyah.com qui fournit des fichiers audio par verset
+  switch (reciterId) {
+    case 'afs': // Mishary Alafasy
+      return `https://everyayah.com/data/Alafasy_128kbps/${paddedSurah}${paddedVerse}.mp3`;
+    case 'sds': // Saad Al-Ghamdi
+      return `https://everyayah.com/data/Ghamadi_40kbps/${paddedSurah}${paddedVerse}.mp3`;
+    case 'maher': // Maher Al-Muaiqly
+      return `https://everyayah.com/data/MaherAlMuaiqly128kbps/${paddedSurah}${paddedVerse}.mp3`;
+    case 'h_dukhain': // Haitham Dukhain
+      return `https://everyayah.com/data/Haitham_Dakhain_128kbps/${paddedSurah}${paddedVerse}.mp3`;
+    default:
+      // Fallback vers Alafasy pour les récitateurs non supportés
+      return `https://everyayah.com/data/Alafasy_128kbps/${paddedSurah}${paddedVerse}.mp3`;
   }
 };
 
