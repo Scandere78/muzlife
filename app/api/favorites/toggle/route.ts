@@ -10,11 +10,11 @@ export async function POST(req: NextRequest) {
     }
 
     const token = authHeader.substring(7);
-    let decoded: any;
+    let decoded: { userId: string; email: string };
     
     try {
-      decoded = jwt.verify(token, process.env.JWT_SECRET!);
-    } catch (error) {
+      decoded = jwt.verify(token, process.env.JWT_SECRET!) as { userId: string; email: string };
+    } catch {
       return NextResponse.json({ error: 'Token invalide' }, { status: 401 });
     }
 

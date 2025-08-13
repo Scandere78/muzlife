@@ -9,14 +9,10 @@ import {
   Settings, 
   BookOpen, 
   Brain, 
-  Volume2, 
-  Eye,
-  Target,
-  Clock,
+  Volume2,
   BarChart3,
   ChevronDown,
   ChevronUp,
-  Users,
   Repeat,
   PlayCircle,
   Square,
@@ -109,7 +105,6 @@ export default function StudyControls({
   currentSession,
   isSessionActive,
   sessionDuration,
-  focusTime,
   studyMode,
   surahStats,
   preferences,
@@ -194,7 +189,7 @@ export default function StudyControls({
             <BarChart3 size={20} className="text-[var(--color-accent)]" />
           </div>
           <div>
-            <h3 className="font-semibold !text-white/80">Contrôles d'étude</h3>
+            <h3 className="font-semibold !text-white/80">Contrôles d&apos;étude</h3>
             <p className="text-sm text-gray-400">
               {isSessionActive ? 'Session active' : 'Prêt à commencer'}
             </p>
@@ -228,7 +223,7 @@ export default function StudyControls({
         <div className="p-4 space-y-6">
           {/* Sélection du mode d'étude */}
           <div>
-            <h4 className="text-sm font-medium !text-white mb-3">Mode d'étude</h4>
+            <h4 className="text-sm font-medium !text-white mb-3">Mode d&apos;étude</h4>
             <div className="space-y-2">
               {studyModes.map((mode) => {
                 const Icon = mode.icon;
@@ -268,7 +263,7 @@ export default function StudyControls({
               <h4 className="text-sm font-medium text-gray-300 mb-3">Session actuelle</h4>
               <div className="bg-white/5 rounded-lg p-4 space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-400">Temps d'étude</span>
+                  <span className="text-sm text-gray-400">Temps d&apos;étude</span>
                   <span className="text-lg font-mono text-[var(--color-accent)]">
                     {formatTime(sessionDuration)}
                   </span>

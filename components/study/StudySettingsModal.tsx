@@ -35,7 +35,7 @@ interface StudySettingsModalProps {
     reminderTime?: string;
     studyDaysOfWeek: number[];
   };
-  onUpdatePreferences: (updates: any) => Promise<void>;
+  onUpdatePreferences: (updates: Record<string, string | number | boolean | number[]>) => Promise<void>;
   onResetPreferences: () => Promise<void>;
 }
 
@@ -107,7 +107,7 @@ export default function StudySettingsModal({
     }
   };
 
-  const updateLocalPreference = (key: string, value: any) => {
+  const updateLocalPreference = (key: string, value: string | number | boolean | number[]) => {
     setLocalPreferences(prev => ({
       ...prev,
       [key]: value,
@@ -153,7 +153,7 @@ export default function StudySettingsModal({
           >
             {/* En-tête */}
             <div className="flex items-center justify-between p-4 sm:p-6 border-b border-white/20">
-              <h2 className="text-lg sm:text-2xl font-semibold !text-white">Paramètres d'étude</h2>
+              <h2 className="text-lg sm:text-2xl font-semibold !text-white">Paramètres d&apos;étude</h2>
               <button
                 onClick={onClose}
                 className="p-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors !text-white"
@@ -171,7 +171,7 @@ export default function StudySettingsModal({
                     return (
                       <button
                         key={tab.id}
-                        onClick={() => setActiveTab(tab.id as any)}
+                        onClick={() => setActiveTab(tab.id as typeof activeTab)}
                         className={`flex-shrink-0 md:w-full flex items-center space-x-2 md:space-x-3 px-3 md:px-4 py-2 md:py-3 rounded-lg transition-all whitespace-nowrap text-sm md:text-base ${
                           activeTab === tab.id
                             ? 'bg-[var(--color-accent)] text-white'
@@ -192,7 +192,7 @@ export default function StudySettingsModal({
                 {activeTab === 'display' && (
                   <div className="space-y-6">
                     <div>
-                      <h3 className="text-base sm:text-lg font-medium !text-white mb-4">Paramètres d'affichage</h3>
+                      <h3 className="text-base sm:text-lg font-medium !text-white mb-4">Paramètres d&apos;affichage</h3>
                       
                       <div className="space-y-4">
                         <div>
@@ -346,12 +346,12 @@ export default function StudySettingsModal({
                 {/* Onglet Étude */}
                 {activeTab === 'study' && (
                   <div className="space-y-6">
-                    <h3 className="text-base sm:text-lg font-medium !text-white mb-4">Préférences d'étude</h3>
+                    <h3 className="text-base sm:text-lg font-medium !text-white mb-4">Préférences d&apos;étude</h3>
                     
                     <div className="space-y-4">
                       <div>
                         <label className="block text-sm font-medium text-gray-300 mb-2">
-                          Mode d'étude par défaut
+                          Mode d&apos;étude par défaut
                         </label>
                         <select
                           value={localPreferences.defaultStudyMode}
@@ -433,7 +433,7 @@ export default function StudySettingsModal({
 
                       <div>
                         <label className="block text-sm font-medium text-gray-300 mb-2">
-                          Temps d'étude hebdomadaire (minutes): {localPreferences.weeklyStudyTimeGoal}
+                          Temps d&apos;étude hebdomadaire (minutes): {localPreferences.weeklyStudyTimeGoal}
                         </label>
                         <input
                           type="range"
@@ -455,7 +455,7 @@ export default function StudySettingsModal({
                 {/* Onglet Notifications */}
                 {activeTab === 'notifications' && (
                   <div className="space-y-6">
-                    <h3 className="text-base sm:text-lg font-medium !text-white mb-4">Rappels d'étude</h3>
+                    <h3 className="text-base sm:text-lg font-medium !text-white mb-4">Rappels d&apos;étude</h3>
                     
                     <div className="space-y-4">
                       <div>
@@ -486,7 +486,7 @@ export default function StudySettingsModal({
 
                           <div>
                             <label className="block text-sm font-medium text-gray-300 mb-3">
-                              Jours d'étude
+                              Jours d&apos;étude
                             </label>
                             <div className="grid grid-cols-3 sm:flex sm:space-x-2 gap-2 sm:gap-0">
                               {daysOfWeek.map((day) => (

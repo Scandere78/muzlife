@@ -7,7 +7,6 @@ import {
   Pause, 
   Heart, 
   BookOpen, 
-  CheckCircle,
   Clock,
   Eye,
   EyeOff,

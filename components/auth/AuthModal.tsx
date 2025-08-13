@@ -33,7 +33,7 @@ export default function AuthModal({ isOpen, onCloseAction }: AuthModalProps) {
   const [showEmailVerification, setShowEmailVerification] = useState(false);
   const [pendingEmail, setPendingEmail] = useState("");
   const [pendingPassword, setPendingPassword] = useState("");
-  const { login, register } = useAuth();
+  const { login } = useAuth();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();

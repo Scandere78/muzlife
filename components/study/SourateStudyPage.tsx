@@ -289,7 +289,7 @@ export default function SourateStudyPage({ sourate, surahNumber }: SourateStudyP
             transition={{ delay: 0.2 }}
             className="space-y-4"
           >
-            {sourate.ayahs.map((ayah: any, index: number) => {
+            {sourate.ayahs.map((ayah: { numberInSurah: number; text: string; transliteration?: string; translation: string }) => {
               const isCurrentlyPlaying = audioManager.audioState.currentVerse === ayah.numberInSurah && audioManager.audioState.isPlaying;
               const isCurrentlyPaused = audioManager.audioState.currentVerse === ayah.numberInSurah && audioManager.audioState.isPaused;
               

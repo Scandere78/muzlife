@@ -10,20 +10,6 @@ import { useAuth } from "../../contexts/AuthContext";
 import AuthModal from "../../components/auth/AuthModal";
 
 
-interface Sourate {
-  position: number;
-  nom: string;
-  nom_phonetique: string;
-  englishNameTranslation: string;
-}
-
-// Fonction utilitaire pour générer un slug à partir du nom phonétique
-function slugify(str: string) {
-  return str
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
-}
 
 export default function Lecture() {
   const { user } = useAuth();
@@ -37,7 +23,7 @@ export default function Lecture() {
     sourate.nom_phonetique.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const handleFavoriteToggle = async (sourate: any) => {
+  const handleFavoriteToggle = async (sourate: { number: number; nom_phonetique: string; slug: string }) => {
     if (!user) {
       // Si l'utilisateur n'est pas connecté, ouvrir le modal d'authentification
       setShowAuthModal(true);

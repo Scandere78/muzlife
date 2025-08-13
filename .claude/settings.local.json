@@ -8,7 +8,8 @@
       "mcp__context7__get-library-docs",
       "Bash(pnpm prisma:*)",
       "Bash(pnpm add:*)",
-      "Bash(rm:*)"
+      "Bash(rm:*)",
+      "Bash(pnpm lint:*)"
     ],
     "deny": []
   }

@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
     let decoded: DecodedToken;
     try {
       decoded = jwt.verify(token, process.env.JWT_SECRET) as DecodedToken;
-    } catch (error) {
+    } catch {
       return NextResponse.json(
         { error: 'Token invalide' },
         { status: 401 }
