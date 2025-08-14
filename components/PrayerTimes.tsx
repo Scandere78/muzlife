@@ -1,12 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
 import { Clock, MapPin, Calendar, Sun, Moon, Sunrise, Sunset } from 'lucide-react';
 import CityAutocomplete from './CityAutocomplete';
+import CountrySelector from './CountrySelector';
+import LocationGPS from './LocationGPS';
+import { useLocation } from '@/contexts/LocationContext';
 
 // Interface pour les horaires de prière
 interface PrayerTimes {
@@ -63,15 +64,13 @@ interface PrayerTimesData {
   };
 }
 
-// Configuration des prières avec leurs icônes et couleurs
+// Configuration des 5 prières obligatoires avec leurs icônes et couleurs
 const prayerConfig = {
-  Fajr: { name: 'Fajr (Aube)', icon: Sunrise, color: 'bg-blue-500', textColor: 'text-blue-500' },
-  Sunrise: { name: 'Lever du soleil', icon: Sun, color: 'bg-orange-400', textColor: 'text-orange-400' },
-  Dhuhr: { name: 'Dhuhr (Midi)', icon: Sun, color: 'bg-yellow-500', textColor: 'text-yellow-500' },
-  Asr: { name: 'Asr (Après-midi)', icon: Sun, color: 'bg-orange-500', textColor: 'text-orange-500' },
-  Sunset: { name: 'Coucher du soleil', icon: Sunset, color: 'bg-red-400', textColor: 'text-red-400' },
-  Maghrib: { name: 'Maghrib (Soir)', icon: Sunset, color: 'bg-purple-500', textColor: 'text-purple-500' },
-  Isha: { name: 'Isha (Nuit)', icon: Moon, color: 'bg-indigo-600', textColor: 'text-indigo-600' },
+  Fajr: { name: 'Fajr', icon: Sunrise, color: 'bg-gradient-to-r from-blue-500 to-blue-600', textColor: 'text-blue-600', description: 'Prière de l\'aube' },
+  Dhuhr: { name: 'Dhuhr', icon: Sun, color: 'bg-gradient-to-r from-yellow-500 to-yellow-600', textColor: 'text-yellow-600', description: 'Prière de midi' },
+  Asr: { name: 'Asr', icon: Sun, color: 'bg-gradient-to-r from-orange-500 to-orange-600', textColor: 'text-orange-600', description: 'Prière de l\'après-midi' },
+  Maghrib: { name: 'Maghrib', icon: Sunset, color: 'bg-gradient-to-r from-purple-500 to-purple-600', textColor: 'text-purple-600', description: 'Prière du coucher' },
+  Isha: { name: 'Isha', icon: Moon, color: 'bg-gradient-to-r from-indigo-600 to-indigo-700', textColor: 'text-indigo-700', description: 'Prière de la nuit' },
 };
 
 // Fonction pour formater l'heure
@@ -79,14 +78,13 @@ function formatTime(time: string): string {
   return time.substring(0, 5); // Retourne HH:MM
 }
 
-// Fonction pour calculer le temps restant jusqu'à la prochaine prière
+// Fonction pour calculer le temps restant jusqu'à la prochaine prière (seulement les 5 obligatoires)
 function getTimeUntilNextPrayer(timings: PrayerTimes): { nextPrayer: string; timeRemaining: string } {
   const now = new Date();
   const currentTime = now.getHours() * 60 + now.getMinutes();
   
   const prayerTimes = [
     { name: 'Fajr', time: timings.Fajr },
-    { name: 'Sunrise', time: timings.Sunrise },
     { name: 'Dhuhr', time: timings.Dhuhr },
     { name: 'Asr', time: timings.Asr },
     { name: 'Maghrib', time: timings.Maghrib },
@@ -120,9 +118,7 @@ function getTimeUntilNextPrayer(timings: PrayerTimes): { nextPrayer: string; tim
 }
 
 export default function PrayerTimes() {
-  const [city, setCity] = useState('Paris');
-  const [country, setCountry] = useState('France');
-  const [selectedCity, setSelectedCity] = useState<CityResult | null>(null);
+  const { preferences, countries, loading: locationLoading, setCountry, setCity } = useLocation();
   const [prayerData, setPrayerData] = useState<PrayerTimesData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -130,13 +126,12 @@ export default function PrayerTimes() {
 
   // Fonction pour récupérer les horaires de prière depuis l'API Aladhan
   const fetchPrayerTimes = async () => {
+    if (!preferences.city || locationLoading) return;
+    
     setLoading(true);
     setError(null);
     try {
-      const cityToSearch = selectedCity?.name || city;
-      const countryToSearch = selectedCity?.country || country;
-      // Méthode 2 = Islamic Society of North America (ISNA), modifiable si besoin
-      const url = `https://api.aladhan.com/v1/timingsByCity?city=${encodeURIComponent(cityToSearch)}&country=${encodeURIComponent(countryToSearch)}&method=2`;
+      const url = `https://api.aladhan.com/v1/timingsByCity?city=${encodeURIComponent(preferences.city.name)}&country=${encodeURIComponent(preferences.city.country)}&method=2`;
       const response = await fetch(url);
       if (!response.ok) {
         const errorData = await response.json();
@@ -166,89 +161,59 @@ export default function PrayerTimes() {
     }
   }, [prayerData]);
 
-  // Charger les horaires au montage du composant
+  // Charger les horaires quand les préférences changent
   useEffect(() => {
     fetchPrayerTimes();
-  }, []);
+  }, [preferences.city, locationLoading]);
 
   // Gérer la sélection d'une ville
   const handleCitySelect = (selectedCityData: CityResult) => {
-    setSelectedCity(selectedCityData);
-    setCity(selectedCityData.name);
-    setCountry(selectedCityData.country);
-    // Automatiquement rechercher les horaires quand une ville est sélectionnée
-    setTimeout(() => fetchPrayerTimes(), 100);
+    const cityData = {
+      name: selectedCityData.name,
+      country: selectedCityData.country,
+      latitude: selectedCityData.latitude,
+      longitude: selectedCityData.longitude,
+      displayName: selectedCityData.displayName
+    };
+    setCity(cityData);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    fetchPrayerTimes();
+  const handleCountrySelect = (selectedCountry: any) => {
+    setCountry(selectedCountry);
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6 space-y-6 bg-white/40 rounded-lg">
-      {/* En-tête avec recherche */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Clock className="h-6 w-6 text-primary" />
-            Horaires de Prière
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4">
-            <div className="flex-1">
-              <CityAutocomplete
-                value={city}
-                onChange={setCity}
-                onCitySelect={handleCitySelect}
-                placeholder="Entrez votre ville (ex: Corbeil-Essonnes, Paris, Lyon...)"
-                className="w-full"
-              />
-            </div>
-            <div className="flex-1">
-              <Input
-                type="text"
-                placeholder="Pays (optionnel)"
-                value={country}
-                onChange={(e) => setCountry(e.target.value)}
-                className="w-full"
-              />
-            </div>
-            <Button type="submit" disabled={loading} className="whitespace-nowrap">
-              {loading ? 'Chargement...' : 'Rechercher'}
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
+    <div className="max-w-6xl mx-auto p-6 space-y-8">
+      {/* En-tête avec recherche améliorée */}
 
-      {/* Affichage des erreurs */}
-      {error && (
-        <Card className="border-red-200 bg-red-50">
-          <CardContent className="pt-6">
-            <p className="text-red-600 text-center">{error}</p>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Informations de la ville et de la date */}
+     {/* Informations de la ville et de la date - Design amélioré */}
       {prayerData && (
-        <Card>
+        <Card className="backdrop-blur-sm bg-gradient-to-r from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-700 border-0 shadow-lg">
           <CardContent className="pt-6">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-              <div className="flex items-center gap-2">
-                <MapPin className="h-5 w-5 text-muted-foreground" />
-                <span className="font-medium">
-                  {selectedCity ? selectedCity.displayName : `${city}, ${country}`}
-                </span>
-                <span className="text-sm text-muted-foreground">({prayerData.meta.timezone})</span>
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-full bg-blue-500 text-white">
+                  <MapPin className="h-5 w-5" />
+                </div>
+                <div>
+                  <div className="font-semibold text-lg text-gray-800 dark:text-white">
+                    📍 {preferences.city.displayName}
+                  </div>
+                  <div className="text-sm text-gray-600 dark:text-gray-300">
+                    🌍 Fuseau horaire: {prayerData.meta.timezone}
+                  </div>
+                </div>
               </div>
-              <div className="flex items-center gap-2">
-                <Calendar className="h-5 w-5 text-muted-foreground" />
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-full bg-purple-500 text-white">
+                  <Calendar className="h-5 w-5" />
+                </div>
                 <div className="text-right">
-                  <div className="font-medium">{prayerData.date.gregorian.weekday.en}, {prayerData.date.gregorian.date}</div>
-                  <div className="text-sm text-muted-foreground">
-                    {prayerData.date.hijri.date} {prayerData.date.hijri.month.en} {prayerData.date.hijri.year} AH
+                  <div className="font-semibold text-lg text-gray-800 dark:text-white">
+                    📅 {prayerData.date.gregorian.weekday.en}, {prayerData.date.gregorian.date}
+                  </div>
+                  <div className="text-sm text-gray-600 dark:text-gray-300">
+                    🌙 {prayerData.date.hijri.date} {prayerData.date.hijri.month.en} {prayerData.date.hijri.year} AH
                   </div>
                 </div>
               </div>
@@ -257,49 +222,110 @@ export default function PrayerTimes() {
         </Card>
       )}
 
-      {/* Prochaine prière */}
-      {timeUntilNext && prayerData && (
-        <Card className="border-primary/20 bg-primary/5">
+      <Card className="backdrop-blur-sm bg-white/80 dark:bg-gray-800/80 border-0 shadow-xl">
+        <CardHeader className="pb-4">
+          <CardTitle className="flex items-center gap-3 text-2xl">
+            <div className="p-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 text-white">
+              <Clock className="h-6 w-6" />
+            </div>
+            <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              Horaires de Prière
+            </span>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex-1">
+                <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">
+                  🌍 Pays
+                </label>
+                <CountrySelector
+                  countries={countries}
+                  selectedCountry={preferences.country}
+                  onCountrySelect={handleCountrySelect}
+                  className="w-full"
+                />
+              </div>
+              <div className="flex-1">
+                <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">
+                  🏙️ Ville
+                </label>
+                <CityAutocomplete
+                  value={preferences.city.name}
+                  onChange={() => {}} // Géré par handleCitySelect
+                  onCitySelect={handleCitySelect}
+                  countryFilter={preferences.country.name}
+                  placeholder={`🔍 Recherchez une ville en ${preferences.country.name}...`}
+                  className="w-full h-12 text-lg"
+                />
+              </div>
+            </div>
+            
+            {/* Bouton GPS */}
+            <div className="border-t pt-4">
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-2 text-center">
+                📍 Ou utilisez votre position GPS pour une localisation précise
+              </p>
+              <LocationGPS className="max-w-md mx-auto" />
+            </div>
+          </div>
+          </CardContent>
+      </Card>
+
+      {/* Affichage des erreurs - Design amélioré */}
+      {error && (
+        <Card className="border-0 bg-gradient-to-r from-red-50 to-pink-50 dark:from-red-900/20 dark:to-pink-900/20 shadow-lg">
           <CardContent className="pt-6">
             <div className="text-center">
-              <h3 className="text-lg font-semibold mb-2">Prochaine Prière</h3>
-              <div className="text-2xl font-bold text-primary mb-2">
-                {prayerConfig[timeUntilNext.nextPrayer as keyof typeof prayerConfig]?.name}
+              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-red-500 text-white mb-4">
+                ⚠️
               </div>
-              <div className="text-sm text-muted-foreground">
-                Dans {timeUntilNext.timeRemaining}
-              </div>
+              <p className="text-red-700 dark:text-red-300 font-medium text-lg">{error}</p>
+              <p className="text-red-600 dark:text-red-400 text-sm mt-2">Veuillez vérifier le nom de la ville et réessayer</p>
             </div>
           </CardContent>
         </Card>
       )}
 
-      {/* Grille des horaires de prière */}
+     
+
+   
+
+      {/* Grille des horaires de prière - Design amélioré */}
       {prayerData && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
           {Object.entries(prayerConfig).map(([key, config]) => {
             const Icon = config.icon;
             const time = prayerData.timings[key as keyof PrayerTimes];
             const isNextPrayer = timeUntilNext?.nextPrayer === key;
             
             return (
-              <Card key={key} className={`transition-all duration-200 ${isNextPrayer ? 'ring-2 ring-primary shadow-lg' : ''}`}>
-                <CardContent className="pt-6">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className={`p-2 rounded-full ${config.color} text-white`}>
-                        <Icon className="h-4 w-4" />
-                      </div>
-                      <div>
-                        <div className="font-medium">{config.name}</div>
-                        <div className={`text-lg font-bold ${config.textColor}`}>
-                          {formatTime(time)}
-                        </div>
-                      </div>
+              <Card 
+                key={key} 
+                className={`group bg-white/40 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 border-0 overflow-hidden ${
+                  isNextPrayer ? 'ring-4 ring-blue-500/50 shadow-2xl shadow-blue-500/25' : 'shadow-lg'
+                }`}
+              >
+                <CardContent className="p-6 text-center">
+                  <div className="mb-4">
+                    <div className={`inline-flex items-center justify-center w-16 h-16 rounded-full ${config.color} text-white shadow-lg transition-transform duration-300 group-hover:scale-110`}>
+                      <Icon className="h-8 w-8" />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <div className="text-xl font-bold text-gray-800 dark:text-white">
+                      {config.name}
+                    </div>
+                    <div className="text-sm text-gray-600 dark:text-gray-300">
+                      {config.description}
+                    </div>
+                    <div className={`text-3xl font-bold ${config.textColor} transition-colors duration-200`}>
+                      {formatTime(time)}
                     </div>
                     {isNextPrayer && (
-                      <div className="text-xs bg-primary text-primary-foreground px-2 py-1 rounded-full">
-                        Prochaine
+                      <div className="inline-flex  bg-gradient-to-r from-blue-500 to-purple-600 text-white px-3 py-2 rounded-full text-sm font-medium animate-pulse">
+                        ⏰ Prochaine
                       </div>
                     )}
                   </div>
@@ -309,36 +335,6 @@ export default function PrayerTimes() {
           })}
         </div>
       )}
-
-      {/* Informations supplémentaires */}
-      {prayerData && (
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">Informations Complémentaires</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-              <div>
-                <strong>Imsak (Début du jeûne):</strong> {formatTime(prayerData.timings.Imsak)}
-              </div>
-              <div>
-                <strong>Minuit:</strong> {formatTime(prayerData.timings.Midnight)}
-              </div>
-              <div>
-                <strong>Premier tiers de la nuit:</strong> {formatTime(prayerData.timings.Firstthird)}
-              </div>
-              <div>
-                <strong>Dernier tiers de la nuit:</strong> {formatTime(prayerData.timings.Lastthird)}
-              </div>
-            </div>
-            <div className="mt-4 pt-4 border-t">
-              <p className="text-xs text-muted-foreground">
-                Méthode de calcul: {prayerData.meta.method.name}
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-      )}
     </div>
   );
-} 
+}

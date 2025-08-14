@@ -1,3 +1,4 @@
+
 "use client";
 import React from 'react';
 import PrayerTimes from '@/components/PrayerTimes';

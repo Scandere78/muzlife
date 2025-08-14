@@ -119,7 +119,7 @@ const Navbar: React.FC = () => {
                   }`}></div>
                 </Link>
                 <Link href="/ecoute" className="relative !text-white hover:!text-[var(--color-accent)] px-3 lg:px-4 py-2.5 rounded-md transition-all duration-300 text-base lg:text-lg font-medium group">
-                  🎧 Écoute
+                  📗 Coran
                   <div className={`absolute bottom-0 left-1/2 transform -translate-x-1/2 h-1 bg-[var(--color-accent)] rounded-full transition-all duration-500 ease-out ${
                     isActive("/ecoute") 
                       ? "w-full opacity-100" 

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import PrayerProgressBar from '@/components/PrayerProgressBar';
+import { useLocation } from '@/contexts/LocationContext';
 
 // Interface pour les horaires de prière
 interface PrayerTimes {
@@ -87,6 +88,7 @@ function getTimeUntilNextPrayer(
 }
 
 export default function PrayerTimer() {
+  const { preferences, loading: locationLoading } = useLocation();
   const [prayerData, setPrayerData] = useState<PrayerTimesData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -94,12 +96,14 @@ export default function PrayerTimer() {
   const [now, setNow] = useState(new Date());
   const [open, setOpen] = useState(false);
 
-  // Récupérer les horaires (Paris par défaut)
+  // Récupérer les horaires selon les préférences de l'utilisateur
   const fetchPrayerTimes = async () => {
+    if (!preferences.city || locationLoading) return;
+    
     setLoading(true);
     setError(null);
     try {
-      const url = `https://api.aladhan.com/v1/timingsByCity?city=Paris&country=France&method=2`;
+      const url = `https://api.aladhan.com/v1/timingsByCity?city=${encodeURIComponent(preferences.city.name)}&country=${encodeURIComponent(preferences.city.country)}&method=2`;
       const response = await fetch(url);
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
@@ -114,10 +118,10 @@ export default function PrayerTimer() {
     }
   };
 
-  // Charger au montage
+  // Charger quand les préférences changent
   useEffect(() => {
     fetchPrayerTimes();
-  }, []);
+  }, [preferences.city, locationLoading]);
 
   // Tickers temps réel
   useEffect(() => {
