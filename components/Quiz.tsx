@@ -641,8 +641,10 @@ const Quiz: React.FC<QuizProps> = ({ difficulty }) => {
                     <div className="flex-1">
                       <p className={`font-bold text-lg mb-2 ${
                         isCorrect ? 'text-green-800' : 'text-red-800'
-                          `${isCorrect ? 'text-green-800 dark:text-green-300' : 'text-red-800 dark:text-red-300'}`
-                          `${isCorrect ? 'text-green-800 dark:text-green-300' : 'text-red-800 dark:text-red-300'}`
+                      } ${
+                        isCorrect ? 'text-green-800 dark:text-green-300' : 'text-red-800 dark:text-red-300'
+                      } ${
+                        isCorrect ? 'animate-fade-in' : 'animate-fade-out'
                       }`}>
                         {isCorrect ? "Excellente réponse !" : "Pas tout à fait..."}
                       </p>
