@@ -150,11 +150,11 @@ export default function NextPrayer() {
 
   if (loading) {
     return (
-      <Card className="border-primary/20 bg-[var(--color-muted)]/60 text-green-800 dark:text-white">
+      <Card className="border-primary/20 bg-[var(--color-muted)]/60 text-gray-900 dark:text-white">
         <CardContent className="pt-6">
           <div className="text-center">
             <div className="animate-spin h-8 w-8 border-b-2 border-primary mx-auto mb-2"></div>
-            <p className="text-sm text-green-700 dark:text-gray-300">Chargement des horaires...</p>
+            <p className="text-sm text-gray-800 dark:text-gray-300">Chargement des horaires...</p>
           </div>
         </CardContent>
       </Card>
@@ -180,20 +180,20 @@ export default function NextPrayer() {
   const nextPrayerConfig = prayerConfig[timeUntilNext.nextPrayer as keyof typeof prayerConfig];
 
   return (
-    <Card className="border-primary/20 bg-[var(--color-muted)]/60 text-green-800 dark:text-white">
+    <Card className="border-primary/20 bg-[var(--color-muted)]/60 text-gray-900 dark:text-white">
       <CardContent className="pt-6">
         <div className="text-center">
           <div className="flex items-center justify-center gap-2 mb-2">
             <Clock className="h-5 w-5 text-[var(--color-accent)]" />
-            <h3 className="text-lg font-semibold text-green-800 dark:text-white drop-shadow">Prochaine Prière</h3>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white drop-shadow">Prochaine Prière</h3>
           </div>
           <div className="text-2xl font-bold text-[var(--color-accent)] mb-2 drop-shadow">
             {nextPrayerConfig?.icon} {nextPrayerConfig?.name}
           </div>
-          {/* <div className="text-sm text-green-800 dark:text-white font-bold">
+          {/* <div className="text-sm text-gray-900 dark:text-white font-bold">
             Dans {timeUntilNext.timeRemaining}
           </div> */}
-          <div className="text-xs text-green-700 dark:text-gray-200 font-bold mt-2">
+          <div className="text-xs text-gray-800 dark:text-gray-200 font-bold mt-2">
             {prayerData.date.gregorian.weekday.en}, {prayerData.date.gregorian.date}
           </div>
         </div>
