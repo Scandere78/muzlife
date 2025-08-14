@@ -34,10 +34,10 @@ const SouratesList: React.FC = () => {
                     {sourate.number}
                   </div>
                   <div className="flex-1">
-                    <h3 className="text-lg font-semibold text-[var(--color-foreground)]">
+                    <h3 className="text-lg font-semibold text-[var(--color-foreground)] dark:text-white">
                       {sourate.nom_phonetique}
                     </h3>
-                    <p className="text-sm text-[var(--color-foreground)]">
+                    <p className="text-sm text-[var(--color-foreground)] dark:text-gray-200">
                       Sourate {sourate.number} • {sourate.slug}
                     </p>
                   </div>

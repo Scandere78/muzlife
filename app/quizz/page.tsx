@@ -34,8 +34,8 @@ export default function QuizPage() {
             <button
               className={`group relative w-full lg:w-80 px-8 py-6 sm:py-8 rounded-3xl font-black text-lg sm:text-xl lg:text-2xl transition-all duration-500 transform hover:scale-110 active:scale-95 shadow-2xl hover:shadow-3xl overflow-hidden border-4 ${
                 selectedDifficulty === 'facile'
-                  ? "bg-gradient-to-br from-green-400 via-green-500 to-emerald-600 text-black shadow-green-300 scale-110 border-green-300 ring-4 ring-green-200"
-                  : "bg-gradient-to-br from-white via-gray-50 to-green-50 text-black hover:from-green-100 hover:to-emerald-100 border-green-300 hover:border-green-400 shadow-green-100 hover:shadow-green-200"
+                  ? "bg-gradient-to-br from-green-400 via-green-500 to-emerald-600 text-black dark:text-white shadow-green-300 scale-110 border-green-300 ring-4 ring-green-200"
+                  : "bg-gradient-to-br from-white via-gray-50 to-green-50 text-black dark:text-white hover:from-green-100 hover:to-emerald-100 border-green-300 hover:border-green-400 shadow-green-100 hover:shadow-green-200"
               }`}
               onClick={() => setSelectedDifficulty('facile')}
             >
@@ -48,7 +48,7 @@ export default function QuizPage() {
               <div className="relative flex flex-col items-center justify-center gap-3">
                 <span className="text-4xl sm:text-5xl drop-shadow-lg">😊</span>
                 <div className="text-center">
-                  <div className="font-black text-green-800 text-xl sm:text-2xl mb-1">FACILE</div>
+                  <div className="font-black text-green-800 dark:text-white text-xl sm:text-2xl mb-1">FACILE</div>
                   <div className="text-sm sm:text-base text-green-800 opacity-90 font-semibold">45 secondes par question</div>
                   <div className="text-xs sm:text-sm text-green-800 opacity-75 mt-1">Parfait pour débuter</div>
                 </div>
@@ -59,7 +59,7 @@ export default function QuizPage() {
               className={`group relative w-full lg:w-80 px-8 py-6 sm:py-8 rounded-3xl font-black text-lg sm:text-xl lg:text-2xl transition-all duration-500 transform hover:scale-110 active:scale-95 shadow-2xl hover:shadow-3xl overflow-hidden border-4 ${
                 selectedDifficulty === 'moyen'
                   ? "bg-gradient-to-br from-[var(--color-accent)] via-[var(--color-accent-dark)] to-[var(--color-foreground)] text-white shadow-[var(--color-accent)]/50 scale-110 border-[var(--color-accent)] ring-4 ring-[var(--color-accent)]/30"
-                  : "bg-gradient-to-br from-white via-gray-50 to-[var(--color-accent)]/10 text-black hover:from-[var(--color-accent)]/20 hover:to-[var(--color-accent)]/30 border-[var(--color-accent)]/50 hover:border-[var(--color-accent)] shadow-[var(--color-accent)]/20 hover:shadow-[var(--color-accent)]/40"
+                  : "bg-gradient-to-br from-white via-gray-50 to-[var(--color-accent)]/10 text-black dark:text-white hover:from-[var(--color-accent)]/20 hover:to-[var(--color-accent)]/30 border-[var(--color-accent)]/50 hover:border-[var(--color-accent)] shadow-[var(--color-accent)]/20 hover:shadow-[var(--color-accent)]/40"
               }`}
               onClick={() => setSelectedDifficulty('moyen')}
             >
@@ -83,7 +83,7 @@ export default function QuizPage() {
               className={`group relative w-full lg:w-80 px-8 py-6 sm:py-8 rounded-3xl font-black text-lg sm:text-xl lg:text-2xl transition-all duration-500 transform hover:scale-110 active:scale-95 shadow-2xl hover:shadow-3xl overflow-hidden border-4 ${
                 selectedDifficulty === 'difficile'
                   ? "bg-gradient-to-br from-red-400 via-red-500 to-red-600 text-white shadow-red-300 scale-110 border-red-300 ring-4 ring-red-200"
-                  : "bg-gradient-to-br from-white via-gray-50 to-red-50 text-black hover:from-red-100 hover:to-pink-100 border-red-300 hover:border-red-400 shadow-red-100 hover:shadow-red-200"
+                  : "bg-gradient-to-br from-white via-gray-50 to-red-50 text-black dark:text-white hover:from-red-100 hover:to-pink-100 border-red-300 hover:border-red-400 shadow-red-100 hover:shadow-red-200"
               }`}
               onClick={() => setSelectedDifficulty('difficile')}
             >
@@ -98,7 +98,7 @@ export default function QuizPage() {
                 <div className="text-center">
                   <div className="font-black text-xl text-gray-700 sm:text-2xl mb-1">DIFFICILE</div>
                   <div className="text-sm sm:text-base text-gray-700 opacity-90 font-semibold">15 secondes par question</div>
-                  <div className="text-xs sm:text-sm text-gray-800 opacity-75 mt-1">Réservé aux experts</div>
+                  <div className="text-xs sm:text-sm text-gray-800 dark:text-white opacity-75 mt-1">Réservé aux experts</div>
                 </div>
               </div>
             </button>
@@ -127,26 +127,26 @@ export default function QuizPage() {
                     {selectedDifficulty === 'facile' ? '😊' :
                      selectedDifficulty === 'moyen' ? '🎯' : '🔥'}
                   </div>
-                  <h3 className="text-2xl sm:text-3xl lg:text-4xl font-black text-[var(--color-foreground)] text-center">
+                  <h3 className="text-2xl sm:text-3xl lg:text-4xl font-black text-[var(--color-foreground)] dark:text-white text-center">
                     Niveau {selectedDifficulty.charAt(0).toUpperCase() + selectedDifficulty.slice(1)}
                   </h3>
                 </div>
                 
                 {/* Informations détaillées ultra-visibles */}
-                <div className="grid gap-4 sm:gap-6 text-base sm:text-lg text-[var(--color-foreground)]">
+                <div className="grid gap-4 sm:gap-6 text-base sm:text-lg text-[var(--color-foreground)] dark:text-gray-200">
                   {selectedDifficulty === 'facile' && (
                     <>
                       <div className="flex items-center justify-center gap-4 p-4 sm:p-6 bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl border-2 border-green-200 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
                         <span className="text-green-600 text-2xl sm:text-3xl">⏱️</span>
-                        <span className="font-bold text-green-800">45 secondes par question</span>
+                        <span className="font-bold text-green-800 dark:text-white">45 secondes par question</span>
                       </div>
                       <div className="flex items-center justify-center gap-4 p-4 sm:p-6 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-2xl border-2 border-blue-200 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
                         <span className="text-blue-600 text-2xl sm:text-3xl">📚</span>
-                        <span className="font-bold text-blue-800">Questions de base sur l&apos;Islam</span>
+                        <span className="font-bold text-blue-800 dark:text-white">Questions de base sur l&apos;Islam</span>
                       </div>
                       <div className="flex items-center justify-center gap-4 p-4 sm:p-6 bg-gradient-to-r from-purple-50 to-violet-50 rounded-2xl border-2 border-purple-200 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
                         <span className="text-purple-600 text-2xl sm:text-3xl">🌟</span>
-                        <span className="font-bold text-purple-800">Idéal pour débuter</span>
+                        <span className="font-bold text-purple-800 dark:text-white">Idéal pour débuter</span>
                       </div>
                     </>
                   )}
@@ -158,11 +158,11 @@ export default function QuizPage() {
                       </div>
                       <div className="flex items-center justify-center gap-4 p-4 sm:p-6 bg-gradient-to-r from-[var(--color-foreground)]/10 to-[var(--color-foreground)]/20 rounded-2xl border-2 border-[var(--color-foreground)]/40 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
                         <span style={{ color: 'var(--color-foreground)' }} className="text-2xl sm:text-3xl">📖</span>
-                        <span className="font-bold" style={{ color: 'var(--color-foreground)' }}>Questions intermédiaires</span>
+                        <span className="font-bold dark:text-white" style={{ color: 'var(--color-foreground)' }}>Questions intermédiaires</span>
                       </div>
                       <div className="flex items-center justify-center gap-4 p-4 sm:p-6 bg-gradient-to-r from-indigo-50 to-blue-50 rounded-2xl border-2 border-indigo-200 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
                         <span className="text-indigo-600 text-2xl sm:text-3xl">👥</span>
-                        <span className="font-bold text-indigo-800">Pour les pratiquants réguliers</span>
+                        <span className="font-bold text-indigo-800 dark:text-indigo-200">Pour les pratiquants réguliers</span>
                       </div>
                     </>
                   )}

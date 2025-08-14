@@ -48,10 +48,10 @@ export default function Lecture() {
   return (
     <div className="page-container navbar-safe px-4 py-6 sm:py-8 flex flex-col items-center min-h-screen w-full overflow-x-visible" style={{ background: 'transparent', color: 'var(--color-foreground)' }}>
       <div className="text-center mb-8 sm:mb-12">
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[var(--color-accent)] mb-3 sm:mb-4 drop-shadow-lg animate-fade-in">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-800 dark:text-white mb-3 sm:mb-4 drop-shadow-lg animate-fade-in">
           📖 Lecture des Sourates
         </h1>
-        <p className="text-base sm:text-lg text-[var(--color-foreground)] max-w-2xl mx-auto animate-fade-in">
+        <p className="text-base sm:text-lg text-gray-600 dark:text-gray-200 max-w-2xl mx-auto animate-fade-in">
           Explorez et lisez les 114 sourates du Saint Coran avec des traductions détaillées
         </p>
       </div>
@@ -64,7 +64,7 @@ export default function Lecture() {
             placeholder="Rechercher une sourate..." 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full p-3 rounded-lg border border-[var(--color-border)] bg-[var(--color-muted)]/60 text-[var(--color-foreground)] placeholder-[var(--color-foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] focus:border-transparent transition-all duration-300" 
+            className="w-full p-3 rounded-lg border border-[var(--color-border)] bg-[var(--color-muted)]/60 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] focus:border-transparent transition-all duration-300" 
           />
           <button className="px-6 py-3 rounded-lg text-white font-bold text-lg border-accent bg-[var(--color-accent)] hover:shadow-lg hover:shadow-[var(--color-accent)]/20 transition-all duration-300 transform hover:-translate-y-1">
             Rechercher
@@ -83,14 +83,14 @@ export default function Lecture() {
                 <div className="flex items-center justify-between">
                   <Link href={detailsUrl} className="flex-1 group">
                     <div className="cursor-pointer">
-                                             <h2 className="text-xl sm:text-2xl font-bold text-[var(--color-foreground)] group-hover:text-[var(--color-accent)] transition-colors duration-300">
+                                             <h2 className="text-xl sm:text-2xl font-bold text-white group-hover:text-[var(--color-accent)] transition-colors duration-300 drop-shadow">
                          <span className="text-[var(--color-accent)] text-lg sm:text-xl mr-2">{sourate.number}.</span>
                          {sourate.nom_phonetique}
                        </h2>
-                       <p className="text-[var(--color-muted)] text-sm sm:text-base mt-1">
+                       <p className="text-gray-300 text-sm sm:text-base mt-1">
                          Sourate {sourate.number} du Coran
                        </p>
-                      <span className="text-[var(--color-accent)] hover:text-[var(--color-foreground)] transition-all duration-300 inline-block mt-3 text-sm font-medium">
+                      <span className="text-[var(--color-accent)] hover:text-white transition-all duration-300 inline-block mt-3 text-sm font-medium">
                         📖 Lire la sourate →
                       </span>
                     </div>
@@ -116,7 +116,7 @@ export default function Lecture() {
                         className={`w-6 h-6 transition-colors ${
                           isFavorite(sourate.number)
                             ? 'text-red-400 group-hover:text-red-300'
-                            : 'text-[var(--color-foreground)] group-hover:text-[var(--color-accent)]'
+                            : 'text-white group-hover:text-[var(--color-accent)]'
                         }`}
                       >
                         <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 3.75a5.25 5.25 0 00-4.5 2.472A5.25 5.25 0 007.5 3.75 5.25 5.25 0 003 9c0 7.25 9 11.25 9 11.25s9-4 9-11.25a5.25 5.25 0 00-5.25-5.25z" />

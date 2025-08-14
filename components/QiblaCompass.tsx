@@ -75,16 +75,16 @@ export default function QiblaCompass(): React.ReactElement {
 
   return (
     <section className="mt-8">
-      <h3 className="text-xl font-bold text-[var(--color-accent)] mb-3">🧭 Direction de la Qibla</h3>
+      <h3 className="text-xl font-bold text-green-800 dark:text-white mb-3 drop-shadow">🧭 Direction de la Qibla</h3>
       <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-muted)]/60 p-5">
         <div className="flex flex-col sm:flex-row gap-6 items-center sm:items-start">
           {/* Compass UI */}
           <div className="relative w-40 h-40 sm:w-48 sm:h-48">
             <div className="absolute inset-0 rounded-full border-2 border-[var(--color-border)] bg-[var(--color-background)]/40 flex items-center justify-center">
-              <div className="absolute top-2 text-xs text-[var(--color-foreground)]/70">N</div>
-              <div className="absolute right-2 text-xs text-[var(--color-foreground)]/70">E</div>
-              <div className="absolute bottom-2 text-xs text-[var(--color-foreground)]/70">S</div>
-              <div className="absolute left-2 text-xs text-[var(--color-foreground)]/70">O</div>
+              <div className="absolute top-2 text-xs text-green-800 dark:text-white">N</div>
+              <div className="absolute right-2 text-xs text-green-800 dark:text-white">E</div>
+              <div className="absolute bottom-2 text-xs text-green-800 dark:text-white">S</div>
+              <div className="absolute left-2 text-xs text-green-800 dark:text-white">O</div>
               <div
                 className="w-1 h-14 sm:h-16 origin-bottom rounded-full"
                 style={{
@@ -98,14 +98,14 @@ export default function QiblaCompass(): React.ReactElement {
 
           {/* Info / permissions */}
           <div className="flex-1">
-            <div className="text-sm text-[var(--color-foreground)]/80">
+            <div className="text-sm text-green-700 dark:text-gray-200">
               {position ? (
                 <div className="mb-2">
                   <span>Cap Qibla: </span>
-                  <span className="font-semibold text-[var(--color-foreground)]">
+                  <span className="font-semibold text-green-800 dark:text-white">
                     {qiblaBearing?.toFixed(0)}°
                   </span>
-                  <span className="text-[var(--color-foreground)]/60"> (par rapport au Nord)</span>
+                  <span className="text-green-600 dark:text-gray-300"> (par rapport au Nord)</span>
                 </div>
               ) : (
                 <div className="mb-2">Obtention de votre position…</div>
@@ -118,7 +118,7 @@ export default function QiblaCompass(): React.ReactElement {
                   onClick={requestPermission}
                   className="px-3 py-2 rounded bg-[var(--color-accent)] text-white text-sm font-semibold"
                 >
-                  Autoriser l'accès aux capteurs
+                  Autoriser l&apos;accès aux capteurs
                 </button>
               ) : (
                 <div className="mb-2">Boussole non disponible. Affichage de la direction absolue.</div>
@@ -128,7 +128,7 @@ export default function QiblaCompass(): React.ReactElement {
                 <div className="text-red-500 text-sm mt-1">{error}</div>
               )}
 
-              <p className="mt-3 text-xs text-[var(--color-foreground)]/60">
+              <p className="mt-3 text-xs text-green-600 dark:text-gray-300">
                 Conseil: Tenez votre téléphone à plat et éloignez-le de tout aimant/métal pour une meilleure précision.
               </p>
             </div>
