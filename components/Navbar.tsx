@@ -175,72 +175,144 @@ const Navbar: React.FC = () => {
               {!isLoggedIn ? (
                 <Button
                   onClick={() => setShowAuthModal(true)}
-                  className="w-auto px-4 py-2 bg-gradient-to-l  to-green-800 text-white rounded-full hover:shadow-lg transition-all duration-300 border border-emerald-500/30 group hover:scale-105 flex items-center gap-2"
+                  className="relative w-auto px-6 py-2.5 bg-gradient-to-r from-green-600 via-emerald-600 to-green-700 text-white rounded-full hover:shadow-2xl hover:shadow-green-500/30 transition-all duration-500 border border-emerald-400/40 group hover:scale-105 flex items-center gap-2.5 backdrop-blur-sm overflow-hidden"
                   variant="default"
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
-                  </svg>
-                  <span className="font-medium">Connexion</span>
+                  {/* Effet de brillance animé */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out"></div>
+                  
+                  {/* Contenu du bouton */}
+                  <div className="relative flex items-center gap-2.5">
+                    <div className="p-1 bg-white/10 rounded-full group-hover:bg-white/20 transition-all duration-300">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                      </svg>
+                    </div>
+                    <span className="font-semibold text-sm tracking-wide">Connexion</span>
+                  </div>
+                  
+                  {/* Effet de pulsation en arrière-plan */}
+                  <div className="absolute inset-0 rounded-full bg-gradient-to-r from-green-400/20 to-emerald-400/20 opacity-0 group-hover:opacity-100 animate-pulse transition-opacity duration-300"></div>
                 </Button>
               ) : (
                 <div className="relative">
                   <Button
                     onClick={() => setShowDropdown(!showDropdown)}
-                    className="w-auto px-3 py-2 h-10 bg-gradient-to-r from-[var(--color-foreground)] to-[var(--color-foreground)] text-white rounded-full hover:scame:105 shadow-lg transition-all duration-300 border border-green-500/30 group hover:scale-105 flex items-center gap-2"
+                    className="relative w-auto px-4 py-2.5 h-auto bg-gradient-to-r from-green-600 via-emerald-600 to-green-700 text-white rounded-full hover:shadow-2xl hover:shadow-green-500/30 transition-all duration-500 border border-emerald-400/40 group hover:scale-105 flex items-center gap-3 backdrop-blur-sm overflow-hidden"
                     variant="default"
                   >
-                    {user?.avatar ? (
-                      <Image src={user.avatar} alt={user.name} width={28} height={28} className="h-7 w-7 rounded-full border border-white/30 transition-transform duration-300 group-hover:scale-110" />
-                    ) : (
-                      <div className="h-7 w-7 bg-[var(--color-foreground)] rounded-full flex items-center justify-center text-white text-sm font-bold border border-white/30 transition-transform duration-300 group-hover:scale-110">
-                        {user?.name?.charAt(0) || "U"}
+                    {/* Effet de brillance animé */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/15 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out"></div>
+                    
+                    {/* Contenu du bouton */}
+                    <div className="relative flex items-center gap-3">
+                      {user?.avatar ? (
+                        <div className="relative">
+                          <Image src={user.avatar} alt={user.name} width={32} height={32} className="h-8 w-8 rounded-full border-2 border-white/40 transition-transform duration-300 group-hover:scale-110 shadow-lg" />
+                          <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-green-400/30 to-emerald-400/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        </div>
+                      ) : (
+                        <div className="relative">
+                          <div className="h-8 w-8 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center text-white text-sm font-bold border-2 border-white/40 transition-transform duration-300 group-hover:scale-110 shadow-lg">
+                            {user?.name?.charAt(0) || "U"}
+                          </div>
+                          <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        </div>
+                      )}
+                      <div className="flex flex-col items-start">
+                        <span className="font-semibold text-sm max-w-24 truncate leading-tight">
+                          {user?.name || "Utilisateur"}
+                        </span>
+                        <span className="text-xs text-white/80 font-medium">Connecté</span>
                       </div>
-                    )}
-                    <span className="font-medium text-sm max-w-24 truncate">
-                      {user?.name || "Utilisateur"}
-                    </span>
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 transition-transform duration-300 group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                    </svg>
+                      <div className="p-1 bg-white/10 rounded-full group-hover:bg-white/20 transition-all duration-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 transition-transform duration-300 group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </div>
+                    </div>
+                    
+                    {/* Effet de pulsation en arrière-plan */}
+                    <div className="absolute inset-0 rounded-full bg-gradient-to-r from-green-400/20 to-emerald-400/20 opacity-0 group-hover:opacity-100 animate-pulse transition-opacity duration-300"></div>
                   </Button>
                   {showDropdown && (
-                    <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-2xl py-1.5 z-20 border border-gray-100 dropdown-container animate-in slide-in-from-top-2 duration-300">
-                      <div className="px-4 py-2 border-b border-gray-100">
-                        <p className="font-semibold text-gray-800">{user?.name}</p>
-                        <p className="text-sm text-gray-500 truncate">{user?.email}</p>
+                    <div className="absolute right-0 mt-3 w-64 bg-gradient-to-br from-white via-gray-50 to-white rounded-2xl shadow-2xl border border-gray-200/60 dropdown-container animate-in slide-in-from-top-4 duration-500 ease-out overflow-hidden backdrop-blur-sm z-20">
+                      {/* En-tête avec dégradé */}
+                      <div className="relative px-5 py-4 bg-gradient-to-r from-green-600 via-emerald-600 to-green-700 text-white">
+                        <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent"></div>
+                        <div className="relative flex items-center gap-3">
+                          {user?.avatar ? (
+                            <Image src={user.avatar} alt={user.name} width={40} height={40} className="h-10 w-10 rounded-full border-2 border-white/40 shadow-lg" />
+                          ) : (
+                            <div className="h-10 w-10 bg-gradient-to-br from-white/20 to-white/10 rounded-full flex items-center justify-center text-white text-lg font-bold border-2 border-white/40 shadow-lg">
+                              {user?.name?.charAt(0) || "U"}
+                            </div>
+                          )}
+                          <div>
+                            <p className="font-bold text-white text-sm">{user?.name}</p>
+                            <p className="text-xs text-white/90 truncate max-w-[150px]">{user?.email}</p>
+                          </div>
+                        </div>
                       </div>
-                      <Link
-                        href="/profile"
-                        className="flex items-center px-4 py-2 text-sm text-slate-700 hover:bg-green-50 transition-all duration-200 hover:translate-x-1"
-                        onClick={() => setShowDropdown(false)}
-                      >
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                        </svg>
-                        Mon profil
-                      </Link>
-                      <Link
-                        href="/dashboard"
-                        className="flex items-center px-4 py-2 text-sm text-slate-700 hover:bg-green-50 transition-all duration-200 hover:translate-x-1"
-                        onClick={() => setShowDropdown(false)}
-                      >
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                        </svg>
-                        Dashboard
-                      </Link>
-                      <div className="border-t border-gray-100 my-1"></div>
-                      <Button
-                        onClick={handleLogout}
-                        className="w-full text-left flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-all duration-200 hover:translate-x-1"
-                        variant="ghost"
-                      >
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                        </svg>
-                        Déconnexion
-                      </Button>
+
+                      {/* Menu items */}
+                      <div className="py-2">
+                        <Link
+                          href="/profile"
+                          className="group flex items-center px-5 py-3 text-sm text-gray-700 hover:bg-gradient-to-r hover:from-green-50 hover:to-emerald-50 transition-all duration-300 hover:translate-x-2 relative overflow-hidden"
+                          onClick={() => setShowDropdown(false)}
+                        >
+                          <div className="absolute left-0 top-0 h-full w-1 bg-gradient-to-b from-green-500 to-emerald-600 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300"></div>
+                          <div className="p-2 bg-green-100 rounded-lg mr-3 group-hover:bg-green-200 transition-all duration-300 group-hover:scale-110">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                          </div>
+                          <div>
+                            <span className="font-semibold text-gray-800 group-hover:text-green-700">Mon profil</span>
+                            <p className="text-xs text-gray-500 group-hover:text-green-600">Gérer vos informations</p>
+                          </div>
+                        </Link>
+
+                        <Link
+                          href="/dashboard"
+                          className="group flex items-center px-5 py-3 text-sm text-gray-700 hover:bg-gradient-to-r hover:from-emerald-50 hover:to-green-50 transition-all duration-300 hover:translate-x-2 relative overflow-hidden"
+                          onClick={() => setShowDropdown(false)}
+                        >
+                          <div className="absolute left-0 top-0 h-full w-1 bg-gradient-to-b from-emerald-500 to-green-600 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300"></div>
+                          <div className="p-2 bg-emerald-100 rounded-lg mr-3 group-hover:bg-emerald-200 transition-all duration-300 group-hover:scale-110">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                            </svg>
+                          </div>
+                          <div>
+                            <span className="font-semibold text-gray-800 group-hover:text-emerald-700">Dashboard</span>
+                            <p className="text-xs text-gray-500 group-hover:text-emerald-600">Vos statistiques</p>
+                          </div>
+                        </Link>
+
+                        {/* Séparateur */}
+                        <div className="my-2 mx-4 border-t border-gray-200"></div>
+
+                        <Link
+                          href="/"
+                          className="group w-full text-left flex items-center px-5 py-3 text-sm text-gray-700 hover:bg-gradient-to-r hover:from-red-50 hover:to-pink-50 transition-all duration-300 hover:translate-x-2 relative overflow-hidden"
+                          onClick={handleLogout}
+                        >
+                          <div className="absolute left-0 top-0 h-full w-1 bg-gradient-to-b from-red-500 to-pink-600 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300"></div>
+                          <div className="p-2 bg-pink-100 rounded-lg mr-3 group-hover:bg-red-200 transition-all duration-300 group-hover:scale-110">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                            </svg>
+                          </div>
+                          <div>
+                            <span className="font-semibold text-red-800 group-hover:text-red-700">Déconnexion</span>
+                            <p className="text-xs text-gray-500 group-hover:text-red-600">Quitter votre session</p>
+                          </div>
+                        </Link>
+
+                        
+                      </div>
                     </div>
                   )}
                 </div>

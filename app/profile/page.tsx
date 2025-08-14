@@ -10,6 +10,7 @@ import { Label } from "../../components/ui/label";
 import { useAuth } from "../../contexts/AuthContext";
 import { User, Lock, Camera, Save, Home, BarChart3 } from "lucide-react";
 import Link from "next/link";
+import '../../styles/globals.css';
 
 export default function ProfilePage() {
   const { user, updateProfile } = useAuth();
@@ -112,7 +113,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white navbar-safe">
+    <div className="container mx-auto max-w-6xl my-8 bg-black/50 text-white p-4 md:p-6 navbar-safe rounded-2xl">
       <div className="max-w-4xl mx-auto p-4 md:p-6">
         {/* En-tête avec navigation */}
         <div className="mb-8">
@@ -352,3 +353,4 @@ export default function ProfilePage() {
     </div>
   );
 }
+

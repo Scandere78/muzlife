@@ -60,6 +60,7 @@ interface AuthContextType {
   getReadingProgress: () => Promise<DashboardStats | null>;
   updateReadingGoal: (dailyGoal: number) => Promise<UserStats | null>;
   toggleVerseFavorite: (surahNumber: number, verseNumber: number) => Promise<{ success: boolean; isFavorite: boolean; message?: string }>;
+  authenticatedFetch: (url: string, options?: RequestInit) => Promise<Response | null>;
 }
 
 const AuthContext = React.createContext<AuthContextType | undefined>(undefined);
@@ -165,9 +166,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
-  const authenticatedFetch = async (url: string, options: RequestInit = {}) => {
+  const authenticatedFetch = async (url: string, options: RequestInit = {}): Promise<Response | null> => {
     try {
       const token = localStorage.getItem("token");
+      if (!token) {
+        logout();
+        return null;
+      }
+      
       const response = await fetch(url, {
         ...options,
         headers: {
@@ -176,12 +182,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           ...options.headers,
         },
       });
-      if (response.status === 404 || response.status === 401) {
+      
+      if (response.status === 401 || response.status === 404) {
         logout();
         return null;
       }
+      
       return response;
-    } catch {
+    } catch (error) {
+      console.error('Erreur authenticatedFetch:', error);
       return null;
     }
   };
@@ -333,6 +342,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     getReadingProgress,
     updateReadingGoal,
     toggleVerseFavorite,
+    authenticatedFetch,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
