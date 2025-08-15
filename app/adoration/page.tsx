@@ -7,7 +7,7 @@ import Navbar from '../../components/Navbar';
 export default function AdorationPage() {
   return (
     <div className="py-12 min-h-screen navbar-safe" style={{ background: 'transparent', color: 'var(--color-foreground)' }}>
-      <Navbar />
+    
       
       {/* Header */}
       <div className="text-center px-4 max-w-4xl mx-auto mb-16">

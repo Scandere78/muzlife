@@ -36,7 +36,6 @@ export default function HomePage() {
   return (
     <div className="py-12 min-h-screen navbar-safe" style={{ background: 'transparent', color: 'var(--color-foreground)' }}>
       {/* Présentation */}
-      <Navbar />
       <div className="text-center px-4 max-w-4xl mx-auto">
         <h1 className="text-4xl text-green-800 dark:text-white font-bold drop-shadow-lg">  
           Bienvenue sur MuzLife

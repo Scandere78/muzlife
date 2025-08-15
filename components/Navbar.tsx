@@ -120,11 +120,10 @@ const Navbar: React.FC = () => {
                 </Link>
               </div>
             </div>
-            {/* Theme toggle + réseaux sociaux */}
+            {/* Theme toggle + boutons */}
             <div className="hidden lg:flex items-center gap-3 ml-4 xl:ml-6">
               <ModeToggle />
-              
-              {/* Bouton de connexion / Compte utilisateur */}
+              {/* Bouton de connexion / Compte utilisateur  mode desktop*/}
               {!isLoggedIn ? (
                 <Button
                   onClick={() => setShowAuthModal(true)}
@@ -275,21 +274,33 @@ const Navbar: React.FC = () => {
             <div className="lg:hidden">
               <Button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="inline-flex items-center justify-center p-2 rounded-full bg-green-600/30 backdrop-blur-sm text-white hover:bg-green-500/40 focus:outline-none transition-all duration-300 hover:scale-110"
+                className="group relative w-10 h-10 rounded-full border border-white/20 !bg-white/10 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white/20 transition-all duration-300 hover:scale-110"
                 aria-label="Menu principal"
-                variant="default"
+                variant="outline"
+                size="icon"
               >
                 <svg
-                  className="h-6 w-6 transition-transform duration-300"
+                  className="absolute h-[1.2rem] w-[1.2rem] transition-all duration-300"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
                 >
                   {isMenuOpen ? (
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    <path 
+                      strokeLinecap="round" 
+                      strokeLinejoin="round" 
+                      strokeWidth={2} 
+                      d="M6 18L18 6M6 6l12 12"
+                      className="animate-pulse"
+                    />
                   ) : (
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                    <path 
+                      strokeLinecap="round" 
+                      strokeLinejoin="round" 
+                      strokeWidth={2} 
+                      d="M4 6h16M4 12h16M4 18h16" 
+                    />
                   )}
                 </svg>
               </Button>
@@ -309,17 +320,22 @@ const Navbar: React.FC = () => {
             isMenuOpen ? "translate-x-0 opacity-100 scale-100" : "translate-x-full opacity-0 scale-95"
           }`}
         >
-          <div className="bg-gradient-to-b from-[var(--color-foreground)] to-[var(--color-foreground)] dark:from-gray-800 dark:to-gray-900 rounded-xl overflow-hidden backdrop-blur-md border border-white/10 dark:border-gray-600">
+          <div className="bg-gradient-to-b from-transparent to-[var(--color-foreground)] dark:from-gray-800 dark:to-gray-900 rounded-xl overflow-hidden backdrop-blur-md border border-white/10 dark:border-gray-600">
             {/* En-tête du menu avec compte */}
             <div className="p-4 flex flex-col gap-4">
-              {/* Bouton de connexion/compte avec style desktop */}
-              {!isLoggedIn ? (
+              {/* Bouton de connexion/compte + theme toggle */}
+
+              <div className="flex items-center gap-3">
+                                <ModeToggle />
+                {/* Bouton de connexion/compte avec style desktop */}
+                {!isLoggedIn ? (
+                
                 <Button
                   onClick={() => {
                     setShowAuthModal(true);
                     setIsMenuOpen(false);
                   }}
-                  className="relative w-full px-6 py-3 bg-gradient-to-r from-green-600 via-emerald-600 to-green-700 text-white rounded-full hover:shadow-2xl hover:shadow-green-500/30 transition-all duration-500 border border-emerald-400/40 group hover:scale-105 flex items-center gap-2.5 backdrop-blur-sm overflow-hidden"
+                  className="relative flex-1 px-6 py-3 bg-gradient-to-r from-green-600 via-emerald-600 to-green-700 text-white rounded-full hover:shadow-2xl hover:shadow-green-500/30 transition-all duration-500 border border-emerald-400/40 group hover:scale-105 flex items-center gap-2.5 backdrop-blur-sm overflow-hidden"
                   variant="default"
                 >
                   {/* Effet de brillance animé */}
@@ -338,10 +354,11 @@ const Navbar: React.FC = () => {
                   {/* Effet de pulsation en arrière-plan */}
                   <div className="absolute inset-0 rounded-full bg-gradient-to-r from-green-400/20 to-emerald-400/20 opacity-0 group-hover:opacity-100 animate-pulse transition-opacity duration-300"></div>
                 </Button>
+                
               ) : (
                 <Button
                   onClick={() => setShowDropdown(!showDropdown)}
-                  className="relative w-full px-4 py-3 h-auto bg-gradient-to-r from-green-600 via-emerald-600 to-green-700 text-white rounded-full hover:shadow-2xl hover:shadow-green-500/30 transition-all duration-500 border border-emerald-400/40 group hover:scale-105 flex items-center gap-3 backdrop-blur-sm overflow-hidden"
+                  className="relative flex-1 px-4 py-3 h-auto bg-gradient-to-r from-green-600 via-emerald-600 to-green-700 text-white rounded-full hover:shadow-2xl hover:shadow-green-500/30 transition-all duration-500 border border-emerald-400/40 group hover:scale-105 flex items-center gap-3 backdrop-blur-sm overflow-hidden"
                   variant="default"
                 >
                   {/* Effet de brillance animé */}
@@ -379,10 +396,8 @@ const Navbar: React.FC = () => {
                   <div className="absolute inset-0 rounded-full bg-gradient-to-r from-green-400/20 to-emerald-400/20 opacity-0 group-hover:opacity-100 animate-pulse transition-opacity duration-300"></div>
                 </Button>
               )}
-              
-              {/* Theme toggle */}
-              <div className="flex justify-center">
-                <ModeToggle />
+                
+              {/* Theme toggle à droite du bouton */}
               </div>
             </div>
             {/* Navigation mobile */}
@@ -398,7 +413,7 @@ const Navbar: React.FC = () => {
                   onClick={() => setIsMenuOpen(false)}
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-3 transition-transform duration-300 hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 3a2 2 0 0 1 1.6.8l3 4a2 2 0 0 1 .013 2.382l-7.99 10.986a2 2 0 0 1-3.247 0l-7.99-10.986A2 2 0 0 1 2.4 7.8l2.998-3.997A2 2 0 0 1 7 3z" /><path d="M2 9h20"/>
                   </svg>
                   <span className="text-lg text-white">Adoration</span>
                 </Link>
@@ -412,9 +427,9 @@ const Navbar: React.FC = () => {
                   onClick={() => setIsMenuOpen(false)}
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-3 transition-transform duration-300 hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                   </svg>
-                  <span className="text-lg text-white">Écoute</span>
+                  <span className="text-lg text-white">Coran</span>
                 </Link>
                 <Link
                   href="/quizz"
@@ -439,9 +454,9 @@ const Navbar: React.FC = () => {
                   }`}
                   onClick={() => setIsMenuOpen(false)}
                 >
+
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-3 transition-transform duration-300 hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                  </svg>
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6l4 2"/><circle cx="12" cy="12" r="10"/></svg>
                   <span className="text-lg text-white">Horaires</span>
                 </Link>
                 <Link

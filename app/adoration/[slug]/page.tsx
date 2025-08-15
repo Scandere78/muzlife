@@ -13,7 +13,6 @@ export default function CategoryPage() {
   if (!category) {
     return (
       <div className="py-12 min-h-screen navbar-safe" style={{ background: 'transparent', color: 'var(--color-foreground)' }}>
-        <Navbar />
         <div className="flex items-center justify-center min-h-[50vh]">
           <div className="text-center bg-[var(--color-muted)]/60 p-8 rounded-xl border border-[var(--color-border)]">
             <h1 className="text-2xl font-bold text-green-800 dark:text-white mb-4">Catégorie non trouvée</h1>
@@ -31,7 +30,6 @@ export default function CategoryPage() {
 
   return (
     <div className="py-12 min-h-screen navbar-safe" style={{ background: 'transparent', color: 'var(--color-foreground)' }}>
-      <Navbar />
       
       {/* Header */}
       <div className="text-center px-4 max-w-4xl mx-auto mb-12">

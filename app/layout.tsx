@@ -32,8 +32,8 @@ export default function RootLayout({
         >
           <AuthProvider>
             <LocationProvider>
-              <Navbar />
-              <main className="pt-16 md:pt-20">{children}</main>
+                <Navbar />
+              <main className="pt-20 md:pt-20">{children}</main>
               <Footer />
             </LocationProvider>
             {/* <Analytics /> */}
