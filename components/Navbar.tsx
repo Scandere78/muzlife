@@ -7,6 +7,7 @@ import { usePathname, useRouter } from "next/navigation";
 import AuthModal from "./auth/AuthModal";
 import Image from "next/image";
 import { Button } from "./ui/button";
+import { ModeToggle } from "./ui/mode-toggle";
 
 const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -54,39 +55,6 @@ const Navbar: React.FC = () => {
     setTimeout(() => window.location.reload(), 500);
   };
 
-  // Theme handling
-  const [theme, setTheme] = useState<string>("light");
-  const getCookie = (name: string): string | null => {
-    if (typeof document === 'undefined') return null;
-    const match = document.cookie.match(
-      new RegExp("(?:^|; )" + encodeURIComponent(name) + "=([^;]*)")
-    );
-    return match ? decodeURIComponent(match[1]) : null;
-  };
-  const setCookie = (name: string, value: string, days = 365) => {
-    if (typeof document === 'undefined') return;
-    const expires = new Date(Date.now() + days * 864e5).toUTCString();
-    document.cookie = `${encodeURIComponent(name)}=${encodeURIComponent(
-      value
-    )}; expires=${expires}; path=/; SameSite=Lax`;
-  };
-  useEffect(() => {
-    const initial =
-      getCookie("theme") ||
-      (window.matchMedia &&
-      window.matchMedia('(prefers-color-scheme: dark)').matches
-        ? 'dark'
-        : 'light');
-    setTheme(initial);
-    document.documentElement.classList.toggle('dark', initial === 'dark');
-  }, []);
-
-  const toggleTheme = () => {
-    const next = theme === 'dark' ? 'light' : 'dark';
-    setTheme(next);
-    setCookie('theme', next, 365);
-    document.documentElement.classList.toggle('dark', next === 'dark');
-  };
 
   if (isDashboardPage) return null;
 
@@ -154,22 +122,7 @@ const Navbar: React.FC = () => {
             </div>
             {/* Theme toggle + réseaux sociaux */}
             <div className="hidden lg:flex items-center gap-3 ml-4 xl:ml-6">
-              <button
-                onClick={toggleTheme}
-                className="group relative w-10 h-10 rounded-full border border-white/20 bg-white/10 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white/20 transition-all duration-300 hover:scale-110"
-                aria-label="Basculer le thème"
-                title="Basculer le thème"
-              >
-                {theme === 'dark' ? (
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-                    <path fillRule="evenodd" d="M9.528 1.718a.75.75 0 01.858.278 8.25 8.25 0 1011.618 11.618.75.75 0 01.278.858 9.75 9.75 0 11-12.754-12.754z" clipRule="evenodd" />
-                  </svg>
-                ) : (
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-                    <path d="M12 2.25a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V3A.75.75 0 0112 2.25zm5.657 2.343a.75.75 0 011.06 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061zM21.75 12a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5H21a.75.75 0 01.75.75zm-3.033 6.591a.75.75 0 00-1.061 1.06l1.06 1.061a.75.75 0 001.061-1.06l-1.06-1.061zM12 18.75a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V19.5a.75.75 0 01.75-.75zm-6.591-3.033a.75.75 0 10-1.06 1.061l1.06 1.061a.75.75 0 001.06-1.061l-1.06-1.061zM3.75 12A.75.75 0 014.5 11.25h1.5a.75.75 0 010 1.5H4.5A.75.75 0 013.75 12zm3.033-6.591a.75.75 0 011.061-1.06L8.905 5.41a.75.75 0 11-1.061 1.06L6.783 5.409zM9.75 12a2.25 2.25 0 114.5 0 2.25 2.25 0 01-4.5 0z" />
-                  </svg>
-                )}
-              </button>
+              <ModeToggle />
               
               {/* Bouton de connexion / Compte utilisateur */}
               {!isLoggedIn ? (
@@ -356,136 +309,154 @@ const Navbar: React.FC = () => {
             isMenuOpen ? "translate-x-0 opacity-100 scale-100" : "translate-x-full opacity-0 scale-95"
           }`}
         >
-          <div className="bg-gradient-to-b from-[var(--color-foreground)] to-[var(--color-foreground)] rounded-xl overflow-hidden backdrop-blur-md border border-white/10">
+          <div className="bg-gradient-to-b from-[var(--color-foreground)] to-[var(--color-foreground)] dark:from-gray-800 dark:to-gray-900 rounded-xl overflow-hidden backdrop-blur-md border border-white/10 dark:border-gray-600">
             {/* En-tête du menu avec compte */}
-            {isLoggedIn ? (
-              <div className="p-4 bg-black/20 flex items-center">
-                {user?.avatar ? (
-                  <Image src={user.avatar} alt={user.name} width={48} height={48} className="h-12 w-12 rounded-full border border-white/30 transition-transform duration-300 hover:scale-110" />
-                ) : (
-                  <div className="h-12 w-12 bg-[var(--color-foreground)] rounded-full flex items-center justify-center text-[var(--color-background)] text-lg font-bold border border-white/30 transition-transform duration-300 hover:scale-110">
-                    {user?.name?.charAt(0) || "U"}
-                  </div>
-                )}
-                <div className="ml-3">
-                  <p className="text-[var(--color-background)] font-medium truncate max-w-[180px]">{user?.name}</p>
-                  <p className="text-[var(--color-background)] text-xs truncate max-w-[180px]">{user?.email}</p>
-                </div>
-              </div>
-            ) : (
-              <div className="p-4 bg-black/20 hover:bg-black/30 transition-all duration-300">
-                <button
+            <div className="p-4 flex flex-col gap-4">
+              {/* Bouton de connexion/compte avec style desktop */}
+              {!isLoggedIn ? (
+                <Button
                   onClick={() => {
                     setShowAuthModal(true);
                     setIsMenuOpen(false);
                   }}
-                  className="flex items-center text-white w-full transition-transform duration-300 hover:scale-105"
+                  className="relative w-full px-6 py-3 bg-gradient-to-r from-green-600 via-emerald-600 to-green-700 text-white rounded-full hover:shadow-2xl hover:shadow-green-500/30 transition-all duration-500 border border-emerald-400/40 group hover:scale-105 flex items-center gap-2.5 backdrop-blur-sm overflow-hidden"
+                  variant="default"
                 >
-                  <div className="h-12 w-12 bg-[var(--color-foreground)] rounded-full flex items-center justify-center mr-3 border border-white/40 transition-transform duration-300 hover:scale-110">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 transition-transform duration-300 hover:rotate-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
-                    </svg>
+                  {/* Effet de brillance animé */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out"></div>
+                  
+                  {/* Contenu du bouton */}
+                  <div className="relative flex items-center gap-2.5">
+                    <div className="p-1 bg-white/10 rounded-full group-hover:bg-white/20 transition-all duration-300">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                      </svg>
+                    </div>
+                    <span className="font-semibold text-sm tracking-wide">Connexion</span>
                   </div>
-                  <div className="text-left">
-                    <p className="font-medium text-lg">Se connecter</p>
-                    <p className="text-sm text-[var(--color-background)]">Accéder à votre espace</p>
+                  
+                  {/* Effet de pulsation en arrière-plan */}
+                  <div className="absolute inset-0 rounded-full bg-gradient-to-r from-green-400/20 to-emerald-400/20 opacity-0 group-hover:opacity-100 animate-pulse transition-opacity duration-300"></div>
+                </Button>
+              ) : (
+                <Button
+                  onClick={() => setShowDropdown(!showDropdown)}
+                  className="relative w-full px-4 py-3 h-auto bg-gradient-to-r from-green-600 via-emerald-600 to-green-700 text-white rounded-full hover:shadow-2xl hover:shadow-green-500/30 transition-all duration-500 border border-emerald-400/40 group hover:scale-105 flex items-center gap-3 backdrop-blur-sm overflow-hidden"
+                  variant="default"
+                >
+                  {/* Effet de brillance animé */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/15 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out"></div>
+                  
+                  {/* Contenu du bouton */}
+                  <div className="relative flex items-center gap-3 w-full">
+                    {user?.avatar ? (
+                      <div className="relative">
+                        <Image src={user.avatar} alt={user.name} width={32} height={32} className="h-8 w-8 rounded-full border-2 border-white/40 transition-transform duration-300 group-hover:scale-110 shadow-lg" />
+                        <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-green-400/30 to-emerald-400/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                      </div>
+                    ) : (
+                      <div className="relative">
+                        <div className="h-8 w-8 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center text-white text-sm font-bold border-2 border-white/40 transition-transform duration-300 group-hover:scale-110 shadow-lg">
+                          {user?.name?.charAt(0) || "U"}
+                        </div>
+                        <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                      </div>
+                    )}
+                    <div className="flex flex-col items-start flex-1">
+                      <span className="font-semibold text-sm max-w-32 truncate leading-tight">
+                        {user?.name || "Utilisateur"}
+                      </span>
+                      <span className="text-xs text-white/80 font-medium">Connecté</span>
+                    </div>
+                    <div className="p-1 bg-white/10 rounded-full group-hover:bg-white/20 transition-all duration-300">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 transition-transform duration-300 group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </div>
                   </div>
-                </button>
+                  
+                  {/* Effet de pulsation en arrière-plan */}
+                  <div className="absolute inset-0 rounded-full bg-gradient-to-r from-green-400/20 to-emerald-400/20 opacity-0 group-hover:opacity-100 animate-pulse transition-opacity duration-300"></div>
+                </Button>
+              )}
+              
+              {/* Theme toggle */}
+              <div className="flex justify-center">
+                <ModeToggle />
               </div>
-            )}
+            </div>
             {/* Navigation mobile */}
             <div className="px-2 py-3">
               <div className="space-y-1">
-                {/* Toggle thème mobile */}
-                <button
-                  onClick={() => {
-                    toggleTheme();
-                    setIsMenuOpen(false);
-                  }}
-                  className="flex w-full items-center px-3 py-3 rounded-lg text-white hover:text-[var(--color-background)] hover:bg-white/10 transition-all duration-300 hover:translate-x-2"
-                >
-                  <div className="h-6 w-6 mr-3 flex items-center justify-center">
-                    {theme === 'dark' ? (
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
-                        <path fillRule="evenodd" d="M9.528 1.718a.75.75 0 01.858.278 8.25 8.25 0 1011.618 11.618.75.75 0 01.278.858 9.75 9.75 0 11-12.754-12.754z" clipRule="evenodd" />
-                      </svg>
-                    ) : (
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
-                        <path d="M12 2.25a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V3A.75.75 0 0112 2.25zm5.657 2.343a.75.75 0 011.06 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061zM21.75 12a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5H21a.75.75 0 01.75.75zm-3.033 6.591a.75.75 0 00-1.061 1.06l1.06 1.061a.75.75 0 001.061-1.06l-1.06-1.061zM12 18.75a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V19.5a.75.75 0 01.75-.75zm-6.591-3.033a.75.75 0 10-1.06 1.061l1.06 1.061a.75.75 0 001.06-1.061l-1.06-1.061zM3.75 12A.75.75 0 014.5 11.25h1.5a.75.75 0 010 1.5H4.5A.75.75 0 013.75 12zm3.033-6.591a.75.75 0 011.061-1.06L8.905 5.41a.75.75 0 11-1.061 1.06L6.783 5.409zM9.75 12a2.25 2.25 0 114.5 0 2.25 2.25 0 01-4.5 0z" />
-                      </svg>
-                    )}
-                  </div>
-                  <span className="text-lg">Thème {theme === 'dark' ? 'sombre' : 'clair'}</span>
-                </button>
                 <Link
                     href="/adoration"
                   className={`flex items-center px-3 py-3 rounded-lg transition-all duration-300 hover:translate-x-2 ${
                     isActive("/adoration")
                       ? "bg-white/20 text-white shadow-lg scale-105"
-                      : "text-white hover:text-[var(--color-background)] hover:bg-white/10"
+                      : "text-white hover:text-[var(--color-accent)] hover:bg-white/10"
                   }`}
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-3 transition-transform duration-300 hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="var(--color-muted)">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-3 transition-transform duration-300 hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                   </svg>
-                  <span className="text-lg text-[var(--color-muted)]">Adoration</span>
+                  <span className="text-lg text-white">Adoration</span>
                 </Link>
                 <Link
                   href="/ecoute"
                   className={`flex items-center px-3 py-3 rounded-lg transition-all duration-300 hover:translate-x-2 ${
                     isActive("/ecoute")
                       ? "bg-white/20 text-white shadow-lg scale-105"
-                      : "text-white hover:text-[var(--color-background)] hover:bg-white/10"
+                      : "text-white hover:text-[var(--color-accent)] hover:bg-white/10"
                   }`}
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-3 transition-transform duration-300 hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="var(--color-muted)">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-3 transition-transform duration-300 hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
                   </svg>
-                  <span className="text-lg text-[var(--color-muted)]">Écoute</span>
+                  <span className="text-lg text-white">Écoute</span>
                 </Link>
                 <Link
                   href="/quizz"
                   className={`flex items-center px-3 py-3 rounded-lg transition-all duration-300 hover:translate-x-2 ${
                     isActive("/quizz")
                       ? "bg-white/20 text-white shadow-lg scale-105"
-                      : "text-white hover:text-[var(--color-background)] hover:bg-white/10"
+                      : "text-white hover:text-[var(--color-accent)] hover:bg-white/10"
                   }`}
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-3 transition-transform duration-300 hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="var(--color-muted)">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-3 transition-transform duration-300 hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
-                  <span className="text-lg text-[var(--color-muted)]">Quizz</span>
+                  <span className="text-lg text-white">Quizz</span>
                 </Link>
                 <Link
                   href="/horaires"
                   className={`flex items-center px-3 py-3 rounded-lg transition-all duration-300 hover:translate-x-2 ${
                     isActive("/horaires")
                       ? "bg-white/20 text-white shadow-lg scale-105"
-                      : "text-white hover:text-[var(--color-background)] hover:bg-white/10"
+                      : "text-white hover:text-[var(--color-accent)] hover:bg-white/10"
                   }`}
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-3 transition-transform duration-300 hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="var(--color-muted)">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-3 transition-transform duration-300 hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                   </svg>
-                  <span className="text-lg text-[var(--color-muted)]">Horaires</span>
+                  <span className="text-lg text-white">Horaires</span>
                 </Link>
                 <Link
                   href="/about"
                   className={`flex items-center px-3 py-3 rounded-lg transition-all duration-300 hover:translate-x-2 ${
                     isActive("/about")
                       ? "bg-white/20 text-white shadow-lg scale-105"
-                      : "text-white hover:text-[var(--color-background)] hover:bg-white/10"
+                      : "text-white hover:text-[var(--color-accent)] hover:bg-white/10"
                   }`}
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-3 transition-transform duration-300 hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="var(--color-muted)">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-3 transition-transform duration-300 hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
-                  <span className="text-lg text-[var(--color-muted)]">À propos</span>
+                  <span className="text-lg text-white">À propos</span>
                 </Link>
               </div>
             </div>
@@ -520,13 +491,24 @@ const Navbar: React.FC = () => {
                       handleLogout();
                       setIsMenuOpen(false);
                     }}
-                    className="flex w-full items-center px-3 py-3 rounded-lg text-red-300 hover:bg-red-900/30 hover:text-red-100 transition-all duration-300 hover:translate-x-2"
-                    variant="ghost"
+                    className="relative w-full px-6 py-3 bg-gradient-to-r from-red-600 via-red-700 to-red-800 text-white rounded-full hover:shadow-2xl hover:shadow-red-500/30 transition-all duration-500 border border-red-400/40 group hover:scale-105 flex items-center gap-2.5 backdrop-blur-sm overflow-hidden"
+                    variant="default"
                   >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-3 transition-transform duration-300 hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                    </svg>
-                    <span className="text-lg">Déconnexion</span>
+                    {/* Effet de brillance animé */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out"></div>
+                    
+                    {/* Contenu du bouton */}
+                    <div className="relative flex items-center gap-2.5">
+                      <div className="p-1 bg-white/10 rounded-full group-hover:bg-white/20 transition-all duration-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                        </svg>
+                      </div>
+                      <span className="font-semibold text-sm tracking-wide">Déconnexion</span>
+                    </div>
+                    
+                    {/* Effet de pulsation en arrière-plan */}
+                    <div className="absolute inset-0 rounded-full bg-gradient-to-r from-red-400/20 to-red-600/20 opacity-0 group-hover:opacity-100 animate-pulse transition-opacity duration-300"></div>
                   </Button>
                 </div>
               </div>

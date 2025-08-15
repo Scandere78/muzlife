@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:is(.dark *));
+
 :root {
   /* Couleurs principales inspirées du logo MuzLife */
   --color-background: #f8f5ef; /* Blanc cassé/beige doux */
@@ -9,6 +11,33 @@
   --color-border: #c7a96b; /* Pour les bordures dorées */
   --color-muted: #e6f0ed; /* Vert très clair pour fonds secondaires */
   --font-sans: Arial, Helvetica, sans-serif;
+  
+  /* shadcn/ui variables - thème clair optimisé pour MuzLife */
+  --radius: 0.625rem;
+  --background: 248 245 239; /* #f8f5ef beige doux */
+  --foreground: 23 76 67; /* #174c43 vert profond */
+  --card: 248 245 239; /* même que background */
+  --card-foreground: 23 76 67;
+  --popover: 248 245 239;
+  --popover-foreground: 23 76 67;
+  --primary: 23 76 67; /* vert profond */
+  --primary-foreground: 248 245 239;
+  --secondary: 230 240 237; /* --color-muted */
+  --secondary-foreground: 23 76 67;
+  --muted: 230 240 237; /* #e6f0ed */
+  --muted-foreground: 119 119 119;
+  --accent: 199 169 107; /* #c7a96b doré */
+  --accent-foreground: 248 245 239;
+  --destructive: 220 38 127;
+  --destructive-foreground: 248 245 239;
+  --border: 199 169 107; /* doré pour les bordures */
+  --input: 230 240 237;
+  --ring: 199 169 107;
+  --chart-1: 199 169 107;
+  --chart-2: 168 138 74;
+  --chart-3: 23 76 67;
+  --chart-4: 230 240 237;
+  --chart-5: 154 127 61;
 }
 
 /* Thème sombre via classe .dark sur html */
@@ -20,6 +49,32 @@
   --color-accent-dark: #9a7f3d; /* or plus terne */
   --color-border: #264a43; /* bordures sombres verdâtres */
   --color-muted: #0b1f1c; /* surfaces secondaires très sombres */
+  
+  /* shadcn/ui variables - thème sombre optimisé pour MuzLife */
+  --background: 6 10 9; /* #060a09 noir verdâtre */
+  --foreground: 231 242 239; /* texte clair */
+  --card: 15 43 38; /* #0f2b26 vert profond pour cartes */
+  --card-foreground: 231 242 239;
+  --popover: 15 43 38;
+  --popover-foreground: 231 242 239;
+  --primary: 194 162 90; /* #c2a25a or atténué */
+  --primary-foreground: 6 10 9;
+  --secondary: 11 31 28; /* #0b1f1c surfaces secondaires */
+  --secondary-foreground: 231 242 239;
+  --muted: 11 31 28;
+  --muted-foreground: 163 163 163;
+  --accent: 194 162 90; /* or atténué */
+  --accent-foreground: 6 10 9;
+  --destructive: 220 38 127;
+  --destructive-foreground: 231 242 239;
+  --border: 38 74 67; /* #264a43 bordures sombres verdâtres */
+  --input: 11 31 28;
+  --ring: 194 162 90;
+  --chart-1: 194 162 90;
+  --chart-2: 154 127 61;
+  --chart-3: 38 74 67;
+  --chart-4: 11 31 28;
+  --chart-5: 106 87 52;
 }
 
 /* Arrière-plan principal avec l'image de calligraphie */
@@ -133,4 +188,51 @@ button:hover, .btn:hover {
 
 .bg-muted {
   background-color: var(--color-muted);
+}
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
 } 

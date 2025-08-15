@@ -41,38 +41,38 @@ export default function HorairesPage() {
           <PrayerTimes />
         </div>
         <div className="mt-10 animate-in fade-in duration-700">
-          <div className="bg-gradient-to-br from-indigo-100 via-white to-yellow-100 rounded-2xl shadow-2xl border border-indigo-200 p-8 backdrop-blur-lg">
+          <div className="bg-gradient-to-br from-indigo-100 via-white to-yellow-100 dark:from-gray-800 dark:via-gray-700 dark:to-gray-800 rounded-2xl shadow-2xl border border-indigo-200 dark:border-gray-600 p-8 backdrop-blur-lg">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div>
-                <h3 className="text-lg font-semibold mb-4 text-indigo-700">À propos des horaires</h3>
-                <div className="space-y-3 text-sm text-gray-700">
+                <h3 className="text-lg font-semibold mb-4 text-indigo-700 dark:text-white">À propos des horaires</h3>
+                <div className="space-y-3 text-sm text-gray-700 dark:text-gray-300">
                   <p>Les horaires sont calculés selon la méthode de l&apos;Université Musulmane d&apos;Umm Al-Qura (Makkah) qui est largement utilisée dans le monde musulman.</p>
                   <p>Les calculs prennent en compte la position géographique, la latitude, la longitude et les ajustements saisonniers.</p>
                   <p>Les horaires sont mis à jour automatiquement et sont précis pour la plupart des villes du monde.</p>
                 </div>
               </div>
               <div>
-                <h3 className="text-lg font-semibold mb-4 text-indigo-700">Les cinq prières</h3>
-                <div className="space-y-2 text-sm text-gray-700">
-                  <div className="flex justify-between items-center rounded-xl bg-blue-50 px-3 py-2 shadow-sm border border-blue-200 mb-2">
-                    <span className="font-semibold text-blue-700">Fajr</span>
-                    <span className="text-blue-500">Avant le lever du soleil</span>
+                <h3 className="text-lg font-semibold mb-4 text-indigo-700 dark:text-white">Les cinq prières</h3>
+                <div className="space-y-2 text-sm text-gray-700 dark:text-gray-300">
+                  <div className="flex justify-between items-center rounded-xl bg-blue-50 dark:bg-blue-900/30 px-3 py-2 shadow-sm border border-blue-200 dark:border-blue-700 mb-2">
+                    <span className="font-semibold text-blue-700 dark:text-blue-300">Fajr</span>
+                    <span className="text-blue-500 dark:text-blue-400">Avant le lever du soleil</span>
                   </div>
-                  <div className="flex justify-between items-center rounded-xl bg-yellow-50 px-3 py-2 shadow-sm border border-yellow-200 mb-2">
-                    <span className="font-semibold text-yellow-700">Dhuhr</span>
-                    <span className="text-yellow-500">Après le zénith</span>
+                  <div className="flex justify-between items-center rounded-xl bg-yellow-50 dark:bg-yellow-900/30 px-3 py-2 shadow-sm border border-yellow-200 dark:border-yellow-700 mb-2">
+                    <span className="font-semibold text-yellow-700 dark:text-yellow-300">Dhuhr</span>
+                    <span className="text-yellow-500 dark:text-yellow-400">Après le zénith</span>
                   </div>
-                  <div className="flex justify-between items-center rounded-xl bg-orange-50 px-3 py-2 shadow-sm border border-orange-200 mb-2">
-                    <span className="font-semibold text-orange-700">Asr</span>
-                    <span className="text-orange-500">Mi-après-midi</span>
+                  <div className="flex justify-between items-center rounded-xl bg-orange-50 dark:bg-orange-900/30 px-3 py-2 shadow-sm border border-orange-200 dark:border-orange-700 mb-2">
+                    <span className="font-semibold text-orange-700 dark:text-orange-300">Asr</span>
+                    <span className="text-orange-500 dark:text-orange-400">Mi-après-midi</span>
                   </div>
-                  <div className="flex justify-between items-center rounded-xl bg-purple-50 px-3 py-2 shadow-sm border border-purple-200 mb-2">
-                    <span className="font-semibold text-purple-700">Maghrib</span>
-                    <span className="text-purple-500">Après le coucher du soleil</span>
+                  <div className="flex justify-between items-center rounded-xl bg-purple-50 dark:bg-purple-900/30 px-3 py-2 shadow-sm border border-purple-200 dark:border-purple-700 mb-2">
+                    <span className="font-semibold text-purple-700 dark:text-purple-300">Maghrib</span>
+                    <span className="text-purple-500 dark:text-purple-400">Après le coucher du soleil</span>
                   </div>
-                  <div className="flex justify-between items-center rounded-xl bg-indigo-50 px-3 py-2 shadow-sm border border-indigo-200 mb-2">
-                    <span className="font-semibold text-indigo-700">Isha</span>
-                    <span className="text-indigo-500">Après la disparition du crépuscule</span>
+                  <div className="flex justify-between items-center rounded-xl bg-indigo-50 dark:bg-indigo-900/30 px-3 py-2 shadow-sm border border-indigo-200 dark:border-indigo-700 mb-2">
+                    <span className="font-semibold text-indigo-700 dark:text-indigo-300">Isha</span>
+                    <span className="text-indigo-500 dark:text-indigo-400">Après la disparition du crépuscule</span>
                   </div>
                 </div>
               </div>

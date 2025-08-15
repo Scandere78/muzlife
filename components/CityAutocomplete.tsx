@@ -21,6 +21,7 @@ interface CityAutocompleteProps {
   value: string;
   onChange: (value: string) => void;
   onCitySelect: (city: CityResult) => void;
+  countryFilter?: string;
   placeholder?: string;
   className?: string;
 }
@@ -46,6 +47,7 @@ export default function CityAutocomplete({
   value,
   onChange,
   onCitySelect,
+  countryFilter,
   placeholder = "Rechercher une ville...",
   className
 }: CityAutocompleteProps) {
@@ -69,7 +71,8 @@ export default function CityAutocomplete({
 
     setLoading(true);
     try {
-      const response = await fetch(`/api/cities/search?q=${encodeURIComponent(query)}`);
+      const url = `/api/cities/search?q=${encodeURIComponent(query)}${countryFilter ? `&country=${encodeURIComponent(countryFilter)}` : ''}`;
+      const response = await fetch(url);
       if (response.ok) {
         const data = await response.json();
         setCities(data.cities || []);
@@ -82,7 +85,7 @@ export default function CityAutocomplete({
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [countryFilter]);
 
   // Effectuer la recherche quand la valeur change
   useEffect(() => {

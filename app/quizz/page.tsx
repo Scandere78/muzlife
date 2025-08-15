@@ -48,9 +48,9 @@ export default function QuizPage() {
               <div className="relative flex flex-col items-center justify-center gap-3">
                 <span className="text-4xl sm:text-5xl drop-shadow-lg">😊</span>
                 <div className="text-center">
-                  <div className="font-black text-green-800 dark:text-white text-xl sm:text-2xl mb-1">FACILE</div>
-                  <div className="text-sm sm:text-base text-green-800 opacity-90 font-semibold">45 secondes par question</div>
-                  <div className="text-xs sm:text-sm text-green-800 opacity-75 mt-1">Parfait pour débuter</div>
+                  <div className="font-black text-green-800 dark:text-green-200 text-xl sm:text-2xl mb-1">FACILE</div>
+                  <div className="text-sm sm:text-base text-green-800 dark:text-green-300 opacity-90 font-semibold">45 secondes par question</div>
+                  <div className="text-xs sm:text-sm text-green-800 dark:text-green-400 opacity-75 mt-1">Parfait pour débuter</div>
                 </div>
               </div>
             </button>
@@ -72,9 +72,9 @@ export default function QuizPage() {
               <div className="relative flex flex-col items-center justify-center gap-3">
                 <span className="text-4xl sm:text-5xl drop-shadow-lg">🎯</span>
                 <div className="text-center">
-                  <div className="font-black text-xl text-gray-600 sm:text-2xl mb-1">MOYEN</div>
-                  <div className="text-sm sm:text-base text-gray-600 opacity-90 font-semibold">30 secondes par question</div>
-                  <div className="text-xs sm:text-sm text-gray-600 opacity-75 mt-1">Pour les connaisseurs</div>
+                  <div className="font-black text-xl text-gray-600 dark:text-gray-200 sm:text-2xl mb-1">MOYEN</div>
+                  <div className="text-sm sm:text-base text-gray-600 dark:text-gray-300 opacity-90 font-semibold">30 secondes par question</div>
+                  <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 opacity-75 mt-1">Pour les connaisseurs</div>
                 </div>
               </div>
             </button>
@@ -96,8 +96,8 @@ export default function QuizPage() {
               <div className="relative flex flex-col items-center justify-center gap-3">
                 <span className="text-4xl sm:text-5xl drop-shadow-lg">🔥</span>
                 <div className="text-center">
-                  <div className="font-black text-xl text-gray-700 sm:text-2xl mb-1">DIFFICILE</div>
-                  <div className="text-sm sm:text-base text-gray-700 opacity-90 font-semibold">15 secondes par question</div>
+                  <div className="font-black text-xl text-gray-700 dark:text-gray-200 sm:text-2xl mb-1">DIFFICILE</div>
+                  <div className="text-sm sm:text-base text-gray-700 dark:text-gray-300 opacity-90 font-semibold">15 secondes par question</div>
                   <div className="text-xs sm:text-sm text-gray-800 dark:text-white opacity-75 mt-1">Réservé aux experts</div>
                 </div>
               </div>

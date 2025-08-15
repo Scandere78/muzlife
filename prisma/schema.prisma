@@ -6,6 +6,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl", "windows", "darwin-arm64"]
 }
 
 datasource db {
@@ -240,6 +241,16 @@ model UserPreferences {
   // Paramètres de rappel
   reminderTime           String?  // Heure de rappel quotidien (HH:MM)
   studyDaysOfWeek        Int[]    // Jours d'étude (0=dimanche, 6=samedi)
+  
+  // Préférences de localisation
+  preferredCountry        String? @default("France")      // Pays préféré
+  preferredCountryCode    String? @default("FR")          // Code pays
+  preferredCountryFlag    String? @default("🇫🇷")         // Drapeau pays
+  preferredCity           String? @default("Paris")       // Ville préférée
+  preferredCityCountry    String? @default("France")      // Pays de la ville
+  preferredCityLatitude   Float?  @default(48.8566)       // Latitude ville
+  preferredCityLongitude  Float?  @default(2.3522)        // Longitude ville
+  preferredCityDisplay    String? @default("Paris, France") // Nom d'affichage ville
   
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

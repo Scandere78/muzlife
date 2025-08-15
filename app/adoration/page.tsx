@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { hisniiCategories } from '@/lib/hisniiDataNew';
-import { Navbar } from '../../components';
+import Navbar from '../../components/Navbar';
 
 export default function AdorationPage() {
   return (

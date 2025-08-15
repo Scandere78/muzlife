@@ -108,9 +108,15 @@ module.exports = {
     const paths = [];
 
     try {
-      // Import Prisma client dynamiquement
+      // Import Prisma client dynamiquement avec gestion d'erreur
       const { PrismaClient } = require('@prisma/client');
       const prisma = new PrismaClient();
+      
+      // Test de connexion avec timeout
+      await Promise.race([
+        prisma.$connect(),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('Connection timeout')), 5000))
+      ]);
 
       // Pages de lecture (sourates) - si elles existent dans la DB
       try {
@@ -200,12 +206,17 @@ module.exports = {
         console.log('Pas de table ville dans la DB');
       }
 
-      await prisma.$disconnect();
+      // Déconnexion sécurisée
+      try {
+        await prisma.$disconnect();
+      } catch (disconnectError) {
+        console.log('Prisma disconnect error (ignoré):', disconnectError.message);
+      }
 
       console.log(`✅ Next-sitemap MuzLife: ${paths.length} pages additionnelles générées`);
 
     } catch (error) {
-      console.error('❌ Erreur lors de la génération des pages dynamiques pour next-sitemap:', error);
+      console.error('❌ Erreur lors de la génération des pages dynamiques pour next-sitemap:', error.message || error);
     }
 
     return paths;

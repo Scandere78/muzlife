@@ -1,7 +1,6 @@
-import { clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
+import { clsx, type ClassValue } from "clsx"
+import { twMerge } from "tailwind-merge"
 
-// Utilitaire Tailwind/clsx typé pour TypeScript
-export function cn(...inputs: (string | number | boolean | undefined | null)[]): string {
-  return twMerge(clsx(inputs));
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs))
 }

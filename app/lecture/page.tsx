@@ -64,7 +64,7 @@ export default function Lecture() {
             placeholder="Rechercher une sourate..." 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full p-3 rounded-lg border border-[var(--color-border)] bg-[var(--color-muted)]/60 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] focus:border-transparent transition-all duration-300" 
+            className="w-full p-3 rounded-lg border border-[var(--color-border)] bg-[var(--color-muted)]/60 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] focus:border-transparent transition-all duration-300" 
           />
           <button className="px-6 py-3 rounded-lg text-white font-bold text-lg border-accent bg-[var(--color-accent)] hover:shadow-lg hover:shadow-[var(--color-accent)]/20 transition-all duration-300 transform hover:-translate-y-1">
             Rechercher
@@ -83,11 +83,11 @@ export default function Lecture() {
                 <div className="flex items-center justify-between">
                   <Link href={detailsUrl} className="flex-1 group">
                     <div className="cursor-pointer">
-                                             <h2 className="text-xl sm:text-2xl font-bold text-white group-hover:text-[var(--color-accent)] transition-colors duration-300 drop-shadow">
+                                             <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white group-hover:text-[var(--color-accent)] transition-colors duration-300 drop-shadow">
                          <span className="text-[var(--color-accent)] text-lg sm:text-xl mr-2">{sourate.number}.</span>
                          {sourate.nom_phonetique}
                        </h2>
-                       <p className="text-gray-300 text-sm sm:text-base mt-1">
+                       <p className="text-gray-600 dark:text-gray-300 text-sm sm:text-base mt-1">
                          Sourate {sourate.number} du Coran
                        </p>
                       <span className="text-[var(--color-accent)] hover:text-white transition-all duration-300 inline-block mt-3 text-sm font-medium">

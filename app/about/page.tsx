@@ -100,12 +100,12 @@ const AboutPage: React.FC = () => {
   };
 
   const FeatureCard = ({ feature }: { feature: Feature }) => (
-    <div className="bg-[var(--color-background)] rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-300 border border-[var(--color-border)]">
+    <div className="bg-[var(--color-background)] dark:bg-gray-800 rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-300 border border-[var(--color-border)] dark:border-gray-600">
       <div className="flex items-center mb-4">
         <span className="text-2xl mr-3">{feature.icon}</span>
-        <h3 className="text-lg font-semibold text-[var(--color-foreground)]">{feature.name}</h3>
+        <h3 className="text-lg font-semibold text-[var(--color-foreground)] dark:text-white">{feature.name}</h3>
       </div>
-      <p className="text-[var(--color-foreground)] leading-relaxed">{feature.description}</p>
+      <p className="text-[var(--color-foreground)] dark:text-gray-300 leading-relaxed">{feature.description}</p>
     </div>
   );
 
@@ -134,9 +134,9 @@ const AboutPage: React.FC = () => {
       {/* Header Section */}
       
         <div className="container mx-auto px-4 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-green-800 dark:text-white">
             À propos de Muzlife</h1>
-          <p className="text-xl md:text-2xl opacity-90 max-w-3xl mx-auto">
+          <p className="text-xl md:text-2xl opacity-90 max-w-3xl mx-auto text-green-700 dark:text-gray-200">
             La plateforme communautaire musulmane gamifiée
           </p>
         </div>
@@ -145,7 +145,7 @@ const AboutPage: React.FC = () => {
       <div className="container mx-auto px-4 py-12">
         {/* Introduction */}
         <div className="text-center mb-16">
-          <p className="text-lg text-[var(--color-foreground)] max-w-4xl mx-auto leading-relaxed">
+          <p className="text-lg text-[var(--color-foreground)] dark:text-gray-300 max-w-4xl mx-auto leading-relaxed">
             Muzlife est une plateforme innovante conçue pour rassembler la communauté musulmane 
             autour d'une expérience interactive et enrichissante. Notre mission est de créer un 
             espace numérique où spiritualité, communauté et technologie se rencontrent harmonieusement.
@@ -153,12 +153,12 @@ const AboutPage: React.FC = () => {
         </div>
 
         {/* Mascot Section */}
-        <div className="bg-[var(--color-background)] rounded-xl shadow-lg p-8 mb-16 text-center border border-[var(--color-border)]">
+        <div className="bg-[var(--color-background)] dark:bg-gray-800 rounded-xl shadow-lg p-8 mb-16 text-center border border-[var(--color-border)] dark:border-gray-600">
           <div className="text-6xl mb-4">🐱</div>
           <h2 className="text-2xl font-bold text-[var(--color-accent)] mb-4">
             Rencontrez {mascot.name}, notre mascotte
           </h2>
-          <p className="text-[var(--color-foreground)] max-w-2xl mx-auto leading-relaxed">
+          <p className="text-[var(--color-foreground)] dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
             {mascot.description}
           </p>
         </div>
@@ -201,35 +201,35 @@ const AboutPage: React.FC = () => {
         </div>
 
         {/* Technology Stack */}
-        <div className="bg-[var(--color-foreground)] text-white rounded-xl p-8 mb-16">
+        <div className="bg-[var(--color-foreground)] dark:bg-gray-900 text-white rounded-xl p-8 mb-16">
           <h2 className="text-2xl font-bold mb-6 text-center text-[var(--color-accent)]">
             🛠️ Notre Stack Technologique</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
             <div>
               <h3 className="font-semibold mb-2">Base de données</h3>
-              <p className="text-[var(--color-muted)]">PostgreSQL</p>
+              <p className="text-[var(--color-muted)] dark:text-gray-400">PostgreSQL</p>
             </div>
             <div>
               <h3 className="font-semibold mb-2">Architecture</h3>
-              <p className="text-[var(--color-muted)]">Full-Stack TypeScript</p>
+              <p className="text-[var(--color-muted)] dark:text-gray-400">Full-Stack TypeScript</p>
             </div>
             <div>
               <h3 className="font-semibold mb-2">Plateformes</h3>
-              <p className="text-[var(--color-muted)]">Web • Mobile • API REST</p>
+              <p className="text-[var(--color-muted)] dark:text-gray-400">Web • Mobile • API REST</p>
             </div>
           </div>
         </div>
 
         {/* Mission Statement */}
-        <div className="bg-[var(--color-background)] rounded-xl shadow-lg p-8 text-center border border-[var(--color-border)]">
+        <div className="bg-[var(--color-background)] dark:bg-gray-800 rounded-xl shadow-lg p-8 text-center border border-[var(--color-border)] dark:border-gray-600">
           <h2 className="text-2xl font-bold text-[var(--color-accent)] mb-6">
             🎯 Notre Mission</h2>
-          <p className="text-[var(--color-foreground)] max-w-4xl mx-auto leading-relaxed mb-4">
+          <p className="text-[var(--color-foreground)] dark:text-gray-300 max-w-4xl mx-auto leading-relaxed mb-4">
             Chez Muzlife, nous croyons que la technologie peut servir à renforcer les liens spirituels 
             et communautaires. Notre plateforme gamifiée encourage la participation positive, 
             l'entraide et l'épanouissement personnel dans un environnement respectueux des valeurs islamiques.
           </p>
-          <p className="text-[var(--color-foreground)] max-w-4xl mx-auto leading-relaxed">
+          <p className="text-[var(--color-foreground)] dark:text-gray-300 max-w-4xl mx-auto leading-relaxed">
             Nous nous engageons à créer un espace numérique où chaque membre peut grandir spirituellement, 
             socialement et personnellement, tout en contribuant au bien-être de la communauté globale.
           </p>

@@ -3,7 +3,7 @@
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { getHisniiCategoryBySlug } from '@/lib/hisniiDataNew';
-import { Navbar } from '../../../components';
+import Navbar from '../../../components/Navbar';
 
 export default function CategoryPage() {
   const params = useParams();
@@ -48,10 +48,10 @@ export default function CategoryPage() {
         </div>
         
         <div className="text-6xl mb-4">{category.icon}</div>
-        <h1 className="text-4xl font-bold drop-shadow-lg mb-4 text-gray-800 dark:text-green-200">
+        <h1 className="text-4xl font-bold drop-shadow-lg mb-4 text-green-800 dark:text-white">
           {category.title}
         </h1>
-        <p className="text-lg leading-relaxed text-gray-500 dark:text-yellow-800">
+        <p className="text-lg leading-relaxed text-green-700 dark:text-gray-200">
           {category.description}
         </p>
         <div className={`mt-6 h-1 w-32 mx-auto rounded-full bg-gradient-to-r ${category.colors.secondary}`}></div>
@@ -88,9 +88,9 @@ export default function CategoryPage() {
               <div className="p-6">
                 {/* Arabic Text */}
                 <div className="mb-6">
-                  <h4 className="text-sm font-semibold mb-3 text-gray-800 dark:text-">Texte Arabe :</h4>
+                  <h4 className="text-sm font-semibold mb-3 text-gray-800 dark:text-white">Texte Arabe :</h4>
                   <div className="bg-[var(--color-background)] rounded-xl p-6 text-right border border-[var(--color-border)]">
-                    <p className="text-2xl leading-loose font-arabic text-gray-900 dark:text-green-400">
+                    <p className="text-2xl leading-loose font-arabic text-gray-900 dark:text-white">
                       {item.arabicText}
                     </p>
                   </div>
@@ -100,7 +100,7 @@ export default function CategoryPage() {
                 <div className="mb-6">
                   <h4 className="text-sm font-semibold mb-3 text-gray-800 dark:text-white">Translittération :</h4>
                   <div className="bg-[var(--color-muted)]/40 rounded-xl p-4 border border-[var(--color-border)]">
-                    <p className="italic leading-relaxed text-gray-700 dark:text-blue-700">
+                    <p className="italic leading-relaxed text-gray-700 dark:text-gray-300">
                       {item.transliteration}
                     </p>
                   </div>
@@ -110,7 +110,7 @@ export default function CategoryPage() {
                 <div className="mb-6">
                   <h4 className="text-sm font-semibold mb-3 text-gray-800 dark:text-white">Traduction :</h4>
                   <div className={`${category.colors.background} rounded-xl p-4 border border-opacity-20`}>
-                    <p className="leading-relaxed text-gray-900 dark:text-orange-500 font-medium">
+                    <p className="leading-relaxed text-gray-900 dark:text-white font-medium">
                       {item.translation}
                     </p>
                   </div>
@@ -146,8 +146,8 @@ export default function CategoryPage() {
                     <div className="flex items-start">
                       <span className="text-lg mr-2 text-blue-600 dark:text-blue-400">📚</span>
                       <div>
-                        <h5 className="font-semibold mb-1 text-gray-800 dark:text-red-400">Contexte :</h5>
-                        <p className="text-sm text-gray-700 dark:text-cyan-400">{item.context}</p>
+                        <h5 className="font-semibold mb-1 text-gray-800 dark:text-white">Contexte :</h5>
+                        <p className="text-sm text-gray-700 dark:text-gray-300">{item.context}</p>
                       </div>
                     </div>
                   </div>

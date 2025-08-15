@@ -52,36 +52,36 @@ interface PageParams {
 // Composant skeleton pour le chargement
 function SouratePageSkeleton() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 p-4">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 dark:from-gray-800 dark:to-gray-900 p-4">
       <div className="max-w-4xl mx-auto">
         {/* Header skeleton */}
         <div className="mb-8">
-          <div className="h-8 bg-gray-200 rounded-lg w-3/4 mb-4 animate-pulse"></div>
-          <div className="h-6 bg-gray-200 rounded-lg w-1/2 animate-pulse"></div>
+          <div className="h-8 bg-gray-200 dark:bg-gray-600 rounded-lg w-3/4 mb-4 animate-pulse"></div>
+          <div className="h-6 bg-gray-200 dark:bg-gray-600 rounded-lg w-1/2 animate-pulse"></div>
         </div>
 
         {/* Controls skeleton */}
-        <div className="mb-6 p-4 bg-white/80 backdrop-blur-sm rounded-xl border border-white/50 shadow-lg">
+        <div className="mb-6 p-4 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl border border-white/50 dark:border-gray-600/50 shadow-lg">
           <div className="flex flex-wrap gap-2 mb-4">
             {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="h-10 bg-gray-200 rounded-lg w-24 animate-pulse"></div>
+              <div key={i} className="h-10 bg-gray-200 dark:bg-gray-600 rounded-lg w-24 animate-pulse"></div>
             ))}
           </div>
-          <div className="h-12 bg-gray-200 rounded-lg w-full animate-pulse"></div>
+          <div className="h-12 bg-gray-200 dark:bg-gray-600 rounded-lg w-full animate-pulse"></div>
         </div>
 
         {/* Verses skeleton */}
         <div className="space-y-4">
           {Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className="p-6 bg-white/80 backdrop-blur-sm rounded-xl border border-white/50 shadow-lg">
+            <div key={i} className="p-6 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl border border-white/50 dark:border-gray-600/50 shadow-lg">
               <div className="flex items-center justify-between mb-4">
-                <div className="h-8 bg-gray-200 rounded-full w-8 animate-pulse"></div>
-                <div className="h-6 bg-gray-200 rounded-lg w-16 animate-pulse"></div>
+                <div className="h-8 bg-gray-200 dark:bg-gray-600 rounded-full w-8 animate-pulse"></div>
+                <div className="h-6 bg-gray-200 dark:bg-gray-600 rounded-lg w-16 animate-pulse"></div>
               </div>
               <div className="space-y-3">
-                <div className="h-8 bg-gray-200 rounded-lg w-full animate-pulse"></div>
-                <div className="h-6 bg-gray-200 rounded-lg w-5/6 animate-pulse"></div>
-                <div className="h-5 bg-gray-200 rounded-lg w-4/5 animate-pulse"></div>
+                <div className="h-8 bg-gray-200 dark:bg-gray-600 rounded-lg w-full animate-pulse"></div>
+                <div className="h-6 bg-gray-200 dark:bg-gray-600 rounded-lg w-5/6 animate-pulse"></div>
+                <div className="h-5 bg-gray-200 dark:bg-gray-600 rounded-lg w-4/5 animate-pulse"></div>
               </div>
             </div>
           ))}

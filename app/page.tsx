@@ -8,7 +8,11 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/effect-fade";
 import { Pagination, Autoplay, EffectFade } from "swiper/modules";
-import { Navbar, PrayerTimer, NextPrayer, CitationOfTheDay, QiblaCompass } from "../components";
+import Navbar from "../components/Navbar";
+import PrayerTimer from "../components/PrayerTimer";
+import NextPrayer from "../components/NextPrayer";
+import CitationOfTheDay from "../components/CitationOfTheDay";
+import QiblaCompass from "../components/QiblaCompass";
 import "../styles/globals.css";
  
 

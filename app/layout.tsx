@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { cookies } from "next/headers";
 import { Inter, Amiri } from "next/font/google";
 import { AuthProvider } from "../contexts/AuthContext";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import '../styles/globals.css';
 import { LocationProvider } from "@/contexts/LocationContext";
+import { ThemeProvider } from "@/components/theme-provider";
 // import { Analytics } from "@vercel/analytics/react"; // Décommente si Analytics est installé
 
 const inter = Inter({ subsets: ["latin"] });
@@ -16,25 +16,32 @@ export const metadata: Metadata = {
   description: "Application moderne pour la communauté musulmane",
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const cookieStore = await cookies();
-  const theme = cookieStore.get("theme")?.value || "light";
   return (
-    <html lang="fr" className={`${inter.className} ${amiri.variable} ${theme === 'dark' ? 'dark' : ''}`}>
+    <html lang="fr" className={`${inter.className} ${amiri.variable}`} suppressHydrationWarning>
       <body style={{ backgroundImage: 'url(/caligraphie.png)', color: 'var(--color-accent)' }} className="min-h-screen font-amiri">
-        <AuthProvider>
-          <LocationProvider>
-            <Navbar />
-            <main className="pt-16 md:pt-20">{children}</main>
-            <Footer />
-          </LocationProvider>
-          {/* <Analytics /> */}
-        </AuthProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <AuthProvider>
+            <LocationProvider>
+              <Navbar />
+              <main className="pt-16 md:pt-20">{children}</main>
+              <Footer />
+            </LocationProvider>
+            {/* <Analytics /> */}
+          </AuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
 }
+
+
