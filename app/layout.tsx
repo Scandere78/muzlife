@@ -6,6 +6,7 @@ import Footer from "../components/Footer";
 import '../styles/globals.css';
 import { LocationProvider } from "@/contexts/LocationContext";
 import { ThemeProvider } from "@/components/theme-provider";
+import { GoogleAnalytics } from '@next/third-parties/google';
 // import { Analytics } from "@vercel/analytics/react"; // Décommente si Analytics est installé
 
 const inter = Inter({ subsets: ["latin"] });
@@ -39,6 +40,7 @@ export default function RootLayout({
             {/* <Analytics /> */}
           </AuthProvider>
         </ThemeProvider>
+        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID!} />
       </body>
     </html>
   );
