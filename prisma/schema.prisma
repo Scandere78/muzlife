@@ -276,3 +276,20 @@ model FavoriteSurah {
   @@unique([userId, surahNumber])
   @@map("favorite_surahs")
 }
+
+// Messages de contact
+model ContactMessage {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  firstName String
+  lastName  String
+  email     String
+  subject   String
+  category  String   // bug, feature, partnership, support, other
+  message   String
+  isRead    Boolean  @default(false)
+  isResolved Boolean @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("contact_messages")
+}
