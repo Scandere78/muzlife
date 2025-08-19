@@ -1,3 +1,5 @@
+nodeLinker: hoisted
+
 onlyBuiltDependencies:
   - '@prisma/client'
   - '@prisma/engines'

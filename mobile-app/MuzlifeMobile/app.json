@@ -1,0 +1,48 @@
+{
+  "expo": {
+    "name": "Muzlife",
+    "slug": "muzlife-mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#4A90E2"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.muzlife.mobile"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#4A90E2"
+      },
+      "edgeToEdgeEnabled": true,
+      "package": "com.muzlife.mobile"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/notification-icon.png",
+          "color": "#4A90E2"
+        }
+      ],
+      "expo-secure-store",
+      "expo-location",
+      "expo-av"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "votre-project-id-ici"
+      }
+    }
+  }
+}
