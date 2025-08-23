@@ -25,36 +25,10 @@ export default function ContactPage() {
   return (
     <div className="py-12 min-h-screen navbar-safe" style={{ background: 'transparent', color: 'var(--color-foreground)' }}>
       {/* Background avec motifs islamiques */}
-      <div className="absolute inset-0 bg-gradient-to-br from-emerald-50 via-teal-25 to-green-50 dark:from-gray-900 dark:via-gray-800 dark:to-emerald-900">
-        {/* Calligraphie en arrière-plan */}
-        <div className="absolute top-20 right-10 opacity-5 dark:opacity-10">
-          <Image 
-            src="/caligraphie.png" 
-            alt="Calligraphie islamique" 
-            width={300} 
-            height={300}
-            className="transform rotate-12"
-          />
-        </div>
-        <div className="absolute bottom-20 left-10 opacity-5 dark:opacity-10">
-          <Image 
-            src="/caligraphie.png" 
-            alt="Calligraphie islamique" 
-            width={200} 
-            height={200}
-            className="transform -rotate-12"
-          />
-        </div>
-        
-        {/* Motifs géométriques */}
-        <div className="absolute inset-0">
-          <div className="absolute top-1/4 left-1/4 w-32 h-32 border border-emerald-200/20 rounded-full"></div>
-          <div className="absolute top-3/4 right-1/4 w-48 h-48 border border-teal-200/20 rounded-full"></div>
-          <div className="absolute top-1/2 left-1/3 w-24 h-24 border border-green-200/20 transform rotate-45"></div>
-        </div>
+      <div className="bg-transparent">
       </div>
 
-      <div className="relative z-10 container mx-auto px-4 py-8">
+      <div className="relative z-10 container mx-auto px-4 py-8 ">
         {/* Header avec style islamique */}
         <div className="text-center mb-16 relative">
           {/* Titre principal */}

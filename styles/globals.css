@@ -228,6 +228,42 @@ button:hover, .btn:hover {
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
+/* Custom scrollbar pour le dropdown de recherche */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #c7a96b #e6f0ed;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #c7a96b, #a88a4a);
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #a88a4a, #8b7238);
+}
+
+/* Dark mode scrollbar */
+.dark .custom-scrollbar {
+  scrollbar-color: #c2a25a #0b1f1c;
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #c2a25a, #9a7f3d);
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #9a7f3d, #7d6632);
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

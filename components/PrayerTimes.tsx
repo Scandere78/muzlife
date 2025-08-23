@@ -166,6 +166,16 @@ export default function PrayerTimes() {
     fetchPrayerTimes();
   }, [preferences.city, locationLoading]);
 
+  // État local pour la valeur de recherche
+  const [searchValue, setSearchValue] = useState(preferences.city?.name || '');
+
+  // Mettre à jour la valeur de recherche quand les préférences changent
+  useEffect(() => {
+    if (preferences.city?.name) {
+      setSearchValue(preferences.city.name);
+    }
+  }, [preferences.city]);
+
   // Gérer la sélection d'une ville
   const handleCitySelect = (selectedCityData: CityResult) => {
     const cityData = {
@@ -176,6 +186,7 @@ export default function PrayerTimes() {
       displayName: selectedCityData.displayName
     };
     setCity(cityData);
+    setSearchValue(selectedCityData.name);
   };
 
   const handleCountrySelect = (selectedCountry: any) => {
@@ -252,13 +263,13 @@ export default function PrayerTimes() {
                   🏙️ Ville
                 </label>
                 <CityAutocomplete
-                  value={preferences.city.name}
-                  onChange={() => {}} // Géré par handleCitySelect
-                  onCitySelect={handleCitySelect}
-                  countryFilter={preferences.country.name}
-                  placeholder={`🔍 Recherchez une ville en ${preferences.country.name}...`}
-                  className="w-full h-12 text-lg"
-                />
+  value={searchValue}
+  onChange={setSearchValue}
+  onCitySelect={handleCitySelect}
+  countryFilter={preferences.country.name}
+  placeholder={`🔍 Recherchez une ville en ${preferences.country.name}...`}
+  className="w-full h-12 text-lg"
+/>
               </div>
             </div>
             

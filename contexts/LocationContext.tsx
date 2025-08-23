@@ -152,14 +152,19 @@ export const LocationProvider = ({ children }: { children: React.ReactNode }) =>
   };
 
   // Définir le pays
-  const setCountry = (country: Country) => {
-    setPreferences(prev => ({
-      ...prev,
-      country,
-      // Reset la ville vers la capitale/ville principale du pays
-      city: getDefaultCityForCountry(country)
-    }));
-  };
+ const setCountry = (country: Country) => {
+  setPreferences(prev => ({
+    ...prev,
+    country,
+    city: {
+      name: "",
+      country: country.name,
+      latitude: 0,
+      longitude: 0,
+      displayName: ""
+    }
+  }));
+};
 
   // Définir la ville
   const setCity = (city: City) => {
