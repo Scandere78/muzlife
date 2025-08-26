@@ -286,6 +286,7 @@ model ContactMessage {
   subject   String
   category  String   // bug, feature, partnership, support, other
   message   String
+  status    String   @default("new") // new, read, replied, closed
   isRead    Boolean  @default(false)
   isResolved Boolean @default(false)
   createdAt DateTime @default(now())

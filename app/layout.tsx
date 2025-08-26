@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import { Inter, Amiri } from "next/font/google";
 import { AuthProvider } from "../contexts/AuthContext";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
 import '../styles/globals.css';
 import { LocationProvider } from "@/contexts/LocationContext";
 import { ThemeProvider } from "@/components/theme-provider";
 import { GoogleAnalytics } from '@next/third-parties/google';
+import { ConditionalLayout } from "../components/ConditionalLayout";
+import { Toaster } from "@/components/ui/sonner";
 // import { Analytics } from "@vercel/analytics/react"; // Décommente si Analytics est installé
 
 const inter = Inter({ subsets: ["latin"] });
@@ -33,12 +33,11 @@ export default function RootLayout({
         >
           <AuthProvider>
             <LocationProvider>
-                <Navbar />
-              <main className="pt-20 md:pt-20">{children}</main>
-              <Footer />
+              <ConditionalLayout>{children}</ConditionalLayout>
             </LocationProvider>
             {/* <Analytics /> */}
           </AuthProvider>
+          <Toaster richColors position="top-right" />
         </ThemeProvider>
         <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID!} />
       </body>
