@@ -28,14 +28,20 @@ interface ContactForm {
   message: string;
 }
 
-export default function ContactForm() {
+interface InitialData {
+  category?: string;
+  subject?: string;
+  message?: string;
+}
+
+export default function ContactForm({ initialData }: { initialData?: InitialData }) {
   const [formData, setFormData] = useState<ContactForm>({
     firstName: '',
     lastName: '',
     email: '',
-    subject: '',
-    category: '',
-    message: ''
+    subject: initialData?.subject || '',
+    category: initialData?.category || '',
+    message: initialData?.message || ''
   });
   
   const [isSubmitting, setIsSubmitting] = useState(false);
