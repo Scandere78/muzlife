@@ -1,4 +1,5 @@
 import * as SecureStore from 'expo-secure-store';
+import { Platform } from 'react-native';
 import { 
   User, 
   AuthResponse, 
@@ -16,8 +17,47 @@ import {
   Surah
 } from '../types/api';
 
-const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3000';
+// Configuration selon la plateforme :
+// - Web : localhost direct
+// - Émulateur Android : 10.0.2.2 (IP spéciale pour accéder au localhost de l'hôte)
+// - Téléphone physique : IP du PC sur le réseau local
+const API_BASE_URL = Platform.OS === 'web' 
+  ? 'http://localhost:3000' 
+  : (process.env.EXPO_PUBLIC_API_URL || 'http://10.0.2.2:3000');
 const TOKEN_KEY = 'muzlife_auth_token';
+
+// Utilitaire pour gérer le stockage sécurisé sur toutes les plateformes
+class SecureStorage {
+  static async getItem(key: string): Promise<string | null> {
+    if (Platform.OS === 'web') {
+      // Sur web, utiliser localStorage
+      return localStorage.getItem(key);
+    } else {
+      // Sur mobile, utiliser SecureStore
+      return await SecureStore.getItemAsync(key);
+    }
+  }
+
+  static async setItem(key: string, value: string): Promise<void> {
+    if (Platform.OS === 'web') {
+      // Sur web, utiliser localStorage
+      localStorage.setItem(key, value);
+    } else {
+      // Sur mobile, utiliser SecureStore
+      await SecureStore.setItemAsync(key, value);
+    }
+  }
+
+  static async deleteItem(key: string): Promise<void> {
+    if (Platform.OS === 'web') {
+      // Sur web, utiliser localStorage
+      localStorage.removeItem(key);
+    } else {
+      // Sur mobile, utiliser SecureStore
+      await SecureStore.deleteItemAsync(key);
+    }
+  }
+}
 
 class MuzlifeApiService {
   private baseURL: string;
@@ -30,7 +70,7 @@ class MuzlifeApiService {
 
   private async initializeToken() {
     try {
-      this.token = await SecureStore.getItemAsync(TOKEN_KEY);
+      this.token = await SecureStorage.getItem(TOKEN_KEY);
     } catch (error) {
       console.error('Error loading token:', error);
     }
@@ -38,7 +78,7 @@ class MuzlifeApiService {
 
   private async getAuthHeaders(): Promise<Record<string, string>> {
     if (!this.token) {
-      this.token = await SecureStore.getItemAsync(TOKEN_KEY);
+      this.token = await SecureStorage.getItem(TOKEN_KEY);
     }
     
     const headers: Record<string, string> = {
@@ -72,14 +112,19 @@ class MuzlifeApiService {
     const headers = await this.getAuthHeaders();
 
     try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000);
+      
       const response = await fetch(url, {
         ...options,
         headers: {
           ...headers,
           ...options.headers,
         },
-        timeout: 10000, // 10 secondes
+        signal: controller.signal,
       });
+      
+      clearTimeout(timeoutId);
 
       return this.handleResponse<T>(response);
     } catch (error) {
@@ -98,7 +143,7 @@ class MuzlifeApiService {
     });
 
     // Sauvegarder le token
-    await SecureStore.setItemAsync(TOKEN_KEY, response.token);
+    await SecureStorage.setItem(TOKEN_KEY, response.token);
     this.token = response.token;
 
     return response;
@@ -111,7 +156,7 @@ class MuzlifeApiService {
     });
 
     // Sauvegarder le token
-    await SecureStore.setItemAsync(TOKEN_KEY, response.token);
+    await SecureStorage.setItem(TOKEN_KEY, response.token);
     this.token = response.token;
 
     return response;
@@ -123,7 +168,7 @@ class MuzlifeApiService {
 
   private async clearAuth(): Promise<void> {
     try {
-      await SecureStore.deleteItemAsync(TOKEN_KEY);
+      await SecureStorage.deleteItem(TOKEN_KEY);
       this.token = null;
     } catch (error) {
       console.error('Error clearing auth:', error);
@@ -144,6 +189,26 @@ class MuzlifeApiService {
   // Méthodes pour les statistiques
   async getUserStats(): Promise<UserStats> {
     return this.request<UserStats>('/api/dashboard/stats');
+  }
+
+  // Méthode pour récupérer toutes les stats du dashboard
+  async getDashboardStats(): Promise<{
+    user: { id: string; email: string; name: string | null };
+    stats: UserStats | null;
+    recentResults: QuizResult[];
+    categoryStats: Record<string, { total: number; correct: number; average: number; totalScore: number }>;
+    readingStats: {
+      todayVerses: number;
+      weekVerses: number;
+      totalVerses: number;
+      currentPosition: { surah: number; verse: number } | null;
+      streak: number;
+      dailyGoal: number;
+      goalProgress: number;
+    };
+    recentReadingProgress: ReadingProgress[];
+  }> {
+    return this.request('/api/dashboard/stats');
   }
 
   // Méthodes pour la lecture du Coran
@@ -215,9 +280,56 @@ class MuzlifeApiService {
     return this.request<QuizResult[]>('/api/quiz/results');
   }
 
-  // Méthodes pour les heures de prière
+  // Méthodes pour les heures de prière (pas d'auth requise)
   async getPrayerTimes(city: string): Promise<PrayerTimes> {
-    return this.request<PrayerTimes>(`/api/prayer-times?city=${encodeURIComponent(city)}`);
+    const url = `${this.baseURL}/api/prayer-times?city=${encodeURIComponent(city)}`;
+    
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000);
+      
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        signal: controller.signal,
+      });
+      
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        throw new Error(`Erreur API: ${response.status}`);
+      }
+
+      const data = await response.json();
+      
+      // Extraire les données de l'API et les formater selon notre interface PrayerTimes
+      if (data.data && data.data.timings) {
+        const timings = data.data.timings;
+        const date = data.data.date;
+        
+        return {
+          city: city,
+          country: 'France', // Par défaut, on peut l'améliorer plus tard
+          date: date.readable || new Date().toLocaleDateString(),
+          fajr: timings.Fajr,
+          sunrise: timings.Sunrise,
+          dhuhr: timings.Dhuhr,
+          asr: timings.Asr,
+          maghrib: timings.Maghrib,
+          isha: timings.Isha,
+        };
+      }
+      
+      throw new Error('Format de réponse API invalide');
+    } catch (error) {
+      console.error('Error fetching prayer times:', error);
+      if (error instanceof Error) {
+        throw new ApiError(error.message, 'PRAYER_TIMES_ERROR');
+      }
+      throw new ApiError('Erreur de connexion', 'NETWORK_ERROR');
+    }
   }
 
   // Méthode utilitaire pour vérifier la connexion

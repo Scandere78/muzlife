@@ -3,7 +3,13 @@
     "allow": [
       "Bash(pnpm create:*)",
       "Bash(pnpm install:*)",
-      "Bash(mkdir:*)"
+      "Bash(mkdir:*)",
+      "WebSearch",
+      "Bash(pnpm add:*)",
+      "Bash(pnpm start:*)",
+      "Bash(pnpm remove:*)",
+      "mcp__context7__resolve-library-id",
+      "mcp__context7__get-library-docs"
     ],
     "deny": []
   }

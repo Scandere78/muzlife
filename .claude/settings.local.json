@@ -14,7 +14,9 @@
       "Bash(npx shadcn@latest add:*)",
       "Bash(pnpm install:*)",
       "Bash(pnpm create:*)",
-      "Bash(mkdir:*)"
+      "Bash(mkdir:*)",
+      "Bash(pnpm start:*)",
+      "Bash(npx tsc:*)"
     ],
     "deny": []
   }

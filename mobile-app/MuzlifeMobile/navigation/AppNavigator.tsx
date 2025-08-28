@@ -3,6 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { Platform } from 'react-native';
 
 // Types
 import { RootStackParamList, MainTabParamList } from './types';
@@ -110,35 +111,35 @@ function MainNavigator() {
 
 // Navigation racine
 function RootNavigator() {
-  // TEMPORAIRE : Bypasser l'authentification pour tester
-  // const { isAuthenticated, isLoading } = useAuthStore();
+  const { isAuthenticated, isLoading } = useAuthStore();
 
-  // if (isLoading) {
-  //   return <LoadingScreen />;
-  // }
+  // Affichage du chargement pendant la vérification de l'authentification
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
 
   return (
     <RootStack.Navigator screenOptions={{ headerShown: false }}>
-      {/* TEMPORAIRE : Afficher directement l'app principale */}
-      <RootStack.Screen name="Main" component={MainNavigator} />
-      {/* {isAuthenticated ? (
+      {isAuthenticated ? (
+        // Utilisateur connecté : afficher l'application principale
         <RootStack.Screen name="Main" component={MainNavigator} />
       ) : (
+        // Utilisateur non connecté : afficher l'authentification
         <RootStack.Screen name="Auth" component={AuthNavigator} />
-      )} */}
+      )}
     </RootStack.Navigator>
   );
 }
 
 // Composant principal de navigation
 export default function AppNavigator() {
-  // TEMPORAIRE : Désactiver le chargement utilisateur
-  // const { loadUser } = useAuthStore();
+  const { loadUser } = useAuthStore();
 
-  // React.useEffect(() => {
-  //   // Charger l'utilisateur au démarrage
-  //   loadUser();
-  // }, [loadUser]);
+  React.useEffect(() => {
+    // Charger l'utilisateur au démarrage de l'application
+    // Cela vérifiera s'il y a un token JWT valide stocké
+    loadUser();
+  }, [loadUser]);
 
   return (
     <SafeAreaProvider>
