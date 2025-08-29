@@ -25,7 +25,7 @@ export default function ContactPage() {
   return (
     <div className="py-12 min-h-screen navbar-safe" style={{ background: 'transparent', color: 'var(--color-foreground)' }}>
       {/* Background avec motifs islamiques */}
-      <div className="absolute inset-0 bg-gradient-to-br from-emerald-50 via-teal-25 to-green-50 dark:from-gray-900 dark:via-gray-800 dark:to-emerald-900">
+      <div className="absolute inset-0 dark:from-gray-900 dark:via-gray-800 dark:to-emerald-900">
         {/* Calligraphie en arrière-plan */}
         <div className="absolute top-20 right-10 opacity-5 dark:opacity-10">
           <Image 
@@ -123,7 +123,7 @@ export default function ContactPage() {
                   <div>
                     <p className="font-bold text-gray-900 dark:text-white">Email professionnel</p>
                     <p className="text-sm text-emerald-600 dark:text-emerald-400 font-medium">contact@muzlife.fr</p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Réponse garantie sous 24h</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Réponse sous 24h</p>
                   </div>
                 </div>
                 
@@ -219,7 +219,7 @@ export default function ContactPage() {
             </div>
             <CardContent className="p-8 relative">
               <div className="max-w-3xl mx-auto">
-                <div className="flex items-center justify-center gap-3 mb-4">
+                <div className="flex items-center text-white justify-center gap-3 mb-4">
                   <Heart className="h-6 w-6 text-red-200 animate-pulse" />
                   <h3 className="text-2xl font-bold">Nous sommes là pour vous aider</h3>
                   <Heart className="h-6 w-6 text-red-200 animate-pulse" />
@@ -229,7 +229,7 @@ export default function ContactPage() {
                   Notre équipe dévouée s&apos;engage à vous répondre dans les plus brefs délais avec 
                   professionnalisme et bienveillance.
                 </p>
-                <div className="flex items-center justify-center gap-6 mt-6 text-sm">
+                <div className="flex items-center justify-center text-white gap-6 mt-6 text-sm">
                   <div className="flex items-center gap-2">
                     <Shield className="h-4 w-4" />
                     <span>Confidentialité garantie</span>

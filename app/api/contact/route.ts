@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
 import * as nodemailer from 'nodemailer';
-
-const prisma = new PrismaClient();
 
 // Configuration SMTP
 const SMTP_CONFIG = {
@@ -27,6 +25,13 @@ interface ContactFormData {
 // Fonction pour envoyer l'email de notification à l'admin
 async function sendAdminNotification(data: ContactFormData): Promise<boolean> {
   try {
+    // Si les credentials SMTP ne sont pas configurés, on simule l'envoi
+    if (!SMTP_CONFIG.user || !SMTP_CONFIG.pass) {
+      console.log('📧 Mode développement: Simulation de notification admin pour', data.email);
+      console.log('Données du formulaire:', data);
+      return true;
+    }
+
     const transporter = nodemailer.createTransport({
       host: SMTP_CONFIG.host,
       port: SMTP_CONFIG.port,
@@ -129,6 +134,12 @@ ${data.message}
 // Fonction pour envoyer l'email de confirmation à l'utilisateur
 async function sendUserConfirmation(data: ContactFormData): Promise<boolean> {
   try {
+    // Si les credentials SMTP ne sont pas configurés, on simule l'envoi
+    if (!SMTP_CONFIG.user || !SMTP_CONFIG.pass) {
+      console.log('📧 Mode développement: Simulation de confirmation pour', data.email);
+      return true;
+    }
+
     const transporter = nodemailer.createTransport({
       host: SMTP_CONFIG.host,
       port: SMTP_CONFIG.port,
@@ -271,9 +282,10 @@ export async function POST(request: NextRequest) {
       message: data.message.trim()
     };
 
-    // Sauvegarder dans la base de données (optionnel)
+    // Sauvegarder dans la base de données avec Prisma
+    let dbSuccess = false;
     try {
-      await prisma.contactMessage.create({
+      const savedMessage = await prisma.contactMessage.create({
         data: {
           firstName: contactData.firstName,
           lastName: contactData.lastName,
@@ -281,12 +293,19 @@ export async function POST(request: NextRequest) {
           subject: contactData.subject,
           category: contactData.category,
           message: contactData.message,
-          createdAt: new Date()
         }
       });
+      console.log('💾 Message sauvegardé en base de données avec l\'ID:', savedMessage.id);
+      dbSuccess = true;
     } catch (dbError) {
-      console.error('Erreur base de données (non bloquante):', dbError);
-      // Continue même si la DB fail
+      console.warn('⚠️  Erreur Prisma (Windows ARM64) - Mode fallback activé:', dbError.message);
+      // Fallback: Log structuré pour récupération manuelle
+      console.log('📝 CONTACT_MESSAGE_FALLBACK:', JSON.stringify({
+        ...contactData,
+        timestamp: new Date().toISOString(),
+        source: 'website_contact_form'
+      }));
+      // On continue sans bloquer l'utilisateur
     }
 
     // Envoyer les emails
@@ -321,7 +340,5 @@ export async function POST(request: NextRequest) {
       { error: "Erreur serveur interne" },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
   }
 }

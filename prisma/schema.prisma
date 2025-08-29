@@ -6,7 +6,8 @@
 
 generator client {
   provider = "prisma-client-js"
-  binaryTargets = ["native", "linux-musl", "windows", "darwin-arm64"]
+  previewFeatures = ["driverAdapters"]
+  binaryTargets = ["native", "windows"]
 }
 
 datasource db {
