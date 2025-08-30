@@ -43,7 +43,7 @@ export default function LocationGPS({ onLocationDetected, className }: LocationG
       const address = data.address || {};
 
       let cityName = address.city || address.town || address.village || address.municipality;
-      let countryName = address.country || '';
+      const countryName = address.country || '';
 
       // Si on ne trouve pas de ville, utiliser la localité
       if (!cityName) {
