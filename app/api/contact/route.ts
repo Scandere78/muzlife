@@ -2,6 +2,21 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import * as nodemailer from 'nodemailer';
 
+// Fonctions de sécurité
+function escapeHtml(unsafe: string): string {
+  return unsafe
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;")
+    .replace(/\//g, "&#x2F;");
+}
+
+function sanitizeEmailHeader(str: string): string {
+  return str.replace(/[\r\n\x00]/g, '');
+}
+
 // Configuration SMTP
 const SMTP_CONFIG = {
   host: process.env.SMTP_HOST || 'smtp.gmail.com',
@@ -9,7 +24,7 @@ const SMTP_CONFIG = {
   user: process.env.SMTP_USER,
   pass: process.env.SMTP_PASS,
   from: process.env.SMTP_FROM || 'noreply@muzlife.com',
-  adminEmail: process.env.ADMIN_EMAIL || 'admin@muzlife.com',
+  adminEmail: process.env.ADMIN_EMAIL || 'contact@muzlife.fr',
 };
 
 // Types pour le formulaire de contact
@@ -55,7 +70,7 @@ async function sendAdminNotification(data: ContactFormData): Promise<boolean> {
     const mailOptions = {
       from: SMTP_CONFIG.from,
       to: SMTP_CONFIG.adminEmail,
-      subject: `[MuzLife Contact] ${categoryLabel} - ${data.subject}`,
+      subject: sanitizeEmailHeader(`[MuzLife Contact] ${categoryLabel} - ${data.subject}`),
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 700px; margin: 0 auto; padding: 20px; background-color: #f8fafc;">
           <div style="background: white; border-radius: 12px; padding: 30px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
@@ -69,7 +84,7 @@ async function sendAdminNotification(data: ContactFormData): Promise<boolean> {
             <!-- Category Badge -->
             <div style="text-align: center; margin-bottom: 25px;">
               <span style="display: inline-block; background: linear-gradient(135deg, #059669, #34d399); color: white; padding: 8px 20px; border-radius: 20px; font-weight: bold; font-size: 14px;">
-                ${categoryLabel}
+                ${escapeHtml(categoryLabel)}
               </span>
             </div>
 
@@ -79,15 +94,15 @@ async function sendAdminNotification(data: ContactFormData): Promise<boolean> {
               <div style="display: grid; gap: 10px;">
                 <div style="display: flex; align-items: center;">
                   <strong style="color: #374151; min-width: 80px;">Nom:</strong>
-                  <span style="color: #6b7280;">${data.firstName} ${data.lastName}</span>
+                  <span style="color: #6b7280;">${escapeHtml(data.firstName)} ${escapeHtml(data.lastName)}</span>
                 </div>
                 <div style="display: flex; align-items: center;">
                   <strong style="color: #374151; min-width: 80px;">Email:</strong>
-                  <a href="mailto:${data.email}" style="color: #059669; text-decoration: none;">${data.email}</a>
+                  <a href="mailto:${escapeHtml(data.email)}" style="color: #059669; text-decoration: none;">${escapeHtml(data.email)}</a>
                 </div>
                 <div style="display: flex; align-items: center;">
                   <strong style="color: #374151; min-width: 80px;">Sujet:</strong>
-                  <span style="color: #6b7280;">${data.subject}</span>
+                  <span style="color: #6b7280;">${escapeHtml(data.subject)}</span>
                 </div>
               </div>
             </div>
@@ -96,13 +111,13 @@ async function sendAdminNotification(data: ContactFormData): Promise<boolean> {
             <div style="background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 20px; margin-bottom: 25px;">
               <h3 style="color: #1f2937; margin: 0 0 15px 0; font-size: 18px;">Message</h3>
               <div style="color: #4b5563; line-height: 1.6; white-space: pre-wrap; font-size: 15px;">
-${data.message}
+${escapeHtml(data.message)}
               </div>
             </div>
 
             <!-- Action Buttons -->
             <div style="text-align: center; margin-top: 30px;">
-              <a href="mailto:${data.email}?subject=Re: ${data.subject}" 
+              <a href="mailto:${escapeHtml(data.email)}?subject=${encodeURIComponent('Re: ' + sanitizeEmailHeader(data.subject))}" 
                  style="display: inline-block; background: linear-gradient(135deg, #059669, #34d399); color: white; padding: 12px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; margin: 0 10px;">
                 📧 Répondre
               </a>
@@ -163,7 +178,7 @@ async function sendUserConfirmation(data: ContactFormData): Promise<boolean> {
     const mailOptions = {
       from: SMTP_CONFIG.from,
       to: data.email,
-      subject: `Confirmation de réception - ${data.subject}`,
+      subject: sanitizeEmailHeader(`Confirmation de réception - ${data.subject}`),
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8fafc;">
           <div style="background: white; border-radius: 12px; padding: 30px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
@@ -187,8 +202,8 @@ async function sendUserConfirmation(data: ContactFormData): Promise<boolean> {
             <div style="background: #f9fafb; border-radius: 8px; padding: 20px; margin-bottom: 25px;">
               <h3 style="color: #1f2937; margin: 0 0 15px 0; font-size: 16px;">Récapitulatif de votre demande</h3>
               <div style="color: #6b7280; font-size: 14px; line-height: 1.6;">
-                <p><strong>Type:</strong> ${categoryLabel}</p>
-                <p><strong>Sujet:</strong> ${data.subject}</p>
+                <p><strong>Type:</strong> ${escapeHtml(categoryLabel)}</p>
+                <p><strong>Sujet:</strong> ${escapeHtml(data.subject)}</p>
                 <p><strong>Date:</strong> ${new Date().toLocaleString('fr-FR')}</p>
               </div>
             </div>
@@ -283,7 +298,6 @@ export async function POST(request: NextRequest) {
     };
 
     // Sauvegarder dans la base de données avec Prisma
-    let dbSuccess = false;
     try {
       const savedMessage = await prisma.contactMessage.create({
         data: {
@@ -296,9 +310,8 @@ export async function POST(request: NextRequest) {
         }
       });
       console.log('💾 Message sauvegardé en base de données avec l\'ID:', savedMessage.id);
-      dbSuccess = true;
     } catch (dbError) {
-      console.warn('⚠️  Erreur Prisma (Windows ARM64) - Mode fallback activé:', dbError.message);
+      console.warn('⚠️  Erreur Prisma (Windows ARM64) - Mode fallback activé:', dbError instanceof Error ? dbError.message : 'Erreur inconnue');
       // Fallback: Log structuré pour récupération manuelle
       console.log('📝 CONTACT_MESSAGE_FALLBACK:', JSON.stringify({
         ...contactData,
