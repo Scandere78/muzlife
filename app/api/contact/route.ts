@@ -24,7 +24,7 @@ const SMTP_CONFIG = {
   user: process.env.SMTP_USER,
   pass: process.env.SMTP_PASS,
   from: process.env.SMTP_FROM || 'noreply@muzlife.com',
-  adminEmail: process.env.ADMIN_EMAIL || 'admin@muzlife.com',
+  adminEmail: process.env.ADMIN_EMAIL || 'contact@muzlife.fr',
 };
 
 // Types pour le formulaire de contact
