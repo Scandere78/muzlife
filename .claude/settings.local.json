@@ -13,7 +13,8 @@
       "WebFetch(domain:ui.shadcn.com)",
       "Bash(npx shadcn@latest add:*)",
       "Bash(cat:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git push:*)"
     ],
     "deny": []
   }
