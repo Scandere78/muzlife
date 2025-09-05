@@ -32,8 +32,8 @@ export default function HorairesPage() {
       <div className="w-full max-w-3xl mx-auto px-4 py-8">
         <div className="mb-8 animate-in fade-in duration-700">
           <div className="text-center">
-            <h1 className="text-4xl font-extrabold mb-2 drop-shadow-lg tracking-tight">Horaires de Prière</h1>
-            <p className="text-lg text-foreground max-w-xl mx-auto mb-2">Consultez les horaires de prière pour votre ville avec précision. Trouvez facilement les temps de Fajr, Dhuhr, Asr, Maghrib et Isha.</p>
+            <h1 className="text-4xl font-extrabold !text-black dark:!text-white mb-2 drop-shadow-lg tracking-tight">Horaires de Prière</h1>
+            <p className="text-lg !text-black dark:!text-white max-w-xl mx-auto mb-2">Consultez les horaires de prière pour votre ville avec précision. Trouvez facilement les temps de Fajr, Dhuhr, Asr, Maghrib et Isha.</p>
           </div>
         </div>
         <div className="w-full animate-in fade-in slide-in-from-bottom-2 duration-700">

@@ -48,7 +48,7 @@ export default function CityAutocomplete({
   onChange,
   onCitySelect,
   countryFilter,
-  placeholder = "Rechercher une ville...",
+  placeholder = "🇫🇷 Rechercher une ville française...",
   className
 }: CityAutocompleteProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -58,10 +58,10 @@ export default function CityAutocomplete({
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Debounce la recherche pour éviter trop d'appels API
-  const debouncedValue = useDebounce(value, 300);
+  // Debounce optimisé pour l'API française (plus réactif)
+  const debouncedValue = useDebounce(value, 200);
 
-  // Recherche des villes
+  // Recherche des villes avec priorité France
   const searchCities = useCallback(async (query: string) => {
     if (query.length < 2) {
       setCities([]);
@@ -78,6 +78,13 @@ export default function CityAutocomplete({
         setCities(data.cities || []);
         setIsOpen(data.cities && data.cities.length > 0);
         setSelectedIndex(-1);
+        
+        // Debug log pour voir quelle API est utilisée
+        if (data.source === 'api-adresse') {
+          console.log('✅ Utilisation de l\'API Adresse française (optimisée)');
+        } else if (data.source === 'nominatim') {
+          console.log('🌍 Utilisation de l\'API OpenStreetMap (fallback)');
+        }
       }
     } catch (error) {
       console.error('Erreur lors de la recherche:', error);
@@ -150,7 +157,7 @@ export default function CityAutocomplete({
   return (
     <div className="relative" ref={dropdownRef}>
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-grey-800 dark:text-white" />
         <Input
           ref={inputRef}
           type="text"
@@ -161,32 +168,35 @@ export default function CityAutocomplete({
             if (cities.length > 0) setIsOpen(true);
           }}
           placeholder={placeholder}
-          className={cn("pl-10", className)}
+          className={cn("pl-10 !text-black dark:!text-white", className)}
         />
         {loading && (
-          <Loader2 className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 animate-spin text-muted-foreground" />
+          <Loader2 className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 animate-spin text-white" />
         )}
       </div>
 
       {/* Dropdown des suggestions */}
       {isOpen && cities.length > 0 && (
-        <Card className="absolute top-full left-0 right-0 z-50 mt-1 shadow-lg border-0">
+        <Card className="absolute top-full left-0 right-0 z-50 mt-1 shadow-lg border border-gray-200 dark:border-gray-600 !bg-black dark:!bg-gray-800">
           <CardContent className="p-0">
-            <div className="max-h-60 overflow-y-auto">
+            <div className="max-h-60 overflow-y-auto !bg-white dark:!bg-gray-800">
               {cities.map((city, index) => (
                 <button
                   key={`${city.name}-${city.country}-${index}`}
                   onClick={() => handleCitySelect(city)}
                   className={cn(
-                    "w-full px-4 py-3 text-left hover:bg-muted/50 transition-colors flex items-center gap-3",
-                    selectedIndex === index && "bg-muted"
+                    "w-full px-4 py-3 text-left !bg-white !text-gray-900 dark:text-white hover:!bg-green-500/20 dark:!bg-gray-800 dark:!text-white dark:hover:!bg-green-500/10 transition-colors flex items-center gap-3",
+                    selectedIndex === index && "bg-green-50 dark:!bg-green-900/40 !text-green-700 dark:!text-green-300"
                   )}
                 >
-                  <MapPin className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                  <MapPin className="h-4 w-4 text-black dark:text-white flex-shrink-0" />
                   <div className="flex-1 min-w-0">
                     <div className="font-medium truncate">{city.name}</div>
-                    <div className="text-sm text-muted-foreground truncate">
-                      {city.state ? `${city.state}, ` : ''}{city.country}
+                    <div className="text-sm text-black dark:text-white truncate">
+                      {city.country === 'France' 
+                        ? (city.state ? `Dép. ${city.state}` : 'France')
+                        : (city.state ? `${city.state}, ${city.country}` : city.country)
+                      }
                     </div>
                   </div>
                 </button>
@@ -198,9 +208,14 @@ export default function CityAutocomplete({
 
       {/* Message si aucun résultat */}
       {isOpen && !loading && cities.length === 0 && value.length >= 2 && (
-        <Card className="absolute top-full left-0 right-0 z-50 mt-1 shadow-lg">
-          <CardContent className="p-4 text-center text-muted-foreground">
-            Aucune ville trouvée pour "{value}"
+        <Card className="absolute top-full left-0 right-0 z-50 mt-1 shadow-lg border-0">
+          <CardContent className="p-4 text-center">
+            <div className="text-red-600 mb-2">
+              Aucune ville trouvée pour &ldquo;{value}&rdquo;
+            </div>
+            <div className="text-xs text-red-600/70">
+              🇫🇷 Recherche optimisée pour les villes françaises
+            </div>
           </CardContent>
         </Card>
       )}
