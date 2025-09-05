@@ -213,7 +213,7 @@ export default function LocationGPS({ onLocationDetected, className }: LocationG
         onClick={handleGetGPSLocation}
         disabled={loading}
         variant="outline"
-        className="w-full flex items-center gap-2 h-12"
+        className="w-full flex items-center !bg-green-600 gap-2 h-12"
       >
         {loading ? (
           <Loader2 className="h-4 w-4 animate-spin" />
