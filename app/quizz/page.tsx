@@ -131,8 +131,8 @@ export default function QuizPage() {
               </button>
             </div>
             
-            <p className="mt-4 text-sm text-[var(--color-foreground)]/60">
-              Niveau sélectionné: <span className="font-semibold text-[var(--color-accent)]">
+            <p className="mt-4 text-sm text-black dark:!text-white opacity-70">
+              Niveau sélectionné: <span className="font-semibold text-black dark:!text-white">
                 {selectedDifficulty.charAt(0).toUpperCase() + selectedDifficulty.slice(1)}
               </span>
             </p>

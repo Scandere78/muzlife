@@ -41,7 +41,7 @@ const QuizSummary: React.FC<QuizSummaryProps> = ({ session, onClose, onRetakeQui
   const avgTimePerQuestion = session.totalTime / session.totalQuestions;
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white rounded-3xl shadow-2xl border border-[var(--color-accent)]/20">
+    <div className="max-w-4xl mx-auto p-6 bg-white dark:!bg-gray-800 rounded-3xl shadow-2xl border border-[var(--color-accent)]/20">
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
