@@ -20,6 +20,7 @@ const Navbar: React.FC = () => {
   const isLoggedIn = !!user;
   const pathname = usePathname();
   const isDashboardPage = pathname?.includes("/dashboard");
+  const isAdminPage = pathname?.includes("/admin");
 
   const isActive = (path: string) => pathname === path;
 
@@ -56,7 +57,7 @@ const Navbar: React.FC = () => {
   };
 
 
-  if (isDashboardPage) return null;
+  if (isDashboardPage || isAdminPage) return null;
 
   return (
     <>
