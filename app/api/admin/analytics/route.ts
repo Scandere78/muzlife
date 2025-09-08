@@ -59,7 +59,7 @@ export async function GET(request: NextRequest) {
       prisma.studySession.count(),
       prisma.studySession.count({
         where: {
-          createdAt: {
+          startedAt: {
             gte: startDate
           }
         }
@@ -121,7 +121,7 @@ export async function GET(request: NextRequest) {
           id: true
         },
         where: {
-          lastRead: {
+          readAt: {
             gte: startDate
           }
         },
@@ -197,7 +197,7 @@ export async function POST(request: NextRequest) {
     if (type === 'export') {
       const analytics = await prisma.user.findMany({
         include: {
-          userStats: true,
+          stats: true,
           quizResults: true,
           readingProgress: true,
           studySessions: true

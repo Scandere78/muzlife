@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
     }
 
     if (status && status !== 'all') {
-      where.emailVerified = status === 'verified';
+      where.isEmailVerified = status === 'verified';
     }
 
     const [users, totalUsers] = await Promise.all([
@@ -39,7 +39,7 @@ export async function GET(request: NextRequest) {
           id: true,
           name: true,
           email: true,
-          emailVerified: true,
+          isEmailVerified: true,
           createdAt: true,
           updatedAt: true,
           _count: {
@@ -99,13 +99,13 @@ export async function POST(request: NextRequest) {
         name,
         email,
         password: hashedPassword,
-        emailVerified: true
+        isEmailVerified: true
       },
       select: {
         id: true,
         name: true,
         email: true,
-        emailVerified: true,
+        isEmailVerified: true,
         createdAt: true,
         updatedAt: true
       }

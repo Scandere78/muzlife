@@ -43,7 +43,7 @@ interface UserData {
   avatar?: string;
   role: 'user' | 'admin' | 'moderator';
   status: 'active' | 'inactive' | 'banned' | 'pending';
-  emailVerified: boolean;
+  isEmailVerified: boolean;
   lastActive: string;
   registeredAt: string;
   location?: string;
@@ -77,7 +77,7 @@ export default function UsersPage() {
       
       if (response.ok) {
         const data = await response.json();
-        setUsers(data);
+        setUsers(data.users || []);
       } else {
         toast.error('Erreur lors du chargement des utilisateurs');
       }
@@ -217,7 +217,7 @@ export default function UsersPage() {
     active: users.filter(u => u.status === 'active').length,
     inactive: users.filter(u => u.status === 'inactive').length,
     admins: users.filter(u => u.role === 'admin').length,
-    verified: users.filter(u => u.emailVerified).length
+    verified: users.filter(u => u.isEmailVerified).length
   };
 
   if (loading) {
@@ -449,7 +449,7 @@ export default function UsersPage() {
                                   <h3 className="font-bold text-lg text-green-800 dark:text-white">
                                     {user.name}
                                   </h3>
-                                  {user.emailVerified && (
+                                  {user.isEmailVerified && (
                                     <CheckCircle className="h-4 w-4 text-green-500" />
                                   )}
                                 </div>

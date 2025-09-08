@@ -42,28 +42,28 @@ import {
 
 interface Ticket {
   id: string;
-  ticketNumber: string;
-  firstName: string;
-  lastName: string;
+  name: string;
   email: string;
   subject: string;
-  category: 'bug' | 'feature' | 'partnership' | 'support' | 'other';
-  priority: 'low' | 'medium' | 'high' | 'urgent';
   message: string;
-  status: 'open' | 'in-progress' | 'resolved' | 'closed';
+  category: string;
+  priority: string;
+  status: string;
   assignedTo?: string;
-  responses: TicketResponse[];
+  userId?: string;
+  ipAddress?: string;
+  userAgent?: string;
   createdAt: string;
   updatedAt: string;
+  resolvedAt?: string;
+  user?: {
+    id: string;
+    name: string;
+    email: string;
+    avatar?: string;
+  };
 }
 
-interface TicketResponse {
-  id: string;
-  message: string;
-  isAdminResponse: boolean;
-  authorName: string;
-  createdAt: string;
-}
 
 export default function TicketsPage() {
   const [tickets, setTickets] = useState<Ticket[]>([]);
@@ -73,8 +73,6 @@ export default function TicketsPage() {
   const [filterStatus, setFilterStatus] = useState('all');
   const [filterPriority, setFilterPriority] = useState('all');
   const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
-  const [responseMessage, setResponseMessage] = useState('');
-  const [sendingResponse, setSendingResponse] = useState(false);
 
   useEffect(() => {
     fetchTickets();
@@ -87,7 +85,7 @@ export default function TicketsPage() {
       
       if (response.ok) {
         const data = await response.json();
-        setTickets(data);
+        setTickets(data.tickets || []);
       } else {
         toast.error('Erreur lors du chargement des tickets');
       }
@@ -132,59 +130,6 @@ export default function TicketsPage() {
     }
   };
 
-  const sendResponse = async () => {
-    if (!selectedTicket || !responseMessage.trim()) return;
-
-    try {
-      setSendingResponse(true);
-      
-      const response = await fetch(`/api/admin/tickets/${selectedTicket.id}/responses`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          message: responseMessage,
-          isAdminResponse: true,
-          authorName: 'Équipe MuzLife'
-        }),
-      });
-
-      if (response.ok) {
-        const newResponse = await response.json();
-
-        setTickets(prev =>
-          prev.map(ticket =>
-            ticket.id === selectedTicket.id
-              ? {
-                  ...ticket,
-                  responses: [...ticket.responses, newResponse],
-                  status: ticket.status === 'open' ? 'in-progress' : ticket.status,
-                  updatedAt: new Date().toISOString()
-                }
-              : ticket
-          )
-        );
-
-        setSelectedTicket(prev => prev ? {
-          ...prev,
-          responses: [...prev.responses, newResponse],
-          status: prev.status === 'open' ? 'in-progress' : prev.status,
-          updatedAt: new Date().toISOString()
-        } : null);
-
-        setResponseMessage('');
-        toast.success('Réponse envoyée avec succès');
-      } else {
-        toast.error('Erreur lors de l\'envoi de la réponse');
-      }
-    } catch (error) {
-      console.error('Erreur lors de l\'envoi:', error);
-      toast.error('Erreur lors de l\'envoi de la réponse');
-    } finally {
-      setSendingResponse(false);
-    }
-  };
 
   const getCategoryIcon = (category: string) => {
     switch (category) {
@@ -202,6 +147,8 @@ export default function TicketsPage() {
       case 'feature': return 'bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900/20 dark:text-blue-300';
       case 'partnership': return 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900/20 dark:text-green-300';
       case 'support': return 'bg-amber-100 text-amber-800 border-amber-200 dark:bg-amber-900/20 dark:text-amber-300';
+      case 'general': return 'bg-purple-100 text-purple-800 border-purple-200 dark:bg-purple-900/20 dark:text-purple-300';
+      case 'feedback': return 'bg-indigo-100 text-indigo-800 border-indigo-200 dark:bg-indigo-900/20 dark:text-indigo-300';
       default: return 'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-900/20 dark:text-gray-300';
     }
   };
@@ -228,11 +175,10 @@ export default function TicketsPage() {
 
   const filteredTickets = tickets.filter(ticket => {
     const matchesSearch = 
-      ticket.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      ticket.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      ticket.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       ticket.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
       ticket.subject.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      ticket.ticketNumber.toLowerCase().includes(searchTerm.toLowerCase());
+      ticket.message.toLowerCase().includes(searchTerm.toLowerCase());
     
     const matchesCategory = filterCategory === 'all' || ticket.category === filterCategory;
     const matchesStatus = filterStatus === 'all' || ticket.status === filterStatus;
@@ -414,10 +360,12 @@ export default function TicketsPage() {
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="all">Toutes les catégories</SelectItem>
-                          <SelectItem value="bug">🐛 Bug</SelectItem>
-                          <SelectItem value="feature">💡 Fonctionnalité</SelectItem>
+                          <SelectItem value="general">❓ Question générale</SelectItem>
+                          <SelectItem value="support">🛠️ Support technique</SelectItem>
+                          <SelectItem value="feature">💡 Suggestion de fonctionnalité</SelectItem>
+                          <SelectItem value="bug">🐛 Signaler un bug</SelectItem>
                           <SelectItem value="partnership">🤝 Partenariat</SelectItem>
-                          <SelectItem value="support">❓ Support</SelectItem>
+                          <SelectItem value="feedback">📝 Retour d'expérience</SelectItem>
                         </SelectContent>
                       </Select>
 
@@ -475,7 +423,7 @@ export default function TicketsPage() {
                               <div className="flex-1">
                                 <div className="flex items-center gap-2 mb-1">
                                   <span className="font-mono text-sm text-green-600 dark:text-green-400 font-semibold">
-                                    {ticket.ticketNumber}
+                                    #{ticket.id.slice(-8)}
                                   </span>
                                   <Badge className={`${getPriorityColor(ticket.priority)} text-xs px-2 py-0.5`}>
                                     {ticket.priority.toUpperCase()}
@@ -487,7 +435,7 @@ export default function TicketsPage() {
                                 <div className="flex items-center gap-3 text-sm text-green-700 dark:text-green-300">
                                   <div className="flex items-center gap-1">
                                     <User className="h-3 w-3" />
-                                    <span>{ticket.firstName} {ticket.lastName}</span>
+                                    <span>{ticket.name}</span>
                                   </div>
                                   <div className="flex items-center gap-1">
                                     <Mail className="h-3 w-3" />
@@ -522,10 +470,12 @@ export default function TicketsPage() {
                                 })}
                               </span>
                             </div>
-                            <div className="flex items-center gap-1">
-                              <MessageCircle className="h-3 w-3" />
-                              <span>{ticket.responses.length} réponse(s)</span>
-                            </div>
+                            {ticket.user && (
+                              <div className="flex items-center gap-1">
+                                <User className="h-3 w-3" />
+                                <span>Utilisateur connecté</span>
+                              </div>
+                            )}
                           </div>
                         </CardContent>
                       </Card>
@@ -541,7 +491,7 @@ export default function TicketsPage() {
                     <CardHeader className="pb-4">
                       <div className="flex items-center justify-between">
                         <CardTitle className="text-green-800 dark:text-green-200">
-                          {selectedTicket.ticketNumber}
+                          #{selectedTicket.id.slice(-8)}
                         </CardTitle>
                         <div className="flex gap-2">
                           <Select
@@ -573,50 +523,28 @@ export default function TicketsPage() {
                         </div>
                       </div>
 
-                      {/* Responses */}
-                      <div className="space-y-3 max-h-96 overflow-y-auto">
-                        {selectedTicket.responses.map((response) => (
-                          <div
-                            key={response.id}
-                            className={`p-3 rounded-lg ${
-                              response.isAdminResponse
-                                ? 'bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800/50 ml-4'
-                                : 'bg-gray-50 dark:bg-gray-900/20 border border-gray-200 dark:border-gray-800/50 mr-4'
-                            }`}
-                          >
-                            <div className="flex justify-between items-center mb-2">
-                              <span className="text-xs font-semibold text-gray-600 dark:text-gray-400">
-                                {response.authorName}
-                              </span>
-                              <span className="text-xs text-gray-500">
-                                {new Date(response.createdAt).toLocaleString('fr-FR')}
-                              </span>
-                            </div>
-                            <p className="text-sm text-gray-800 dark:text-gray-200">
-                              {response.message}
-                            </p>
-                          </div>
-                        ))}
+                      {/* Informations additionnelles */}
+                      <div className="grid grid-cols-2 gap-3 pt-4 border-t border-green-200 dark:border-green-700">
+                        <div className="text-center p-3 bg-gradient-to-r from-green-50/70 to-emerald-50/70 dark:from-slate-700/30 dark:to-slate-600/30 rounded-lg">
+                          <p className="text-lg font-bold text-green-800 dark:text-white">{selectedTicket.category}</p>
+                          <p className="text-xs text-green-600 dark:text-green-400">Catégorie</p>
+                        </div>
+                        <div className="text-center p-3 bg-gradient-to-r from-green-50/70 to-emerald-50/70 dark:from-slate-700/30 dark:to-slate-600/30 rounded-lg">
+                          <p className="text-lg font-bold text-green-800 dark:text-white">{selectedTicket.priority}</p>
+                          <p className="text-xs text-green-600 dark:text-green-400">Priorité</p>
+                        </div>
                       </div>
 
-                      {/* Response Form */}
-                      <div className="space-y-3 pt-4 border-t border-green-200 dark:border-green-700">
-                        <Textarea
-                          placeholder="Tapez votre réponse..."
-                          value={responseMessage}
-                          onChange={(e) => setResponseMessage(e.target.value)}
-                          className="bg-green-50/50 dark:bg-slate-700/50 border-green-200 dark:border-green-700"
-                          rows={3}
-                        />
-                        <Button
-                          onClick={sendResponse}
-                          disabled={!responseMessage.trim() || sendingResponse}
-                          className="w-full bg-gradient-to-r from-green-600 via-emerald-600 to-green-700 text-white hover:shadow-lg hover:shadow-green-500/30 transition-all duration-300"
-                        >
-                          <Send className="h-4 w-4 mr-2" />
-                          {sendingResponse ? 'Envoi...' : 'Envoyer la réponse'}
-                        </Button>
-                      </div>
+                      {selectedTicket.user && (
+                        <div className="p-3 bg-gradient-to-r from-blue-50/70 to-indigo-50/70 dark:from-slate-700/30 dark:to-slate-600/30 rounded-lg">
+                          <p className="text-sm font-medium text-blue-800 dark:text-blue-200">
+                            👤 Utilisateur connecté : {selectedTicket.user.name}
+                          </p>
+                          <p className="text-xs text-blue-600 dark:text-blue-400 mt-1">
+                            {selectedTicket.user.email}
+                          </p>
+                        </div>
+                      )}
                     </CardContent>
                   </Card>
                 ) : (

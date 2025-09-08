@@ -1,29 +1,73 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma';
 
-// Cette API permettra de mettre à jour le statut d'un ticket, ajouter des réponses, etc.
+export async function GET(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const ticket = await prisma.ticket.findUnique({
+      where: { id: params.id },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            avatar: true
+          }
+        }
+      }
+    });
+
+    if (!ticket) {
+      return NextResponse.json(
+        { error: 'Ticket non trouvé' },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json(ticket);
+  } catch (error) {
+    console.error('Erreur lors de la récupération du ticket:', error);
+    return NextResponse.json(
+      { error: 'Erreur interne du serveur' },
+      { status: 500 }
+    );
+  }
+}
+
 export async function PATCH(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    const { id } = params;
     const body = await request.json();
-    
-    // Simuler la mise à jour en base de données
-    console.log(`Mise à jour du ticket ${id} avec:`, body);
-    
-    // Simuler un délai de traitement
-    await new Promise(resolve => setTimeout(resolve, 300));
-    
-    // Retourner une réponse de succès
-    return NextResponse.json(
-      { 
-        message: 'Ticket mis à jour avec succès',
-        ticketId: id,
-        updates: body
+    const { status, priority, assignedTo, category } = body;
+
+    const updatedTicket = await prisma.ticket.update({
+      where: { id: params.id },
+      data: {
+        ...(status && { status }),
+        ...(priority && { priority }),
+        ...(assignedTo !== undefined && { assignedTo }),
+        ...(category && { category }),
+        ...(status === 'resolved' && { resolvedAt: new Date() }),
+        updatedAt: new Date()
       },
-      { status: 200 }
-    );
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            avatar: true
+          }
+        }
+      }
+    });
+
+    return NextResponse.json(updatedTicket);
   } catch (error) {
     console.error('Erreur lors de la mise à jour du ticket:', error);
     return NextResponse.json(
@@ -38,18 +82,11 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
-    const { id } = params;
-    
-    // Simuler la suppression en base de données
-    console.log(`Suppression du ticket ${id}`);
-    
-    // Simuler un délai de traitement
-    await new Promise(resolve => setTimeout(resolve, 300));
-    
-    return NextResponse.json(
-      { message: 'Ticket supprimé avec succès' },
-      { status: 200 }
-    );
+    await prisma.ticket.delete({
+      where: { id: params.id }
+    });
+
+    return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Erreur lors de la suppression du ticket:', error);
     return NextResponse.json(
