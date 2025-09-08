@@ -78,14 +78,6 @@ const Navbar: React.FC = () => {
             {/* Desktop Menu */}
             <div className="hidden lg:flex items-center">
               <div className="flex items-center space-x-2 xl:space-x-3">
-                <Link href="/adoration" className="relative !text-white hover:!text-[var(--color-accent)] px-2 lg:px-3 py-2 rounded-md transition-all duration-300 text-sm lg:text-base font-medium group">
-                  <span className="text-xs mr-1">⭐</span>Adoration
-                  <div className={`absolute bottom-0 left-1/2 transform -translate-x-1/2 h-1 bg-[var(--color-accent)] rounded-full transition-all duration-500 ease-out ${
-                    isActive("/adoration") 
-                      ? "w-full opacity-100" 
-                      : "w-0 opacity-0 group-hover:w-1/2 group-hover:opacity-70"
-                  }`}></div>
-                </Link>
                 <Link href="/ecoute" className="relative !text-white hover:!text-[var(--color-accent)] px-2 lg:px-3 py-2 rounded-md transition-all duration-300 text-sm lg:text-base font-medium group">
                   <span className="text-xs mr-1">📗</span>Coran
                   <div className={`absolute bottom-0 left-1/2 transform -translate-x-1/2 h-1 bg-[var(--color-accent)] rounded-full transition-all duration-500 ease-out ${
@@ -94,6 +86,8 @@ const Navbar: React.FC = () => {
                       : "w-0 opacity-0 group-hover:w-1/2 group-hover:opacity-70"
                   }`}></div>
                 </Link>
+                
+                
                 <Link href="/quizz" className="relative !text-white hover:!text-[var(--color-accent)] px-2 lg:px-3 py-2 rounded-md transition-all duration-300 text-sm lg:text-base font-medium group">
                   <span className="text-xs mr-1">🧠</span>Quizz
                   <div className={`absolute bottom-0 left-1/2 transform -translate-x-1/2 h-1 bg-[var(--color-accent)] rounded-full transition-all duration-500 ease-out ${
@@ -110,10 +104,10 @@ const Navbar: React.FC = () => {
                       : "w-0 opacity-0 group-hover:w-1/2 group-hover:opacity-70"
                   }`}></div>
                 </Link>
-                <Link href="/about" className="relative !text-white hover:!text-[var(--color-accent)] px-2 lg:px-3 py-2 rounded-md transition-all duration-300 text-sm lg:text-base font-medium group">
-                  <span className="text-xs mr-1">👤</span>À propos
+                <Link href="/adoration" className="relative !text-white hover:!text-[var(--color-accent)] px-2 lg:px-3 py-2 rounded-md transition-all duration-300 text-sm lg:text-base font-medium group">
+                  <span className="text-xs mr-1">⭐</span>Adoration
                   <div className={`absolute bottom-0 left-1/2 transform -translate-x-1/2 h-1 bg-[var(--color-accent)] rounded-full transition-all duration-500 ease-out ${
-                    isActive("/about") 
+                    isActive("/adoration") 
                       ? "w-full opacity-100" 
                       : "w-0 opacity-0 group-hover:w-1/2 group-hover:opacity-70"
                   }`}></div>
@@ -122,6 +116,14 @@ const Navbar: React.FC = () => {
                   <span className="text-xs mr-1">📧</span>Contact
                   <div className={`absolute bottom-0 left-1/2 transform -translate-x-1/2 h-1 bg-[var(--color-accent)] rounded-full transition-all duration-500 ease-out ${
                     isActive("/contact") 
+                      ? "w-full opacity-100" 
+                      : "w-0 opacity-0 group-hover:w-1/2 group-hover:opacity-70"
+                  }`}></div>
+                </Link>
+                <Link href="/about" className="relative !text-white hover:!text-[var(--color-accent)] px-2 lg:px-3 py-2 rounded-md transition-all duration-300 text-sm lg:text-base font-medium group">
+                  <span className="text-xs mr-1">👤</span>À propos
+                  <div className={`absolute bottom-0 left-1/2 transform -translate-x-1/2 h-1 bg-[var(--color-accent)] rounded-full transition-all duration-500 ease-out ${
+                    isActive("/about") 
                       ? "w-full opacity-100" 
                       : "w-0 opacity-0 group-hover:w-1/2 group-hover:opacity-70"
                   }`}></div>
@@ -412,20 +414,6 @@ const Navbar: React.FC = () => {
             <div className="px-2 py-3">
               <div className="space-y-1">
                 <Link
-                    href="/adoration"
-                  className={`flex items-center px-3 py-3 rounded-lg transition-all duration-300 hover:translate-x-2 ${
-                    isActive("/adoration")
-                      ? "bg-white/20 text-white shadow-lg scale-105"
-                      : "text-white hover:text-[var(--color-accent)] hover:bg-white/10"
-                  }`}
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-3 transition-transform duration-300 hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 3a2 2 0 0 1 1.6.8l3 4a2 2 0 0 1 .013 2.382l-7.99 10.986a2 2 0 0 1-3.247 0l-7.99-10.986A2 2 0 0 1 2.4 7.8l2.998-3.997A2 2 0 0 1 7 3z" /><path d="M2 9h20"/>
-                  </svg>
-                  <span className="text-lg text-white">Adoration</span>
-                </Link>
-                <Link
                   href="/ecoute"
                   className={`flex items-center px-3 py-3 rounded-lg transition-all duration-300 hover:translate-x-2 ${
                     isActive("/ecoute")
@@ -439,6 +427,8 @@ const Navbar: React.FC = () => {
                   </svg>
                   <span className="text-lg text-white">Coran</span>
                 </Link>
+                
+                
                 <Link
                   href="/quizz"
                   className={`flex items-center px-3 py-3 rounded-lg transition-all duration-300 hover:translate-x-2 ${
@@ -468,18 +458,18 @@ const Navbar: React.FC = () => {
                   <span className="text-lg text-white">Horaires</span>
                 </Link>
                 <Link
-                  href="/about"
+                    href="/adoration"
                   className={`flex items-center px-3 py-3 rounded-lg transition-all duration-300 hover:translate-x-2 ${
-                    isActive("/about")
+                    isActive("/adoration")
                       ? "bg-white/20 text-white shadow-lg scale-105"
                       : "text-white hover:text-[var(--color-accent)] hover:bg-white/10"
                   }`}
                   onClick={() => setIsMenuOpen(false)}
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-3 transition-transform duration-300 hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 3a2 2 0 0 1 1.6.8l3 4a2 2 0 0 1 .013 2.382l-7.99 10.986a2 2 0 0 1-3.247 0l-7.99-10.986A2 2 0 0 1 2.4 7.8l2.998-3.997A2 2 0 0 1 7 3z" /><path d="M2 9h20"/>
                   </svg>
-                  <span className="text-lg text-white">À propos</span>
+                  <span className="text-lg text-white">Adoration</span>
                 </Link>
                 <Link
                   href="/contact"
@@ -494,6 +484,20 @@ const Navbar: React.FC = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26c.06.04.12.06.19.06s.13-.02.19-.06L19 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                   </svg>
                   <span className="text-lg text-white">Contact</span>
+                </Link>
+                <Link
+                  href="/about"
+                  className={`flex items-center px-3 py-3 rounded-lg transition-all duration-300 hover:translate-x-2 ${
+                    isActive("/about")
+                      ? "bg-white/20 text-white shadow-lg scale-105"
+                      : "text-white hover:text-[var(--color-accent)] hover:bg-white/10"
+                  }`}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-3 transition-transform duration-300 hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span className="text-lg text-white">À propos</span>
                 </Link>
               </div>
             </div>
