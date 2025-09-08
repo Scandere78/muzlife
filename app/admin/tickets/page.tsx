@@ -30,7 +30,7 @@ import {
   Trash2,
   FileText,
   Tag,
-  Priority,
+  ArrowUp,
   Bug,
   Lightbulb,
   Handshake,

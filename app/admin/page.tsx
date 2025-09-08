@@ -548,25 +548,25 @@ export default function AdminDashboard() {
                                 <DropdownMenuItem
                                   onClick={() => updateStatus(submission.id, 'read')}
                                   disabled={submission.status === 'read'}
-                                  className="flex items-center gap-2"
+                                  className="flex items-center gap-2 py-2"
                                 >
                                   <Eye className="h-4 w-4" />
-                                  Marquer comme lu
+                                  👁️ Marquer comme lu
                                 </DropdownMenuItem>
                                 <DropdownMenuItem
                                   onClick={() => updateStatus(submission.id, 'replied')}
                                   disabled={submission.status === 'replied'}
-                                  className="flex items-center gap-2"
+                                  className="flex items-center gap-2 py-2"
                                 >
                                   <MessageSquare className="h-4 w-4" />
-                                  Marquer répondu
+                                  💬 Marquer répondu
                                 </DropdownMenuItem>
                                 <DropdownMenuItem
                                   onClick={() => updateStatus(submission.id, 'closed')}
-                                  className="flex items-center gap-2"
+                                  className="flex items-center gap-2 py-2"
                                 >
                                   <XCircle className="h-4 w-4" />
-                                  Fermer
+                                  ✅ Fermer le ticket
                                 </DropdownMenuItem>
                               </DropdownMenuContent>
                             </DropdownMenu>
@@ -585,16 +585,17 @@ export default function AdminDashboard() {
                                 <AlertDialogHeader>
                                   <AlertDialogTitle>Confirmer la suppression</AlertDialogTitle>
                                   <AlertDialogDescription>
-                                    Êtes-vous sûr de vouloir supprimer ce message ? Cette action est irréversible.
+                                    Êtes-vous sûr de vouloir supprimer ce message de {submission.firstName} {submission.lastName} ? 
+                                    Cette action est irréversible et toutes les données associées seront perdues définitivement.
                                   </AlertDialogDescription>
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>
                                   <AlertDialogCancel>Annuler</AlertDialogCancel>
                                   <AlertDialogAction
                                     onClick={() => deleteSubmission(submission.id)}
-                                    className="bg-red-600 hover:bg-red-700"
+                                    className="bg-red-600 hover:bg-red-700 focus:ring-red-500"
                                   >
-                                    Supprimer
+                                    🗑️ Supprimer définitivement
                                   </AlertDialogAction>
                                 </AlertDialogFooter>
                               </AlertDialogContent>

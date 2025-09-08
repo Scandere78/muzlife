@@ -1,327 +1,196 @@
-'use client';
-
-import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { toast } from 'sonner';
-import { 
-  Mail, 
-  Send, 
-  MessageSquare, 
-  User, 
-  Phone, 
-  MapPin, 
-  Clock,
-  CheckCircle,
-  AlertCircle
-} from 'lucide-react';
+import { Mail, MessageSquare, Phone, MapPin, Clock, Bug, HelpCircle, Handshake, Heart } from 'lucide-react';
+import ContactForm from '@/components/ContactForm';
 
 export default function ContactPage() {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    subject: '',
-    message: '',
-    category: 'general'
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
-
-  const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: value
-    }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!formData.name || !formData.email || !formData.subject || !formData.message) {
-      toast.error('Veuillez remplir tous les champs obligatoires');
-      return;
+  const contactInfo = [
+    {
+      icon: Mail,
+      title: "Email",
+      details: "contact@muzlife.fr",
+      description: "Nous rÃ©pondons sous 24h"
+    },
+    {
+      icon: MessageSquare,
+      title: "Support",
+      details: "Chat en direct",
+      description: "Disponible 24h/7j"
+    },
+    {
+      icon: Phone,
+      title: "TÃ©lÃ©phone",
+      details: "+33 1 23 45 67 89",
+      description: "Lun-Ven 9h-18h"
+    },
+    {
+      icon: MapPin,
+      title: "Adresse",
+      details: "Paris, France",
+      description: "SiÃ¨ge social"
     }
+  ];
 
-    setIsSubmitting(true);
-    
-    try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        setIsSubmitted(true);
-        toast.success('Votre message a été envoyé avec succès !');
-        setFormData({
-          name: '',
-          email: '',
-          subject: '',
-          message: '',
-          category: 'general'
-        });
-      } else {
-        toast.error(data.error || 'Erreur lors de l\'envoi du message');
-      }
-    } catch (error) {
-      console.error('Erreur:', error);
-      toast.error('Erreur lors de l\'envoi du message');
-    } finally {
-      setIsSubmitting(false);
+  const categories = [
+    {
+      icon: Bug,
+      title: "Signaler un bug",
+      description: "ProblÃ¨me technique ou dysfonctionnement",
+      color: "text-red-600 dark:text-red-400"
+    },
+    {
+      icon: HelpCircle,
+      title: "Demande de fonctionnalitÃ©",
+      description: "Suggestion d'amÃ©lioration ou nouvelle feature",
+      color: "text-blue-600 dark:text-blue-400"
+    },
+    {
+      icon: Handshake,
+      title: "Partenariat",
+      description: "Proposition de collaboration",
+      color: "text-green-600 dark:text-green-400"
+    },
+    {
+      icon: Heart,
+      title: "Support technique",
+      description: "Aide pour utiliser l'application",
+      color: "text-purple-600 dark:text-purple-400"
     }
-  };
-
-  if (isSubmitted) {
-    return (
-      <div className="min-h-screen" style={{ background: 'var(--color-foreground)', backgroundImage: 'url(/caligraphie.png)' }}>
-        <div className="container mx-auto px-4 py-8">
-          <div className="max-w-2xl mx-auto">
-            <Card className="border border-green-200/50 dark:border-green-700/50 shadow-lg bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm">
-              <CardContent className="p-8 text-center">
-                <div className="mb-6">
-                  <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
-                  <h2 className="text-2xl font-bold text-green-800 dark:text-green-200 mb-2">
-                    Message envoyé avec succès !
-                  </h2>
-                  <p className="text-green-600 dark:text-green-400">
-                    Nous avons bien reçu votre message et nous vous répondrons dans les plus brefs délais.
-                  </p>
-                </div>
-                <Button
-                  onClick={() => setIsSubmitted(false)}
-                  className="bg-gradient-to-r from-green-600 via-emerald-600 to-green-700 text-white hover:shadow-lg hover:shadow-green-500/30 transition-all duration-300"
-                >
-                  Envoyer un autre message
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  ];
 
   return (
-    <div className="min-h-screen" style={{ background: 'var(--color-foreground)', backgroundImage: 'url(/caligraphie.png)' }}>
-      <div className="container mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <div className="relative inline-block mb-4">
-            <div className="p-4 bg-gradient-to-br from-green-600 via-emerald-600 to-green-700 rounded-2xl shadow-lg">
-              <Mail className="h-8 w-8 text-white" />
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-800">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] dark:bg-grid-slate-700/25" />
+      <div 
+        className="absolute inset-0 opacity-10 dark:opacity-5"
+        style={{
+          backgroundImage: 'url(/caligraphie.png)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat'
+        }}
+      />
+      
+      <div className="relative">
+        <div className="container mx-auto px-4 py-12">
+          {/* Header */}
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl shadow-lg mb-6">
+              <Mail className="h-10 w-10 text-white" />
             </div>
-            <div className="absolute -inset-1 bg-gradient-to-br from-green-400 to-emerald-500 rounded-2xl opacity-20 blur animate-pulse" />
-          </div>
-          <h1 className="text-4xl lg:text-5xl font-bold text-green-800 dark:text-white mb-4">
-            =ç Contactez-nous
-          </h1>
-          <p className="text-lg text-green-700 dark:text-green-200 max-w-2xl mx-auto">
-            Une question, une suggestion ou besoin d'aide ? 
-            Notre équipe est là pour vous accompagner dans votre parcours spirituel.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-          {/* Formulaire de contact */}
-          <div className="lg:col-span-2">
-            <Card className="border border-green-200/50 dark:border-green-700/50 shadow-lg bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-3 text-green-800 dark:text-green-200">
-                  <div className="p-2 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg shadow-md">
-                    <MessageSquare className="h-5 w-5 text-white" />
-                  </div>
-                  Envoyez-nous un message
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="name" className="text-green-800 dark:text-green-200 font-medium">
-                        Nom complet *
-                      </Label>
-                      <div className="relative mt-1">
-                        <User className="absolute left-3 top-3 h-4 w-4 text-green-500" />
-                        <Input
-                          id="name"
-                          type="text"
-                          value={formData.name}
-                          onChange={(e) => handleInputChange('name', e.target.value)}
-                          className="pl-10 bg-green-50/50 dark:bg-slate-700/50 border-green-200 dark:border-green-700 focus:ring-2 focus:ring-green-500"
-                          placeholder="Votre nom complet"
-                          required
-                        />
-                      </div>
-                    </div>
-                    
-                    <div>
-                      <Label htmlFor="email" className="text-green-800 dark:text-green-200 font-medium">
-                        Email *
-                      </Label>
-                      <div className="relative mt-1">
-                        <Mail className="absolute left-3 top-3 h-4 w-4 text-green-500" />
-                        <Input
-                          id="email"
-                          type="email"
-                          value={formData.email}
-                          onChange={(e) => handleInputChange('email', e.target.value)}
-                          className="pl-10 bg-green-50/50 dark:bg-slate-700/50 border-green-200 dark:border-green-700 focus:ring-2 focus:ring-green-500"
-                          placeholder="votre@email.com"
-                          required
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="category" className="text-green-800 dark:text-green-200 font-medium">
-                      Catégorie
-                    </Label>
-                    <Select value={formData.category} onValueChange={(value) => handleInputChange('category', value)}>
-                      <SelectTrigger className="mt-1 bg-green-50/50 dark:bg-slate-700/50 border-green-200 dark:border-green-700">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="general">S Question générale</SelectItem>
-                        <SelectItem value="support">=à Support technique</SelectItem>
-                        <SelectItem value="feature">=¡ Suggestion de fonctionnalité</SelectItem>
-                        <SelectItem value="bug">= Signaler un bug</SelectItem>
-                        <SelectItem value="partnership">> Partenariat</SelectItem>
-                        <SelectItem value="feedback">=Ý Retour d'expérience</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="subject" className="text-green-800 dark:text-green-200 font-medium">
-                      Sujet *
-                    </Label>
-                    <Input
-                      id="subject"
-                      type="text"
-                      value={formData.subject}
-                      onChange={(e) => handleInputChange('subject', e.target.value)}
-                      className="mt-1 bg-green-50/50 dark:bg-slate-700/50 border-green-200 dark:border-green-700 focus:ring-2 focus:ring-green-500"
-                      placeholder="Résumez votre message en quelques mots"
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="message" className="text-green-800 dark:text-green-200 font-medium">
-                      Message *
-                    </Label>
-                    <Textarea
-                      id="message"
-                      value={formData.message}
-                      onChange={(e) => handleInputChange('message', e.target.value)}
-                      className="mt-1 bg-green-50/50 dark:bg-slate-700/50 border-green-200 dark:border-green-700 focus:ring-2 focus:ring-green-500 min-h-[150px]"
-                      placeholder="Décrivez votre demande en détail..."
-                      required
-                    />
-                  </div>
-
-                  <Button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-full bg-gradient-to-r from-green-600 via-emerald-600 to-green-700 text-white hover:shadow-lg hover:shadow-green-500/30 transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent mr-2" />
-                        Envoi en cours...
-                      </>
-                    ) : (
-                      <>
-                        <Send className="h-4 w-4 mr-2" />
-                        Envoyer le message
-                      </>
-                    )}
-                  </Button>
-                </form>
-              </CardContent>
-            </Card>
+            <h1 className="text-5xl font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-4">
+              Contactez-nous
+            </h1>
+            <p className="text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed">
+              Une question, une suggestion ou besoin d'aide ? Notre Ã©quipe MuzLife est lÃ  pour vous accompagner dans votre parcours spirituel.
+            </p>
           </div>
 
-          {/* Informations de contact */}
-          <div className="space-y-6">
-            {/* Informations générales */}
-            <Card className="border border-green-200/50 dark:border-green-700/50 shadow-lg bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm">
-              <CardHeader>
-                <CardTitle className="text-green-800 dark:text-green-200">
-                  Autres moyens de nous contacter
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-start gap-3">
-                  <Mail className="h-5 w-5 text-green-600 mt-1" />
-                  <div>
-                    <p className="font-medium text-green-800 dark:text-green-200">Email</p>
-                    <p className="text-sm text-green-600 dark:text-green-400">contact@muzlife.fr</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start gap-3">
-                  <Clock className="h-5 w-5 text-green-600 mt-1" />
-                  <div>
-                    <p className="font-medium text-green-800 dark:text-green-200">Délai de réponse</p>
-                    <p className="text-sm text-green-600 dark:text-green-400">24-48 heures</p>
-                  </div>
-                </div>
+          <div className="grid lg:grid-cols-3 gap-12">
+            {/* Contact Info */}
+            <div className="lg:col-span-1 space-y-8">
+              {/* Quick Contact */}
+              <Card className="border-0 shadow-xl bg-white/90 backdrop-blur-sm dark:bg-slate-800/90 hover:shadow-2xl transition-all duration-300">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-3 text-slate-800 dark:text-slate-200">
+                    <div className="p-2 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg">
+                      <Clock className="h-5 w-5 text-white" />
+                    </div>
+                    Informations de contact
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  {contactInfo.map((item, index) => {
+                    const IconComponent = item.icon;
+                    return (
+                      <div key={index} className="flex items-start gap-4 p-4 rounded-xl bg-slate-50 dark:bg-slate-700/50 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
+                        <div className="p-2 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg shadow-md">
+                          <IconComponent className="h-5 w-5 text-white" />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-slate-900 dark:text-white">{item.title}</h3>
+                          <p className="text-indigo-600 dark:text-indigo-400 font-medium">{item.details}</p>
+                          <p className="text-sm text-slate-600 dark:text-slate-400">{item.description}</p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </CardContent>
+              </Card>
 
-                <div className="flex items-start gap-3">
-                  <MapPin className="h-5 w-5 text-green-600 mt-1" />
-                  <div>
-                    <p className="font-medium text-green-800 dark:text-green-200">Basé en</p>
-                    <p className="text-sm text-green-600 dark:text-green-400">France, Europe</p>
+              {/* Categories */}
+              <Card className="border-0 shadow-xl bg-white/90 backdrop-blur-sm dark:bg-slate-800/90">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-3 text-slate-800 dark:text-slate-200">
+                    <div className="p-2 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg">
+                      <MessageSquare className="h-5 w-5 text-white" />
+                    </div>
+                    Types de demandes
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {categories.map((category, index) => {
+                    const IconComponent = category.icon;
+                    return (
+                      <div key={index} className="p-4 rounded-xl bg-slate-50 dark:bg-slate-700/50 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors border border-slate-200/50 dark:border-slate-600/50">
+                        <div className="flex items-center gap-3 mb-2">
+                          <IconComponent className={`h-5 w-5 ${category.color}`} />
+                          <h4 className="font-semibold text-slate-900 dark:text-white">{category.title}</h4>
+                        </div>
+                        <p className="text-sm text-slate-600 dark:text-slate-400">{category.description}</p>
+                      </div>
+                    );
+                  })}
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Contact Form */}
+            <div className="lg:col-span-2">
+              <Card className="border-0 shadow-2xl bg-white/95 backdrop-blur-sm dark:bg-slate-800/95 hover:shadow-3xl transition-all duration-500">
+                <CardHeader className="pb-8">
+                  <CardTitle className="flex items-center gap-3 text-slate-800 dark:text-slate-200">
+                    <div className="p-3 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl shadow-lg">
+                      <MessageSquare className="h-6 w-6 text-white" />
+                    </div>
+                    <div>
+                      <h2 className="text-2xl font-bold">Envoyez-nous un message</h2>
+                      <p className="text-slate-600 dark:text-slate-400 text-sm font-normal mt-1">
+                        Nous vous rÃ©pondrons dans les plus brefs dÃ©lais
+                      </p>
+                    </div>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <ContactForm />
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+
+          {/* Bottom Section */}
+          <div className="mt-16 text-center">
+            <Card className="border-0 shadow-xl bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-pink-500/10 dark:from-indigo-500/5 dark:via-purple-500/5 dark:to-pink-500/5 backdrop-blur-sm">
+              <CardContent className="p-8">
+                <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">
+                  Rejoignez la communautÃ© MuzLife
+                </h3>
+                <p className="text-lg text-slate-600 dark:text-slate-400 mb-6 max-w-2xl mx-auto">
+                  Ensemble, approfondissons notre foi et partageons un voyage spirituel enrichissant.
+                </p>
+                <div className="flex flex-wrap justify-center gap-4">
+                  <div className="px-6 py-3 bg-white/80 dark:bg-slate-800/80 rounded-xl shadow-md">
+                    <span className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">10k+</span>
+                    <p className="text-sm text-slate-600 dark:text-slate-400">Utilisateurs actifs</p>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* FAQ rapide */}
-            <Card className="border border-green-200/50 dark:border-green-700/50 shadow-lg bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm">
-              <CardHeader>
-                <CardTitle className="text-green-800 dark:text-green-200">
-                  Questions fréquentes
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div className="p-3 bg-gradient-to-r from-green-50/70 to-emerald-50/70 dark:from-slate-700/30 dark:to-slate-600/30 rounded-lg">
-                  <p className="text-sm font-medium text-green-800 dark:text-green-200">
-                    =¡ Comment ajouter une nouvelle ville ?
-                  </p>
-                  <p className="text-xs text-green-600 dark:text-green-400 mt-1">
-                    Utilisez l'outil de géolocalisation dans les paramètres
-                  </p>
-                </div>
-                
-                <div className="p-3 bg-gradient-to-r from-green-50/70 to-emerald-50/70 dark:from-slate-700/30 dark:to-slate-600/30 rounded-lg">
-                  <p className="text-sm font-medium text-green-800 dark:text-green-200">
-                    =
- Problème avec l'audio ?
-                  </p>
-                  <p className="text-xs text-green-600 dark:text-green-400 mt-1">
-                    Vérifiez vos paramètres audio et votre connexion
-                  </p>
-                </div>
-
-                <div className="p-3 bg-gradient-to-r from-green-50/70 to-emerald-50/70 dark:from-slate-700/30 dark:to-slate-600/30 rounded-lg">
-                  <p className="text-sm font-medium text-green-800 dark:text-green-200">
-                    =ñ Application mobile disponible ?
-                  </p>
-                  <p className="text-xs text-green-600 dark:text-green-400 mt-1">
-                    Actuellement en version web, mobile en préparation
-                  </p>
+                  <div className="px-6 py-3 bg-white/80 dark:bg-slate-800/80 rounded-xl shadow-md">
+                    <span className="text-2xl font-bold text-purple-600 dark:text-purple-400">24/7</span>
+                    <p className="text-sm text-slate-600 dark:text-slate-400">Support disponible</p>
+                  </div>
+                  <div className="px-6 py-3 bg-white/80 dark:bg-slate-800/80 rounded-xl shadow-md">
+                    <span className="text-2xl font-bold text-pink-600 dark:text-pink-400">100%</span>
+                    <p className="text-sm text-slate-600 dark:text-slate-400">Gratuit</p>
+                  </div>
                 </div>
               </CardContent>
             </Card>

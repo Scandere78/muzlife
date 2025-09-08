@@ -3,23 +3,24 @@ import { prisma } from '@/lib/prisma';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const user = await prisma.user.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
-        userStats: true,
+        stats: true,
         quizResults: {
           orderBy: { createdAt: 'desc' },
           take: 5
         },
         readingProgress: {
-          orderBy: { lastRead: 'desc' },
+          orderBy: { readAt: 'desc' },
           take: 5
         },
         studySessions: {
-          orderBy: { createdAt: 'desc' },
+          orderBy: { startedAt: 'desc' },
           take: 5
         },
         _count: {
@@ -52,23 +53,24 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const { name, email, emailVerified } = await request.json();
 
     const user = await prisma.user.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         name,
         email,
-        emailVerified
+        isEmailVerified: emailVerified
       },
       select: {
         id: true,
         name: true,
         email: true,
-        emailVerified: true,
+        isEmailVerified: true,
         createdAt: true,
         updatedAt: true
       }
@@ -86,11 +88,12 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     await prisma.user.delete({
-      where: { id: params.id }
+      where: { id }
     });
 
     return NextResponse.json({ message: 'Utilisateur supprimé avec succès' });
