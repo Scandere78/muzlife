@@ -14,13 +14,13 @@
   ```bash
   pnpm run build
   ```
-  Generates optimized production build and sitemap.
+  Generates optimized production build and sitemap via `next-sitemap` postbuild hook.
 
   **Lint code:**
   ```bash
   pnpm run lint
   ```
-  Runs Next.js ESLint configuration. Note: ESLint is disabled during builds (`ignoreDuringBuilds: true`).
+  Runs Next.js ESLint configuration. Note: ESLint is disabled during builds (`ignoreDuringBuilds: true`) to prevent deployment issues.
 
   **Database operations:**
   ```bash
@@ -37,7 +37,7 @@
   ### Core Stack
   - **Framework:** Next.js 15 with App Router
   - **Database:** MongoDB with Prisma ORM
-  - **Authentication:** JWT tokens with localStorage persistence
+  - **Authentication:** Custom JWT implementation using `jose` library (not NextAuth)
   - **Styling:** TailwindCSS 4.x with dark mode support
   - **UI Components:** Radix UI primitives + custom components
   - **Icons:** Lucide React + React Icons
@@ -136,7 +136,8 @@
   **Build and Deployment:**
   - ESLint is disabled during builds (`ignoreDuringBuilds: true`) to prevent deployment issues
   - Prisma client auto-generates on package installation via postinstall hook
-  - Sitemap generation included in build process via `next-sitemap`
+  - Sitemap generation included in build process via `next-sitemap` postbuild hook
+  - Multi-platform Prisma binaries configured (native, linux-musl, windows, darwin-arm64)
   - Vercel Analytics is ready but commented out in layout
 
   **Database and State Management:**

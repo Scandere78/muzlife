@@ -32,6 +32,7 @@ model User {
   studySessions StudySession[]
   verseStates VerseState[]
   favoriteSurahs FavoriteSurah[]
+  tickets Ticket[]
   
   // Stats intégrées
   stats UserStats?
@@ -275,4 +276,36 @@ model FavoriteSurah {
   
   @@unique([userId, surahNumber])
   @@map("favorite_surahs")
+}
+
+// Modèle pour les tickets de support/contact
+model Ticket {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String?  @db.ObjectId  // Optionnel car les visiteurs non-connectés peuvent créer des tickets
+  
+  // Informations du contact
+  name        String   // Nom de la personne qui contacte
+  email       String   // Email de contact
+  subject     String   // Sujet du message
+  message     String   // Message principal
+  category    String   @default("general") // Catégorie (general, bug, feature, support, etc.)
+  priority    String   @default("medium")  // Priorité (low, medium, high, urgent)
+  
+  // Statut et assignation
+  status      String   @default("open")    // open, in_progress, resolved, closed
+  assignedTo  String?  // Admin qui traite le ticket
+  
+  // Métadonnées
+  ipAddress   String?  // IP d'origine
+  userAgent   String?  // User Agent du navigateur
+  
+  // Timestamps
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  resolvedAt  DateTime?
+  
+  // Relation optionnelle avec l'utilisateur
+  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  
+  @@map("tickets")
 }
