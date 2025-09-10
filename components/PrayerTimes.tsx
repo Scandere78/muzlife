@@ -117,7 +117,13 @@ function getTimeUntilNextPrayer(timings: PrayerTimes): { nextPrayer: string; tim
   return { nextPrayer, timeRemaining };
 }
 
-export default function PrayerTimes() {
+// Props pour recevoir la ville sélectionnée et le callback
+interface PrayerTimesProps {
+  onCitySelect?: (city: CityResult) => void;
+  selectedCity?: CityResult | null;
+}
+
+export default function PrayerTimes({ onCitySelect, selectedCity }: PrayerTimesProps = {}) {
   const { preferences, countries, loading: locationLoading, setCountry, setCity } = useLocation();
   const [prayerData, setPrayerData] = useState<PrayerTimesData | null>(null);
   const [loading, setLoading] = useState(false);
@@ -127,21 +133,36 @@ export default function PrayerTimes() {
 
   // Fonction pour récupérer les horaires de prière depuis l'API Aladhan
   const fetchPrayerTimes = async () => {
-    if (!preferences.city || locationLoading) return;
+    // Utiliser la ville sélectionnée depuis l'URL si elle existe, sinon les préférences
+    const cityToUse = selectedCity || preferences.city;
+    if (!cityToUse || locationLoading) return;
     
     setLoading(true);
     setError(null);
     try {
-      const url = `https://api.aladhan.com/v1/timingsByCity?city=${encodeURIComponent(preferences.city.name)}&country=${encodeURIComponent(preferences.city.country)}&method=2`;
+      const url = `https://api.aladhan.com/v1/timingsByCity?city=${encodeURIComponent(cityToUse.name)}&country=${encodeURIComponent(cityToUse.country || 'France')}&method=2`;
       const response = await fetch(url);
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.data || 'Erreur lors de la récupération des horaires');
       }
       const data = await response.json();
+      
+      // Vérifier que les données sont valides
+      if (!data.data || !data.data.timings) {
+        throw new Error('Ville non trouvée. Veuillez sélectionner une ville valide dans la liste.');
+      }
+      
       setPrayerData(data.data);
+      setError(null); // Réinitialiser l'erreur si succès
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Erreur inconnue');
+      const errorMessage = err instanceof Error ? err.message : 'Erreur inconnue';
+      setError(errorMessage);
+      
+      // Si la ville n'est pas trouvée, ne pas mettre à jour l'URL
+      if (errorMessage.includes('Ville non trouvée')) {
+        setPrayerData(null);
+      }
     } finally {
       setLoading(false);
     }
@@ -162,10 +183,18 @@ export default function PrayerTimes() {
     }
   }, [prayerData]);
 
-  // Charger les horaires quand les préférences changent
+  // Charger les horaires quand les préférences ou la ville sélectionnée changent
   useEffect(() => {
     fetchPrayerTimes();
-  }, [preferences.city, locationLoading]);
+  }, [
+    selectedCity?.name,
+    selectedCity?.latitude, 
+    selectedCity?.longitude,
+    preferences.city.name,
+    preferences.city.latitude,
+    preferences.city.longitude,
+    locationLoading
+  ]);
 
   // Gérer la sélection d'une ville
   const handleCitySelect = (selectedCityData: CityResult) => {
@@ -178,12 +207,34 @@ export default function PrayerTimes() {
     };
     setCityInputValue(selectedCityData.name);
     setCity(cityData);
+    
+    // Appeler le callback parent pour mettre à jour l'URL
+    if (onCitySelect) {
+      onCitySelect(selectedCityData);
+    }
   };
 
-  // Synchroniser la valeur d'entrée avec les préférences
+  // Synchroniser avec la ville sélectionnée depuis l'URL si elle existe
   useEffect(() => {
-    setCityInputValue(preferences.city.name);
-  }, [preferences.city.name]);
+    if (selectedCity && selectedCity.name !== preferences.city.name) {
+      setCityInputValue(selectedCity.name);
+      setCity({
+        name: selectedCity.name,
+        country: selectedCity.country || 'France',
+        latitude: selectedCity.latitude,
+        longitude: selectedCity.longitude,
+        displayName: selectedCity.displayName || selectedCity.name
+      });
+    } else if (!selectedCity) {
+      setCityInputValue(preferences.city.name);
+    }
+  }, [
+    selectedCity?.name,
+    selectedCity?.latitude,
+    selectedCity?.longitude,
+    preferences.city.name,
+    setCity
+  ]);
 
   const handleCountrySelect = (selectedCountry: any) => {
     setCountry(selectedCountry);
@@ -289,7 +340,12 @@ export default function PrayerTimes() {
                 ⚠️
               </div>
               <p className="text-red-700 dark:text-red-300 font-medium text-lg">{error}</p>
-              <p className="text-red-600 dark:text-red-400 text-sm mt-2">Veuillez vérifier le nom de la ville et réessayer</p>
+              <p className="text-red-600 dark:text-red-400 text-sm mt-2">
+                {error.includes('Ville non trouvée') 
+                  ? '🔍 Utilisez l\'autocomplétion pour sélectionner une ville valide'
+                  : 'Veuillez vérifier le nom de la ville et réessayer'
+                }
+              </p>
             </div>
           </CardContent>
         </Card>

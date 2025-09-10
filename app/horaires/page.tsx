@@ -1,10 +1,19 @@
 
 "use client";
-import React from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import PrayerTimes from '@/components/PrayerTimes';
 import PrayerTimer from '@/components/PrayerTimer';
 
-
+// Interface pour les résultats de ville
+interface CityResult {
+  name: string;
+  country: string;
+  state?: string;
+  latitude: number;
+  longitude: number;  
+  displayName: string;
+}
 
 /**
  * Page des horaires de prière
@@ -15,6 +24,7 @@ import PrayerTimer from '@/components/PrayerTimer';
  * - Identifier la prochaine prière avec le temps restant
  * - Consulter les informations complémentaires (Imsak, minuit, etc.)
  * - Voir la date grégorienne et hijri
+ * - L'URL se met à jour automatiquement avec la ville sélectionnée
  * 
  * Fonctionnalités principales :
  * - Interface moderne et responsive
@@ -22,23 +32,103 @@ import PrayerTimer from '@/components/PrayerTimer';
  * - Mise à jour en temps réel du temps restant
  * - Support de nombreuses villes dans le monde
  * - Affichage des dates grégorienne et hijri
+ * - URL partageable avec la ville sélectionnée
  */
-export default function HorairesPage() {
+function HorairesContent() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [selectedCity, setSelectedCity] = useState<CityResult | null>(null);
+  const [cityName, setCityName] = useState('');
 
+  // Lire la ville depuis l'URL au chargement et rechercher automatiquement ses coordonnées
+  useEffect(() => {
+    const cityParam = searchParams.get('city');
+    
+    if (cityParam) {
+      // Convertir le format URL (corbeil-cerf ou paris-20e-arrondissement) en nom normal
+      const formattedCity = cityParam
+        .replace(/-/g, ' ') // Remplacer les tirets par des espaces
+        .replace(/\b\w/g, char => char.toUpperCase()); // Capitaliser chaque mot
+      
+      setCityName(formattedCity);
+      
+      // Rechercher automatiquement la ville pour obtenir ses coordonnées
+      const searchCity = async () => {
+        try {
+          const response = await fetch(`/api/cities/search?q=${encodeURIComponent(formattedCity)}&country=France`);
+          if (response.ok) {
+            const data = await response.json();
+            if (data.cities && data.cities.length > 0) {
+              // Prendre la première ville correspondante
+              const city = data.cities[0];
+              setSelectedCity({
+                name: city.name,
+                country: city.country || 'France',
+                latitude: city.latitude,
+                longitude: city.longitude,
+                displayName: city.displayName || city.name
+              });
+            }
+          }
+        } catch (error) {
+          console.error('Erreur lors de la recherche automatique de la ville:', error);
+        }
+      };
+      
+      searchCity();
+    }
+  }, [searchParams]);
 
+  // Fonction appelée quand une ville valide est sélectionnée dans l'autocomplete
+  const handleCitySelect = (city: CityResult) => {
+    setSelectedCity(city);
+    setCityName(city.name);
+    
+    // Mettre à jour l'URL avec SEULEMENT le nom de la ville
+    // Format simplifié: /horaires?city=paris ou /horaires?city=corbeil-cerf
+    const urlCityName = city.name
+      .toLowerCase()
+      .normalize("NFD") // Décomposer les accents
+      .replace(/[\u0300-\u036f]/g, "") // Supprimer les accents
+      .replace(/[^a-z0-9\s-]/g, '') // Garder seulement lettres, chiffres, espaces, tirets
+      .replace(/\s+/g, '-') // Remplacer espaces par tirets
+      .replace(/-+/g, '-') // Éviter les tirets multiples
+      .trim();
+    
+    const params = new URLSearchParams();
+    params.set('city', urlCityName);
+    
+    // Utiliser replace au lieu de push pour éviter l'accumulation dans l'historique
+    router.replace(`/horaires?${params.toString()}`, { scroll: false });
+  };
 
   return (
     <div className="min-h-screen w-full flex flex-col items-center justify-center" style={{ background: 'transparent', color: 'var(--color-foreground)' }}>
       <div className="w-full max-w-3xl mx-auto px-4 py-8">
         <div className="mb-8 animate-in fade-in duration-700">
           <div className="text-center">
-            <h1 className="text-4xl font-extrabold !text-black dark:!text-white mb-2 drop-shadow-lg tracking-tight">Horaires de Prière</h1>
-            <p className="text-lg !text-black dark:!text-white max-w-xl mx-auto mb-2">Consultez les horaires de prière pour votre ville avec précision. Trouvez facilement les temps de Fajr, Dhuhr, Asr, Maghrib et Isha.</p>
+            <h1 className="text-4xl font-extrabold !text-black dark:!text-white mb-2 drop-shadow-lg tracking-tight">
+              Horaires de Prière
+              {cityName && (
+                <span className="block text-2xl text-green-600 dark:text-green-400 mt-2">
+                  📍 {cityName}
+                </span>
+              )}
+            </h1>
+            <p className="text-lg !text-black dark:!text-white max-w-xl mx-auto mb-2">
+              {cityName 
+                ? `Horaires précis pour ${cityName}. Temps de Fajr, Dhuhr, Asr, Maghrib et Isha.`
+                : 'Consultez les horaires de prière pour votre ville avec précision. Trouvez facilement les temps de Fajr, Dhuhr, Asr, Maghrib et Isha.'
+              }
+            </p>
           </div>
         </div>
         <div className="w-full animate-in fade-in slide-in-from-bottom-2 duration-700">
-          <PrayerTimer />
-          <PrayerTimes />
+          <PrayerTimer selectedCity={selectedCity} />
+          <PrayerTimes 
+            onCitySelect={handleCitySelect} 
+            selectedCity={selectedCity}
+          />
         </div>
         <div className="mt-10 animate-in fade-in duration-700">
           <div className="bg-gradient-to-br from-indigo-100 via-white to-yellow-100 dark:from-gray-800 dark:via-gray-700 dark:to-gray-800 rounded-2xl shadow-2xl border border-indigo-200 dark:border-gray-600 p-8 backdrop-blur-lg">
@@ -81,5 +171,21 @@ export default function HorairesPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+// Wrapper avec Suspense pour useSearchParams
+export default function HorairesPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen w-full flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
+          <p className="text-lg !text-black dark:!text-white">Chargement des horaires...</p>
+        </div>
+      </div>
+    }>
+      <HorairesContent />
+    </Suspense>
   );
 }

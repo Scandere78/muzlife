@@ -87,7 +87,22 @@ function getTimeUntilNextPrayer(
   return { nextPrayer: nextName, hours, minutes, seconds };
 }
 
-export default function PrayerTimer() {
+// Interface pour les résultats de ville
+interface CityResult {
+  name: string;
+  country: string;
+  state?: string;
+  latitude: number;
+  longitude: number;
+  displayName: string;
+}
+
+// Props pour recevoir la ville sélectionnée
+interface PrayerTimerProps {
+  selectedCity?: CityResult | null;
+}
+
+export default function PrayerTimer({ selectedCity }: PrayerTimerProps = {}) {
   const { preferences, loading: locationLoading } = useLocation();
   const [prayerData, setPrayerData] = useState<PrayerTimesData | null>(null);
   const [loading, setLoading] = useState(false);
@@ -98,12 +113,14 @@ export default function PrayerTimer() {
 
   // Récupérer les horaires selon les préférences de l'utilisateur
   const fetchPrayerTimes = async () => {
-    if (!preferences.city || locationLoading) return;
+    // Utiliser la ville sélectionnée depuis l'URL si elle existe, sinon les préférences
+    const cityToUse = selectedCity || preferences.city;
+    if (!cityToUse || locationLoading) return;
     
     setLoading(true);
     setError(null);
     try {
-      const url = `https://api.aladhan.com/v1/timingsByCity?city=${encodeURIComponent(preferences.city.name)}&country=${encodeURIComponent(preferences.city.country)}&method=2`;
+      const url = `https://api.aladhan.com/v1/timingsByCity?city=${encodeURIComponent(cityToUse.name)}&country=${encodeURIComponent(cityToUse.country || 'France')}&method=2`;
       const response = await fetch(url);
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
@@ -118,10 +135,23 @@ export default function PrayerTimer() {
     }
   };
 
-  // Charger quand les préférences changent
+  // Charger quand les préférences ou la ville sélectionnée changent
   useEffect(() => {
+    // Utiliser les valeurs de la ville pour la comparaison, pas l'objet entier
+    const cityKey = selectedCity 
+      ? `${selectedCity.name}-${selectedCity.latitude}-${selectedCity.longitude}`
+      : `${preferences.city.name}-${preferences.city.latitude}-${preferences.city.longitude}`;
+    
     fetchPrayerTimes();
-  }, [preferences.city, locationLoading]);
+  }, [
+    selectedCity?.name, 
+    selectedCity?.latitude, 
+    selectedCity?.longitude,
+    preferences.city.name,
+    preferences.city.latitude,
+    preferences.city.longitude,
+    locationLoading
+  ]);
 
   // Tickers temps réel
   useEffect(() => {
