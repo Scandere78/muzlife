@@ -66,11 +66,11 @@ interface PrayerTimesData {
 
 // Configuration des 5 prières obligatoires avec leurs icônes et couleurs
 const prayerConfig = {
-  Fajr: { name: 'Fajr', icon: Sunrise, color: 'bg-gradient-to-r from-blue-500 to-blue-600', textColor: 'text-blue-600', description: 'Prière de l\'aube' },
-  Dhuhr: { name: 'Dhuhr', icon: Sun, color: 'bg-gradient-to-r from-yellow-500 to-yellow-600', textColor: 'text-yellow-600', description: 'Prière de midi' },
-  Asr: { name: 'Asr', icon: Sun, color: 'bg-gradient-to-r from-orange-500 to-orange-600', textColor: 'text-orange-600', description: 'Prière de l\'après-midi' },
-  Maghrib: { name: 'Maghrib', icon: Sunset, color: 'bg-gradient-to-r from-purple-500 to-purple-600', textColor: 'text-purple-600', description: 'Prière du coucher' },
-  Isha: { name: 'Isha', icon: Moon, color: 'bg-gradient-to-r from-indigo-600 to-indigo-700', textColor: 'text-indigo-700', description: 'Prière de la nuit' },
+  Fajr: { name: 'Fajr', icon: Sunrise, color: 'bg-black/70', textColor: 'text-black/80', description: 'Prière de l\'aube' },
+  Dhuhr: { name: 'Dhuhr', icon: Sun, color: 'bg-black/70', textColor: 'text-black/80', description: 'Prière de midi' },
+  Asr: { name: 'Asr', icon: Sun, color: 'bg-black/70', textColor: 'text-black/80', description: 'Prière de l\'après-midi' },
+  Maghrib: { name: 'Maghrib', icon: Sunset, color: 'bg-black/70', textColor: 'text-black/80', description: 'Prière du coucher' },
+  Isha: { name: 'Isha', icon: Moon, color: 'bg-black/70', textColor: 'text-black/80', description: 'Prière de la nuit' },
 };
 
 // Fonction pour formater l'heure
@@ -117,30 +117,52 @@ function getTimeUntilNextPrayer(timings: PrayerTimes): { nextPrayer: string; tim
   return { nextPrayer, timeRemaining };
 }
 
-export default function PrayerTimes() {
+// Props pour recevoir la ville sélectionnée et le callback
+interface PrayerTimesProps {
+  onCitySelect?: (city: CityResult) => void;
+  selectedCity?: CityResult | null;
+}
+
+export default function PrayerTimes({ onCitySelect, selectedCity }: PrayerTimesProps = {}) {
   const { preferences, countries, loading: locationLoading, setCountry, setCity } = useLocation();
   const [prayerData, setPrayerData] = useState<PrayerTimesData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [timeUntilNext, setTimeUntilNext] = useState<{ nextPrayer: string; timeRemaining: string } | null>(null);
+  const [cityInputValue, setCityInputValue] = useState(preferences.city.name);
 
   // Fonction pour récupérer les horaires de prière depuis l'API Aladhan
   const fetchPrayerTimes = async () => {
-    if (!preferences.city || locationLoading) return;
+    // Utiliser la ville sélectionnée depuis l'URL si elle existe, sinon les préférences
+    const cityToUse = selectedCity || preferences.city;
+    if (!cityToUse || locationLoading) return;
     
     setLoading(true);
     setError(null);
     try {
-      const url = `https://api.aladhan.com/v1/timingsByCity?city=${encodeURIComponent(preferences.city.name)}&country=${encodeURIComponent(preferences.city.country)}&method=2`;
+      const url = `https://api.aladhan.com/v1/timingsByCity?city=${encodeURIComponent(cityToUse.name)}&country=${encodeURIComponent(cityToUse.country || 'France')}&method=2`;
       const response = await fetch(url);
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.data || 'Erreur lors de la récupération des horaires');
       }
       const data = await response.json();
+      
+      // Vérifier que les données sont valides
+      if (!data.data || !data.data.timings) {
+        throw new Error('Ville non trouvée. Veuillez sélectionner une ville valide dans la liste.');
+      }
+      
       setPrayerData(data.data);
+      setError(null); // Réinitialiser l'erreur si succès
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Erreur inconnue');
+      const errorMessage = err instanceof Error ? err.message : 'Erreur inconnue';
+      setError(errorMessage);
+      
+      // Si la ville n'est pas trouvée, ne pas mettre à jour l'URL
+      if (errorMessage.includes('Ville non trouvée')) {
+        setPrayerData(null);
+      }
     } finally {
       setLoading(false);
     }
@@ -161,10 +183,18 @@ export default function PrayerTimes() {
     }
   }, [prayerData]);
 
-  // Charger les horaires quand les préférences changent
+  // Charger les horaires quand les préférences ou la ville sélectionnée changent
   useEffect(() => {
     fetchPrayerTimes();
-  }, [preferences.city, locationLoading]);
+  }, [
+    selectedCity?.name,
+    selectedCity?.latitude, 
+    selectedCity?.longitude,
+    preferences.city.name,
+    preferences.city.latitude,
+    preferences.city.longitude,
+    locationLoading
+  ]);
 
   // Gérer la sélection d'une ville
   const handleCitySelect = (selectedCityData: CityResult) => {
@@ -175,8 +205,36 @@ export default function PrayerTimes() {
       longitude: selectedCityData.longitude,
       displayName: selectedCityData.displayName
     };
+    setCityInputValue(selectedCityData.name);
     setCity(cityData);
+    
+    // Appeler le callback parent pour mettre à jour l'URL
+    if (onCitySelect) {
+      onCitySelect(selectedCityData);
+    }
   };
+
+  // Synchroniser avec la ville sélectionnée depuis l'URL si elle existe
+  useEffect(() => {
+    if (selectedCity && selectedCity.name !== preferences.city.name) {
+      setCityInputValue(selectedCity.name);
+      setCity({
+        name: selectedCity.name,
+        country: selectedCity.country || 'France',
+        latitude: selectedCity.latitude,
+        longitude: selectedCity.longitude,
+        displayName: selectedCity.displayName || selectedCity.name
+      });
+    } else if (!selectedCity) {
+      setCityInputValue(preferences.city.name);
+    }
+  }, [
+    selectedCity?.name,
+    selectedCity?.latitude,
+    selectedCity?.longitude,
+    preferences.city.name,
+    setCity
+  ]);
 
   const handleCountrySelect = (selectedCountry: any) => {
     setCountry(selectedCountry);
@@ -188,11 +246,11 @@ export default function PrayerTimes() {
 
      {/* Informations de la ville et de la date - Design amélioré */}
       {prayerData && (
-        <Card className="backdrop-blur-sm bg-gradient-to-r from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-700 border-0 shadow-lg">
+        <Card className="backdrop-blur-sm bg-white/30 dark:from-gray-800 dark:bg-white/20 border-0 shadow-lg">
           <CardContent className="pt-6">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-full bg-blue-500 text-white">
+                <div className="p-2 rounded-full  text-black dark:text-white bg-white/60 dark:!bg-gray-800/70">
                   <MapPin className="h-5 w-5" />
                 </div>
                 <div>
@@ -205,7 +263,7 @@ export default function PrayerTimes() {
                 </div>
               </div>
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-full bg-purple-500 text-white">
+                <div className="p-2 rounded-full  text-black dark:text-white bg-white/60 dark:!bg-gray-800/70">
                   <Calendar className="h-5 w-5" />
                 </div>
                 <div className="text-right">
@@ -222,13 +280,13 @@ export default function PrayerTimes() {
         </Card>
       )}
 
-      <Card className="backdrop-blur-sm bg-white/80 dark:bg-gray-800/80 border-0 shadow-xl">
+      <Card className="backdrop-blur-sm bg-white/30 dark:!bg-white/30 border-0 shadow-xl">
         <CardHeader className="pb-4">
           <CardTitle className="flex items-center gap-3 text-2xl">
-            <div className="p-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 text-white">
+            <div className="p-2 rounded-full  text-black dark:text-white bg-white/60 dark:!bg-gray-800/70">
               <Clock className="h-6 w-6" />
             </div>
-            <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            <span className="bg-clip-text dark:text-white">
               Horaires de Prière
             </span>
           </CardTitle>
@@ -244,20 +302,20 @@ export default function PrayerTimes() {
                   countries={countries}
                   selectedCountry={preferences.country}
                   onCountrySelect={handleCountrySelect}
-                  className="w-full"
+                  className="w-full !bg-white/10 dark:!bg-gray-800/80"
                 />
               </div>
               <div className="flex-1">
-                <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">
+                <label className="block text-sm font-medium mb-2 !!bg-red-600 text-gray-700 dark:text-gray-300">
                   🏙️ Ville
                 </label>
                 <CityAutocomplete
-                  value={preferences.city.name}
-                  onChange={() => {}} // Géré par handleCitySelect
+                  value={cityInputValue}
+                  onChange={setCityInputValue}
                   onCitySelect={handleCitySelect}
                   countryFilter={preferences.country.name}
-                  placeholder={`🔍 Recherchez une ville en ${preferences.country.name}...`}
-                  className="w-full h-12 text-lg"
+                  placeholder={`🔍 Recherchez une ville`}
+                  className="w-full h-12 text-lg bg-white/50 dark:bg-gray-800/80"
                 />
               </div>
             </div>
@@ -282,7 +340,12 @@ export default function PrayerTimes() {
                 ⚠️
               </div>
               <p className="text-red-700 dark:text-red-300 font-medium text-lg">{error}</p>
-              <p className="text-red-600 dark:text-red-400 text-sm mt-2">Veuillez vérifier le nom de la ville et réessayer</p>
+              <p className="text-red-600 dark:text-red-400 text-sm mt-2">
+                {error.includes('Ville non trouvée') 
+                  ? '🔍 Utilisez l\'autocomplétion pour sélectionner une ville valide'
+                  : 'Veuillez vérifier le nom de la ville et réessayer'
+                }
+              </p>
             </div>
           </CardContent>
         </Card>
@@ -324,7 +387,7 @@ export default function PrayerTimes() {
                       {formatTime(time)}
                     </div>
                     {isNextPrayer && (
-                      <div className="inline-flex  bg-gradient-to-r from-blue-500 to-purple-600 text-white px-3 py-2 rounded-full text-sm font-medium animate-pulse">
+                      <div className="inline-flex  bg-green-500 text-white px-3 py-2 rounded-full text-sm font-medium">
                         ⏰ Prochaine
                       </div>
                     )}

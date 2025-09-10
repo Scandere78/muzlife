@@ -87,7 +87,22 @@ function getTimeUntilNextPrayer(
   return { nextPrayer: nextName, hours, minutes, seconds };
 }
 
-export default function PrayerTimer() {
+// Interface pour les résultats de ville
+interface CityResult {
+  name: string;
+  country: string;
+  state?: string;
+  latitude: number;
+  longitude: number;
+  displayName: string;
+}
+
+// Props pour recevoir la ville sélectionnée
+interface PrayerTimerProps {
+  selectedCity?: CityResult | null;
+}
+
+export default function PrayerTimer({ selectedCity }: PrayerTimerProps = {}) {
   const { preferences, loading: locationLoading } = useLocation();
   const [prayerData, setPrayerData] = useState<PrayerTimesData | null>(null);
   const [loading, setLoading] = useState(false);
@@ -98,12 +113,14 @@ export default function PrayerTimer() {
 
   // Récupérer les horaires selon les préférences de l'utilisateur
   const fetchPrayerTimes = async () => {
-    if (!preferences.city || locationLoading) return;
+    // Utiliser la ville sélectionnée depuis l'URL si elle existe, sinon les préférences
+    const cityToUse = selectedCity || preferences.city;
+    if (!cityToUse || locationLoading) return;
     
     setLoading(true);
     setError(null);
     try {
-      const url = `https://api.aladhan.com/v1/timingsByCity?city=${encodeURIComponent(preferences.city.name)}&country=${encodeURIComponent(preferences.city.country)}&method=2`;
+      const url = `https://api.aladhan.com/v1/timingsByCity?city=${encodeURIComponent(cityToUse.name)}&country=${encodeURIComponent(cityToUse.country || 'France')}&method=2`;
       const response = await fetch(url);
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
@@ -118,10 +135,23 @@ export default function PrayerTimer() {
     }
   };
 
-  // Charger quand les préférences changent
+  // Charger quand les préférences ou la ville sélectionnée changent
   useEffect(() => {
+    // Utiliser les valeurs de la ville pour la comparaison, pas l'objet entier
+    const cityKey = selectedCity 
+      ? `${selectedCity.name}-${selectedCity.latitude}-${selectedCity.longitude}`
+      : `${preferences.city.name}-${preferences.city.latitude}-${preferences.city.longitude}`;
+    
     fetchPrayerTimes();
-  }, [preferences.city, locationLoading]);
+  }, [
+    selectedCity?.name, 
+    selectedCity?.latitude, 
+    selectedCity?.longitude,
+    preferences.city.name,
+    preferences.city.latitude,
+    preferences.city.longitude,
+    locationLoading
+  ]);
 
   // Tickers temps réel
   useEffect(() => {
@@ -194,12 +224,12 @@ export default function PrayerTimer() {
     <>
       <div className="mx-auto mb-8 flex justify-center">
         <div
-          className="relative rounded-full shadow-xl p-1 flex flex-col items-center w-64 h-64 bg-gradient-to-br from-indigo-50 via-white to-purple-50 cursor-pointer hover:scale-105 transition-all duration-500 group"
-          style={{ boxShadow: '0 10px 40px -10px rgba(79, 70, 229, 0.4), inset 0 0 0 1px rgba(79, 70, 229, 0.1)' }}
+          className="relative rounded-full shadow-xl p-1 flex flex-col items-center w-64 h-64 bg-gradient-to-br from-green-50 via-white to-green-50 cursor-pointer hover:scale-105 transition-all duration-500 group"
+          style={{ boxShadow: '0 10px 40px -10px rgba(34, 197, 94, 0.4), inset 0 0 0 1px rgba(34, 197, 94, 0.1)' }}
           onClick={() => setOpen(true)}
         >
           {/* Contour décoratif externe */}
-          <div className="absolute inset-1 rounded-full border-2 border-indigo-100/50"></div>
+          <div className="absolute inset-1 rounded-full border-2 border-green-100/50"></div>
 
           {/* Fond calligraphique avec overlay */}
           <div className="absolute inset-3 rounded-full overflow-hidden z-10">
@@ -224,7 +254,7 @@ export default function PrayerTimer() {
               return (
                 <div
                   key={i}
-                  className="absolute w-1.5 h-4 bg-gradient-to-b from-indigo-400 to-purple-400 rounded-full shadow-sm"
+                  className="absolute w-1.5 h-4 bg-gradient-to-b from-green-400 to-green-600 rounded-full shadow-sm"
                   style={{ left: `${x}%`, top: `${y}%`, transform: `translate(-50%, -50%) rotate(${i * 30}deg)` }}
                 />
               );
@@ -237,7 +267,7 @@ export default function PrayerTimer() {
               return (
                 <div
                   key={`m-${i}`}
-                  className="absolute w-0.5 h-1.5 bg-indigo-200 rounded-full"
+                  className="absolute w-0.5 h-1.5 bg-green-200 rounded-full"
                   style={{ left: `${x}%`, top: `${y}%`, transform: 'translate(-50%, -50%)' }}
                 />
               );
@@ -246,20 +276,20 @@ export default function PrayerTimer() {
 
           {/* Cadran central */}
           <div className="absolute inset-0 flex items-center justify-center z-20">
-            <div className="w-40 h-40 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center border border-indigo-100 shadow-inner">
+            <div className="w-40 h-40 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center border border-green-100 shadow-inner">
               <div className="text-center font-mono relative p-6">
-                <div className="absolute inset-0 rounded-full bg-indigo-100/50 blur-xl"></div>
+                <div className="absolute inset-0 rounded-full bg-green-100/50 blur-xl"></div>
                 <div className="relative z-10 flex flex-col gap-1">
                   {/* Compte à rebours HH:MM:SS */}
-                  <div className="text-4xl font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600">
+                  <div className="text-4xl font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-green-600 to-green-700">
                     {countdown.hours.toString().padStart(2, '0')}
-                    <span className="animate-pulse text-indigo-500 mx-1">:</span>
+                    <span className="animate-pulse text-green-500 mx-1">:</span>
                     {countdown.minutes.toString().padStart(2, '0')}
-                    <span className="animate-pulse text-indigo-500 mx-1">:</span>
+                    <span className="animate-pulse text-green-500 mx-1">:</span>
                     {countdown.seconds.toString().padStart(2, '0')}
                   </div>
                   {/* Prochaine prière */}
-                  <div className="text-xs sm:text-sm font-semibold text-indigo-500 flex items-center justify-center gap-1">
+                  <div className="text-xs sm:text-sm font-semibold text-green-600 flex items-center justify-center gap-1">
                     <span>{nextCfg?.icon}</span>
                     <span>{nextCfg?.fullName}</span>
                   </div>
@@ -273,25 +303,25 @@ export default function PrayerTimer() {
             <div className="relative w-full h-full">
               {/* Heures */}
               <div
-                className="absolute top-1/2 left-1/2 origin-center w-1 h-14 bg-gradient-to-t from-indigo-700 to-indigo-500 rounded-full shadow-md z-10"
+                className="absolute top-1/2 left-1/2 origin-center w-1 h-14 bg-gradient-to-t from-green-700 to-green-500 rounded-full shadow-md z-10"
                 style={{ transform: `translate(-50%, 0) rotate(${hoursAngle}deg)`, transformOrigin: 'bottom center' }}
               >
-                <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-3 h-3 bg-indigo-500 rounded-full shadow-sm"></div>
+                <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-3 h-3 bg-green-500 rounded-full shadow-sm"></div>
               </div>
               {/* Minutes */}
               <div
-                className="absolute top-1/2 left-1/2 origin-center w-0.5 h-20 bg-gradient-to-t from-purple-700 to-purple-400 rounded-full shadow-md z-20"
+                className="absolute top-1/2 left-1/2 origin-center w-0.5 h-20 bg-gradient-to-t from-green-700 to-green-400 rounded-full shadow-md z-20"
                 style={{ transform: `translate(-50%, 0) rotate(${minutesAngle}deg)`, transformOrigin: 'bottom center' }}
               >
-                <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-purple-500 rounded-full shadow-sm"></div>
+                <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-green-500 rounded-full shadow-sm"></div>
               </div>
               {/* Centre */}
-              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-indigo-800 rounded-full z-30 shadow-md"></div>
+              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-green-800 rounded-full z-30 shadow-md"></div>
             </div>
           </div>
 
           {/* Etiquette */}
-          <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-xs font-medium px-4 py-1 rounded-full shadow-lg z-40">
+          <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-green-500 to-green-600 text-white text-xs font-medium px-4 py-1 rounded-full shadow-lg z-40">
             Voir progression
           </div>
 
@@ -299,7 +329,7 @@ export default function PrayerTimer() {
           <div
             className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-1000"
             style={{
-              background: 'radial-gradient(circle at center, rgba(79, 70, 229, 0.2) 0%, transparent 70%)',
+              background: 'radial-gradient(circle at center, rgba(34, 197, 94, 0.2) 0%, transparent 70%)',
               filter: 'blur(20px)',
             }}
           />

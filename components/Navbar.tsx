@@ -77,41 +77,51 @@ const Navbar: React.FC = () => {
             </div>
             {/* Desktop Menu */}
             <div className="hidden lg:flex items-center">
-              <div className="flex items-center space-x-4 xl:space-x-6">
-                <Link href="/adoration" className="relative !text-white hover:!text-[var(--color-accent)] px-3 lg:px-4 py-2.5 rounded-md transition-all duration-300 text-base lg:text-lg font-medium group">
-                  ⭐ Adoration
-                  <div className={`absolute bottom-0 left-1/2 transform -translate-x-1/2 h-1 bg-[var(--color-accent)] rounded-full transition-all duration-500 ease-out ${
-                    isActive("/tuto/wudu") 
-                      ? "w-full opacity-100" 
-                      : "w-0 opacity-0 group-hover:w-1/2 group-hover:opacity-70"
-                  }`}></div>
-                </Link>
-                <Link href="/ecoute" className="relative !text-white hover:!text-[var(--color-accent)] px-3 lg:px-4 py-2.5 rounded-md transition-all duration-300 text-base lg:text-lg font-medium group">
-                  📗 Coran
+              <div className="flex items-center space-x-2 xl:space-x-3">
+                <Link href="/ecoute" className="relative !text-white hover:!text-[var(--color-accent)] px-2 lg:px-3 py-2 rounded-md transition-all duration-300 text-sm lg:text-base font-medium group">
+                  <span className="text-xs mr-1">📗</span>Coran
                   <div className={`absolute bottom-0 left-1/2 transform -translate-x-1/2 h-1 bg-[var(--color-accent)] rounded-full transition-all duration-500 ease-out ${
                     isActive("/ecoute") 
                       ? "w-full opacity-100" 
                       : "w-0 opacity-0 group-hover:w-1/2 group-hover:opacity-70"
                   }`}></div>
                 </Link>
-                <Link href="/quizz" className="relative !text-white hover:!text-[var(--color-accent)] px-3 lg:px-4 py-2.5 rounded-md transition-all duration-300 text-base lg:text-lg font-medium group">
-                  🧠 Quizz
+                
+                
+                <Link href="/quizz" className="relative !text-white hover:!text-[var(--color-accent)] px-2 lg:px-3 py-2 rounded-md transition-all duration-300 text-sm lg:text-base font-medium group">
+                  <span className="text-xs mr-1">🧠</span>Quizz
                   <div className={`absolute bottom-0 left-1/2 transform -translate-x-1/2 h-1 bg-[var(--color-accent)] rounded-full transition-all duration-500 ease-out ${
                     isActive("/quizz") 
                       ? "w-full opacity-100" 
                       : "w-0 opacity-0 group-hover:w-1/2 group-hover:opacity-70"
                   }`}></div>
                 </Link>
-                <Link href="/horaires" className="relative !text-white hover:!text-[var(--color-accent)] px-3 lg:px-4 py-2.5 rounded-md transition-all duration-300 text-base lg:text-lg font-medium group">
-                  🕌 Horaires
+                <Link href="/horaires" className="relative !text-white hover:!text-[var(--color-accent)] px-2 lg:px-3 py-2 rounded-md transition-all duration-300 text-sm lg:text-base font-medium group">
+                  <span className="text-xs mr-1">🕌</span>Horaires
                   <div className={`absolute bottom-0 left-1/2 transform -translate-x-1/2 h-1 bg-[var(--color-accent)] rounded-full transition-all duration-500 ease-out ${
                     isActive("/horaires") 
                       ? "w-full opacity-100" 
                       : "w-0 opacity-0 group-hover:w-1/2 group-hover:opacity-70"
                   }`}></div>
                 </Link>
-                <Link href="/about" className="relative !text-white hover:!text-[var(--color-accent)] px-3 lg:px-4 py-2.5 rounded-md transition-all duration-300 text-base lg:text-lg font-medium group">
-                  👤 À propos
+                <Link href="/adoration" className="relative !text-white hover:!text-[var(--color-accent)] px-2 lg:px-3 py-2 rounded-md transition-all duration-300 text-sm lg:text-base font-medium group">
+                  <span className="text-xs mr-1">⭐</span>Adoration
+                  <div className={`absolute bottom-0 left-1/2 transform -translate-x-1/2 h-1 bg-[var(--color-accent)] rounded-full transition-all duration-500 ease-out ${
+                    isActive("/adoration") 
+                      ? "w-full opacity-100" 
+                      : "w-0 opacity-0 group-hover:w-1/2 group-hover:opacity-70"
+                  }`}></div>
+                </Link>
+                <Link href="/contact" className="relative !text-white hover:!text-[var(--color-accent)] px-2 lg:px-3 py-2 rounded-md transition-all duration-300 text-sm lg:text-base font-medium group">
+                  <span className="text-xs mr-1">📧</span>Contact
+                  <div className={`absolute bottom-0 left-1/2 transform -translate-x-1/2 h-1 bg-[var(--color-accent)] rounded-full transition-all duration-500 ease-out ${
+                    isActive("/contact") 
+                      ? "w-full opacity-100" 
+                      : "w-0 opacity-0 group-hover:w-1/2 group-hover:opacity-70"
+                  }`}></div>
+                </Link>
+                <Link href="/about" className="relative !text-white hover:!text-[var(--color-accent)] px-2 lg:px-3 py-2 rounded-md transition-all duration-300 text-sm lg:text-base font-medium group">
+                  <span className="text-xs mr-1">👤</span>À propos
                   <div className={`absolute bottom-0 left-1/2 transform -translate-x-1/2 h-1 bg-[var(--color-accent)] rounded-full transition-all duration-500 ease-out ${
                     isActive("/about") 
                       ? "w-full opacity-100" 
@@ -121,13 +131,13 @@ const Navbar: React.FC = () => {
               </div>
             </div>
             {/* Theme toggle + boutons */}
-            <div className="hidden lg:flex items-center gap-3 ml-4 xl:ml-6">
+            <div className="hidden lg:flex items-center gap-2 ml-3 xl:ml-4">
               <ModeToggle />
               {/* Bouton de connexion / Compte utilisateur  mode desktop*/}
               {!isLoggedIn ? (
                 <Button
                   onClick={() => setShowAuthModal(true)}
-                  className="relative w-auto px-6 py-2.5 bg-gradient-to-r from-green-600 via-emerald-600 to-green-700 text-white rounded-full hover:shadow-2xl hover:shadow-green-500/30 transition-all duration-500 border border-emerald-400/40 group hover:scale-105 flex items-center gap-2.5 backdrop-blur-sm overflow-hidden"
+                  className="relative w-auto px-4 py-2 bg-gradient-to-r from-green-600 via-emerald-600 to-green-700 text-white rounded-full hover:shadow-2xl hover:shadow-green-500/30 transition-all duration-500 border border-emerald-400/40 group hover:scale-105 flex items-center gap-2 backdrop-blur-sm overflow-hidden"
                   variant="default"
                 >
                   {/* Effet de brillance animé */}
@@ -404,20 +414,6 @@ const Navbar: React.FC = () => {
             <div className="px-2 py-3">
               <div className="space-y-1">
                 <Link
-                    href="/adoration"
-                  className={`flex items-center px-3 py-3 rounded-lg transition-all duration-300 hover:translate-x-2 ${
-                    isActive("/adoration")
-                      ? "bg-white/20 text-white shadow-lg scale-105"
-                      : "text-white hover:text-[var(--color-accent)] hover:bg-white/10"
-                  }`}
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-3 transition-transform duration-300 hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 3a2 2 0 0 1 1.6.8l3 4a2 2 0 0 1 .013 2.382l-7.99 10.986a2 2 0 0 1-3.247 0l-7.99-10.986A2 2 0 0 1 2.4 7.8l2.998-3.997A2 2 0 0 1 7 3z" /><path d="M2 9h20"/>
-                  </svg>
-                  <span className="text-lg text-white">Adoration</span>
-                </Link>
-                <Link
                   href="/ecoute"
                   className={`flex items-center px-3 py-3 rounded-lg transition-all duration-300 hover:translate-x-2 ${
                     isActive("/ecoute")
@@ -431,6 +427,8 @@ const Navbar: React.FC = () => {
                   </svg>
                   <span className="text-lg text-white">Coran</span>
                 </Link>
+                
+                
                 <Link
                   href="/quizz"
                   className={`flex items-center px-3 py-3 rounded-lg transition-all duration-300 hover:translate-x-2 ${
@@ -458,6 +456,34 @@ const Navbar: React.FC = () => {
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-3 transition-transform duration-300 hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6l4 2"/><circle cx="12" cy="12" r="10"/></svg>
                   <span className="text-lg text-white">Horaires</span>
+                </Link>
+                <Link
+                    href="/adoration"
+                  className={`flex items-center px-3 py-3 rounded-lg transition-all duration-300 hover:translate-x-2 ${
+                    isActive("/adoration")
+                      ? "bg-white/20 text-white shadow-lg scale-105"
+                      : "text-white hover:text-[var(--color-accent)] hover:bg-white/10"
+                  }`}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-3 transition-transform duration-300 hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 3a2 2 0 0 1 1.6.8l3 4a2 2 0 0 1 .013 2.382l-7.99 10.986a2 2 0 0 1-3.247 0l-7.99-10.986A2 2 0 0 1 2.4 7.8l2.998-3.997A2 2 0 0 1 7 3z" /><path d="M2 9h20"/>
+                  </svg>
+                  <span className="text-lg text-white">Adoration</span>
+                </Link>
+                <Link
+                  href="/contact"
+                  className={`flex items-center px-3 py-3 rounded-lg transition-all duration-300 hover:translate-x-2 ${
+                    isActive("/contact")
+                      ? "bg-white/20 text-white shadow-lg scale-105"
+                      : "text-white hover:text-[var(--color-accent)] hover:bg-white/10"
+                  }`}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-3 transition-transform duration-300 hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26c.06.04.12.06.19.06s.13-.02.19-.06L19 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                  <span className="text-lg text-white">Contact</span>
                 </Link>
                 <Link
                   href="/about"

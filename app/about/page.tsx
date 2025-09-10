@@ -187,10 +187,10 @@ const AboutPage: React.FC = () => {
             MuzLife est une plateforme islamique moderne qui accompagne les musulmans dans leur parcours spirituel quotidien. 
             Cette première version pose les fondations d'une <strong>magnifique histoire</strong> qui grandira avec notre Oumma.
           </p>
-          <p className="text-base text-green-600 dark:text-green-400 font-medium">
+          <p className="text-base text-black dark:text-white font-medium">
             🌟 Version 1.0 - Le début d'un voyage spirituel partagé
           </p>
-        </div>
+        </div>m
       </div>
 
       <div className="container mx-auto px-4">

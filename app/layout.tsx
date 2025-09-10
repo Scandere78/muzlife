@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Amiri } from "next/font/google";
 import { AuthProvider } from "../contexts/AuthContext";
+import { QuizProvider } from "../contexts/QuizContext";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import '../styles/globals.css';
@@ -32,11 +33,13 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <AuthProvider>
-            <LocationProvider>
-                <Navbar />
-              <main className="pt-20 md:pt-20">{children}</main>
-              <Footer />
-            </LocationProvider>
+            <QuizProvider>
+              <LocationProvider>
+                  <Navbar />
+                <main className="pt-20 md:pt-20">{children}</main>
+                <Footer />
+              </LocationProvider>
+            </QuizProvider>
             {/* <Analytics /> */}
           </AuthProvider>
         </ThemeProvider>
