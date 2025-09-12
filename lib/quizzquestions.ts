@@ -421,7 +421,7 @@ export const quizQuestions: QuizQuestion[] = [
     difficulty: "moyen",
     indice: "Il a unifié les différentes copies",
     category: "Sciences du Coran",
-    explanation: "Le calife Uthman ibn Affan a standardisé le Coran en une seule version officielle vers 650 après J.-C."
+    explanation: "Le calife Uthman ibn Affan a standardisé le Coran en une seule version officielle vers l'an 650."
   },
   {
     id: "m19",

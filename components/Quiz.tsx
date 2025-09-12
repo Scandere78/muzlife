@@ -30,12 +30,17 @@ const Quiz: React.FC<QuizProps> = ({ difficulty, onBackToMenu }) => {
   // const [showConfetti, setShowConfetti] = useState(false); // Supprimé pour simplifier
   const [questionProgress, setQuestionProgress] = useState(0);
   const [isAnswering, setIsAnswering] = useState(false);
-  const [timeToNextQuestion, setTimeToNextQuestion] = useState(0);
   const [showSkipButton, setShowSkipButton] = useState(false);
   const [questionStartTime, setQuestionStartTime] = useState<Date>(new Date());
   const [showSummary, setShowSummary] = useState(false);
   
   const { startQuizSession, addAnswer, finishQuizSession, getLastSession } = useQuizContext();
+
+  // Scroll to top au montage du composant (important pour mobile)
+  useEffect(() => {
+    // Scroll immédiat sans animation pour éviter tout décalage
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  }, []); // Vide pour n'exécuter qu'au montage
 
   // Initialiser les questions et la session au démarrage
   useEffect(() => {
@@ -82,35 +87,12 @@ const Quiz: React.FC<QuizProps> = ({ difficulty, onBackToMenu }) => {
     else setTimeLeft(30);
   }, [difficulty, quizStarted]);
 
-  // Timer pour passer à la question suivante avec bouton skip
+  // Afficher le bouton suivant quand l'explication est visible
   useEffect(() => {
     if (showExplanation && quizStarted && !showResults) {
-      const delayTime = 10000; // 10 secondes pour toutes les réponses
-      setTimeToNextQuestion(Math.ceil(delayTime / 1000));
       setShowSkipButton(true);
-      
-      // Timer principal
-      const timeout = setTimeout(() => {
-        skipToNextQuestion();
-      }, delayTime);
-      
-      // Timer pour le compte à rebours
-      const countdownInterval = setInterval(() => {
-        setTimeToNextQuestion(prev => {
-          if (prev <= 1) {
-            clearInterval(countdownInterval);
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-      
-      return () => {
-        clearTimeout(timeout);
-        clearInterval(countdownInterval);
-      };
     }
-  }, [showExplanation, currentQuestionIndex, difficulty, quizStarted, showResults, questions.length, isCorrect]);
+  }, [showExplanation, quizStarted, showResults]);
 
   // Cette fonction n'est plus nécessaire car le quiz démarre automatiquement
   // mais on la garde vide pour éviter les erreurs si elle est appelée quelque part
@@ -179,7 +161,6 @@ const Quiz: React.FC<QuizProps> = ({ difficulty, onBackToMenu }) => {
       setShowCorrectAnswer(false);
       setUsedHint(false);
       setShowSkipButton(false);
-      setTimeToNextQuestion(0);
       setQuestionStartTime(new Date());
       setTimeLeft(difficulty === "facile" ? 45 : difficulty === "difficile" ? 15 : 30);
     } else {
@@ -209,13 +190,15 @@ const Quiz: React.FC<QuizProps> = ({ difficulty, onBackToMenu }) => {
     setQuestionProgress(0);
     setIsAnswering(false);
     setShowSkipButton(false);
-    setTimeToNextQuestion(0);
     setTimeLeft(difficulty === "facile" ? 45 : difficulty === "difficile" ? 15 : 30);
     setQuestionStartTime(new Date());
     
     // Générer de nouvelles questions
     const randomQuestions = getRandomQuestions(difficulty, 10);
     setQuestions(randomQuestions);
+    
+    // Démarrer une nouvelle session de quiz
+    startQuizSession(randomQuestions, difficulty);
     
     // Garder quizStarted à true pour que le bouton skip fonctionne
     setQuizStarted(true);
@@ -395,7 +378,7 @@ const Quiz: React.FC<QuizProps> = ({ difficulty, onBackToMenu }) => {
                   
                   {/* Streak indicator */}
                   {streak >= 3 && (
-                    <div className="flex items-center gap-2 bg-[var(--color-accent)] text-white px-3 py-1 rounded-lg font-semibold text-sm">
+                    <div className="flex items-center gap-2 bg-red-400 text-white px-3 py-1 rounded-lg font-semibold text-sm">
                       <span>🔥</span>
                       <span>EN FEU! {streak}</span>
                     </div>
@@ -430,62 +413,46 @@ const Quiz: React.FC<QuizProps> = ({ difficulty, onBackToMenu }) => {
                 </div>
               )}
 
+              {/* Bouton Suivant - affiché AVANT l'explication */}
+              {showExplanation && showSkipButton && (
+                <div className="mt-4 text-center">
+                  <button
+                    className="px-6 py-3 !bg-blue-600 text-white rounded-lg hover:!bg-blue-700 transform hover:scale-105 transition-all duration-200 font-bold text-base shadow-lg"
+                    onClick={skipToNextQuestion}
+                  >
+                    {currentQuestionIndex + 1 < questions.length ? 'Question Suivante →' : 'Voir les Résultats →'}
+                  </button>
+                </div>
+              )}
+
               {/* Explication avec plus de visibilité et temps de lecture */}
               {showExplanation && (
                 <div className="mt-3">
                   <div className={`p-4 rounded-lg border-2 animate-slide-up ${
                     isCorrect 
-                      ? "bg-gradient-to-r from-green-50 to-emerald-50 border-green-300" 
-                      : "bg-gradient-to-r from-red-50 to-pink-50 border-red-300"
+                      ? "bg-gradient-to-r from-green-500 to-emerald-500 border-green-300" 
+                      : "bg-gradient-to-r from-green-500 to-emerald-300 border-green-300"
                   }`}>
                     <div className="flex items-start gap-3">
                       <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-white text-sm ${
-                        isCorrect ? 'bg-green-500' : 'bg-red-500'
+                        isCorrect ? 'bg-green-500' : 'bg-white/20'
                       }`}>
-                        {isCorrect ? "✅" : "❌"}
+                        {isCorrect ? "💡" : "💡"}
                       </div>
                       <div className="flex-1">
                         <p className={`font-bold text-sm mb-1 ${
-                          isCorrect ? 'text-green-800 dark:text-green-300' : 'text-red-800 dark:text-red-300'
+                          isCorrect ? 'text-green-200 dark:text-gray-300' : 'text-green-200 dark:text-black'
                         }`}>
                           {isCorrect ? "Excellente réponse !" : "Pas tout à fait..."}
                         </p>
-                        <p className={`leading-relaxed text-sm ${
-                          isCorrect ? 'text-green-700' : 'text-red-700'
+                        <p className={`leading-relaxed text-sm font-bold ${
+                          isCorrect ? 'text-gray-800' : 'text-gray-800 dark:text-black'
                         }`}>
                           {currentQuestion.explanation}
                         </p>
                       </div>
                     </div>
                   </div>
-                  
-                  {/* Indicateur de progression avec bouton skip */}
-                  {showSkipButton && (
-                    <div className="mt-3 text-center">
-                      <div className="flex items-center justify-center gap-3 flex-wrap">
-                        <div className="flex items-center gap-1 text-xs !text-black dark:!text-white opacity-70">
-                          <span>Suivante dans</span>
-                          <span className="font-bold text-gra-700 text-sm">{timeToNextQuestion}s</span>
-                        </div>
-                        
-                        <button
-                          className="px-3 py-1 !bg-green-600 text-white rounded-lg hover:bg-[var(--color-accent-dark)] transform hover:scale-105 transition-all duration-200 font-semibold text-sm"
-                          onClick={skipToNextQuestion}
-                        >
-                          Passer →
-                        </button>
-                      </div>
-                      
-                      <div className="mt-2 w-full max-w-xs mx-auto h-1 bg-gray-200 rounded-full overflow-hidden">
-                        <div 
-                          className="h-full bg-[var(--color-accent)] rounded-full transition-all duration-1000 ease-linear"
-                          style={{ 
-                            width: `${100 - (timeToNextQuestion * 100 / 10)}%` 
-                          }}
-                        ></div>
-                      </div>
-                    </div>
-                  )}
                 </div>
               )}
             </div>
@@ -607,7 +574,7 @@ const Quiz: React.FC<QuizProps> = ({ difficulty, onBackToMenu }) => {
                 {/* Boutons d'action avec couleurs du site */}
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <button
-                    className="group relative px-8 py-4 rounded-xl bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 text-white font-bold text-lg shadow-xl transform hover:scale-105 transition-all duration-300 overflow-hidden"
+                    className="group relative px-8 py-4 rounded-xl !bg-blue-500 text-white hover:bg-blue-300 font-bold text-lg shadow-xl transform hover:scale-105 transition-all duration-300 overflow-hidden"
                     onClick={() => setShowSummary(true)}
                   >
                     <span className="relative flex items-center gap-3">
@@ -618,10 +585,10 @@ const Quiz: React.FC<QuizProps> = ({ difficulty, onBackToMenu }) => {
                   </button>
                   
                   <button
-                    className="group relative px-8 py-4 rounded-xl !bg-blue-600 text-white font-bold text-lg shadow-xl transform hover:scale-105 transition-all duration-300 overflow-hidden"
+                    className="group relative px-8 py-4 rounded-xl !bg-blue-600 text-white font-bold text-lg shadow-xl transform dark:hover:bg-red-600 hover:scale-105 transition-all duration-300 overflow-hidden"
                     onClick={resetQuiz}
                   >
-                    <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-[var(--color-accent)] via-[var(--color-accent-dark)] to-[var(--color-accent)] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                    <span className="absolute inset-0 w-full h-full bg-blue-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
                     <span className="relative flex items-center gap-3">
                       <span className="text-xl">🔄</span>
                       Rejouer
@@ -629,7 +596,18 @@ const Quiz: React.FC<QuizProps> = ({ difficulty, onBackToMenu }) => {
                     </span>
                   </button>
                   
-                 
+                  {onBackToMenu && (
+                    <button
+                      className="group relative px-8 py-4 rounded-xl bg-gradient-to-r from-gray-500 via-gray-600 to-gray-700 text-white font-bold text-lg shadow-xl transform hover:scale-105 transition-all duration-300 overflow-hidden"
+                      onClick={onBackToMenu}
+                    >
+                      <span className="relative flex items-center gap-3">
+                        <span className="text-xl">↩️</span>
+                        Changer de difficulté
+                        <span className="text-xl">⚙️</span>
+                      </span>
+                    </button>
+                  )}
                 </div>
               </div>
             </div>

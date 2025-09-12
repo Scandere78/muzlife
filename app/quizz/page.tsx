@@ -1,12 +1,32 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Quiz from "../../components/Quiz";
 import "../../styles/globals.css";
 
 export default function QuizPage() {
   const [selectedDifficulty, setSelectedDifficulty] = useState<'facile' | 'moyen' | 'difficile'>('moyen');
   const [showQuiz, setShowQuiz] = useState(false);
+  const difficultyRef = useRef<HTMLDivElement>(null);
+
+  // Scroll au centre des boutons de difficulté au chargement de la page
+  useEffect(() => {
+    // Petit délai pour s'assurer que le DOM est prêt
+    setTimeout(() => {
+      if (difficultyRef.current) {
+        // Calculer la position pour centrer l'élément dans la fenêtre
+        const elementRect = difficultyRef.current.getBoundingClientRect();
+        const absoluteElementTop = elementRect.top + window.pageYOffset;
+        const middle = absoluteElementTop - (window.innerHeight / 2) + (elementRect.height / 2);
+        
+        // Scroller jusqu'à cette position
+        window.scrollTo({
+          top: middle,
+          behavior: 'smooth' // ou 'instant' pour un scroll immédiat
+        });
+      }
+    }, 100); // 100ms de délai pour laisser le temps au DOM de se charger
+  }, []); // Se déclenche uniquement au montage du composant
 
   const startQuiz = () => {
     setShowQuiz(true);
@@ -50,7 +70,7 @@ export default function QuizPage() {
           </div>
 
           {/* Options de difficulté */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div ref={difficultyRef} className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <button
               className={`group p-6 rounded-2xl border-2 transition-all duration-300 transform hover:scale-105 ${
                 selectedDifficulty === 'facile'
@@ -60,7 +80,7 @@ export default function QuizPage() {
               onClick={() => setSelectedDifficulty('facile')}
             >
               <div className="text-center">
-                <div className="text-4xl mb-3">😊</div>
+                <div className="text-4xl mb-3">⭐</div>
                 <div className="font-bold text-xl mb-2">FACILE</div>
                 <div className={`text-sm ${selectedDifficulty === 'facile' ? '!text-white/90' : '!text-black dark:!text-white opacity-60'}`}>
                   45 secondes par question
@@ -80,7 +100,7 @@ export default function QuizPage() {
               onClick={() => setSelectedDifficulty('moyen')}
             >
               <div className="text-center">
-                <div className="text-4xl mb-3">🎯</div>
+                <div className="text-4xl mb-3">⭐⭐</div>
                 <div className="font-bold text-xl mb-2">MOYEN</div>
                 <div className={`text-sm ${selectedDifficulty === 'moyen' ? '!text-white/90' : '!text-black dark:!text-white opacity-60'}`}>
                   30 secondes par question
@@ -100,7 +120,7 @@ export default function QuizPage() {
               onClick={() => setSelectedDifficulty('difficile')}
             >
               <div className="text-center">
-                <div className="text-4xl mb-3">🔥</div>
+                <div className="text-4xl mb-3">⭐⭐⭐</div>
                 <div className="font-bold text-xl mb-2">DIFFICILE</div>
                 <div className={`text-sm ${selectedDifficulty === 'difficile' ? '!text-white/90' : '!text-black dark:!text-white opacity-60'}`}>
                   15 secondes par question
@@ -140,7 +160,7 @@ export default function QuizPage() {
         </div>
 
         {/* Informations rapides */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-2xl mx-auto">
+        {/*<div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-2xl mx-auto">
           <div className="group !bg-white/50 dark:!bg-gray-800/80 backdrop-blur-sm rounded-2xl p-6 border border-[var(--color-accent)]/20 hover:border-[var(--color-accent)]/40 transition-all duration-300 hover:scale-105">
             <div className="text-3xl mb-3 text-center group-hover:scale-110 transition-transform duration-300">📚</div>
             <div className="text-center">
@@ -164,7 +184,7 @@ export default function QuizPage() {
               <div className="text-sm !text-black dark:!text-white opacity-70">Et streaks</div>
             </div>
           </div>
-        </div>
+        </div>*/}
       </div>
     </div>
   );
